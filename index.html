@@ -2,18 +2,99 @@
 <html>
 <head>
 	<title>RogueType</title>
-	<meta charset="utf8">
+	<meta charset="utf8" />
+	<meta name="author" value="Pecon" />
+	<meta name="description" value="A simple browser-based roguelike game that features custom user-made maps." />
+	<meta name="keywords" value="roguetype,game,roguelike,pecon,jazz cat" />
+
+	<link async rel="stylesheet" href="./main.css" />
+	<link async rel="icon" type="image/png" href="./favicon.png" />
 
 	<script async src="./main.js"></script>
 	<script async src="./tilebase.js"></script>
 	<script async src="./unit.js"></script>
 	<script async src="./item.js"></script>
-	<link rel="stylesheet" href="./main.css" />
+	<script async src="./hazard.js"></script>
+
+	<link async rel="preload" href="./level.dat" as="fetch" />
+	<link async rel="preload" href="./level_easy.dat" as="fetch" />
+	<link async rel="preload" href="./level_hard.dat" as="fetch" />
+	<link async rel="preload" href="./zeus_map.dat" as="fetch" />
+	
+	<link async rel="preload" href="./title.mp3" as="audio" />
+
+	<style>
+html
+{
+	height: 100%;
+	width: 100%;
+}
+
+body
+{
+	color: #DDD;
+	/*font-family: "neoletters", consolas, 'lucidia console', monospace;*/
+	font-size: 16px;
+	text-align: center;
+
+	user-select: none;
+}
+
+.version
+{
+	position: absolute;
+	top: 1px;
+	left: 1px;
+
+	font-family: consolas, 'lucidia console', arial;
+}
+
+h1
+{
+	font-size: 24px;
+}
+
+h2
+{
+	font-size: 20px;
+}
+
+.controls
+{
+	font-family: "neoletters", consolas, 'lucidia console', monospace;
+
+	position: fixed;
+	top: 0px;
+	left: 0px;
+
+	height: calc(100% - 32px);
+	width: calc(100% - 32px);
+
+	border-style: solid;
+	border-color: #DDD;
+	border-width: 16px;
+	margin: 0px;
+	padding: 0px;
+
+	background-color: #000;
+
+	z-index: 2;
+}
+
+.mapSelector
+{
+	position: absolute;
+	bottom: 3px;
+	left: 3px;
+	display: none;
+}
+	</style>
 </head>
 <body>
-	<div id="welcome" class="controls" ><h1>RogueType</h1><h2>A Roguelike game by Pecon, featuring music by Jazz Cat</h2>
+
+	<div id="welcome" class="controls"><h1>RogueType</h1><h2>A Roguelike game by Pecon, featuring music by Jazz Cat</h2>
 		<br />
-		<pre style="font-family: 'neoletters';">Movement: W,A,S,D
+		<pre style="font-family: 'neoletters', consolas, 'lucidia console', monospace;">Movement: W,A,S,D
 
 Combat: Arrow keys
 
@@ -22,15 +103,24 @@ Wait/Rest: Spacebar
 Hover the mouse over any tile or item for a description.
 
 It is recommended that you press F11 to fullscreen your browser.
-
-
-
-<span id="start" class="start">Press any key to start.</span>
 		</pre>
+		<br />
+		<div id="loading">Loading, please wait...</div>
+		<noscript><span style="color: red; text-decoration: underline;">You must enable Javascript for this game to run.</span></noscript>
+		<br />
+		<div id="start" class="start">Press the space key to start.</div>
+		<div class="version">v1.9.0</div>
+		<div id="selector" class="mapSelector">
+			<select id="maps">
+			</select>
+			<button onclick="addMap();">Add</button>
+		</div>
+		
 	</div>
-	<div class="pageContainer">
+	<div class="pageContainer" id="window"><span id="container" class="gameContainer"></span>
+		<br />
+		<div class="gameLog" id="log"></div>
 		<span id="inventory" class="inventoryContainer"></span>
-		<span id="container" class="gameContainer"></span>
 		<span class="stats">
 			<p>Health</p>
 			<pre id="healthIndicator"></pre>
@@ -38,9 +128,57 @@ It is recommended that you press F11 to fullscreen your browser.
 			<br />
 			<p>Stamina</p>
 			<pre id="staminaIndicator"></pre>
+			<br />
+			<br />
+			<p>Experience</p>
+			<pre id="expIndicator"></pre>
 		</span>
-		<br />
-		<div class="gameLog" id="log"></div>
+		
 	</div>
+
+	<div class="floatingBox" id="options">
+		<h2>Options</h2>
+		<br />
+		Movement Keys: 
+		<select id="optionsMovement">
+			<option>WASD</option>
+			<option>ArrowKeys</option>
+			<option>IJKL</option>
+			<option>8456</option>
+			<option>8426</option>
+			<option>HJKL</option>
+		</select>
+		<br />
+		<br />
+		Combat Keys:
+		<select id="optionsCombat">
+			<option>ArrowKeys</option>
+			<option>WASD</option>
+			<option>IJKL</option>
+			<option>8456</option>
+			<option>8426</option>
+			<option>HJKL</option>
+		</select>
+		<br />
+		<br />
+		Wait Key:
+		<select id="optionsWait">
+			<option>Spacebar</option>
+			<option>Return</option>
+			<option>Z</option>
+		</select>
+		<br />
+		<br />
+		Sound:
+		<select id="optionsSound">
+			<option>Enabled</option>
+			<option>Disabled</option>
+		</select>
+		<br />
+		<br />
+		<button onclick="updateOptions();">Apply</button> <button onclick="hideOptions();">Cancel</button>
+	</div>
+	<button class="optionsButton" onclick="displayOptions();">Options</button>
+	<textarea id="focusGrabber"></textarea>
 </body>
 </html>

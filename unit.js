@@ -2,19 +2,30 @@ class unit
 {
 	constructor(typeName, location)
 	{
+		if(location === undefined)
+			throw "Location not specified!";
+
 		this.class = "monster";
-		this.location = location;
+		this.location = {x: location.x, y: location.y};
 		this.itemDrop = null;
 		this.passive = false;
+		this.canDisplace = false;
+		this.baseWeapon = null;
+		this.weapon = null;
+		this.exp = 0;
+		this.poison = 0;
+		this.poisonSchedule = 0;
+		this.moveDelay = 0;
+		this.moveDelaySchedule = 0;
 		let maxHealth = 100;
 		let maxStamina = 100;
-		let weapon = "fists";
 		let character = '?';
 		let description = "";
 		let name = "";
 		let perception = 5;
-		let defence = 5;
-		let agility = 5;
+		let strength = 2;
+		let defence = 2;
+		let agility = 2;
 		let level = 1;
 
 		switch(typeName)
@@ -22,14 +33,14 @@ class unit
 			case "player":
 				this.class = "player";
 				this.compulsiveAction = null;
-				name = "You";
-				description = "A nondescript protagonist.";
+				name = "Player";
+				description = "It's you!";
 				character = '@';
-				weapon = "fists";
+				this.baseWeapon = new item("fists");
 				this.itemDrop = undefined;
 
 				maxHealth = 25;
-				maxStamina = 50;
+				maxStamina = 20;
 				level = 10;
 				break;
 
@@ -37,12 +48,13 @@ class unit
 				name = "Giant Rat";
 				description = "An absolutely massive rat.";
 				character = "R";
-				weapon = "rat_teeth";
+				this.baseWeapon = new item("rat_teeth");
 				this.itemDrop = "rat_meat";
 
-				maxHealth = 3;
+				maxHealth = 6;
 				maxStamina = 15;
 				perception = 2;
+				strength = 1;
 				defence = 1;
 				agility = 3;
 				level = 1;
@@ -52,12 +64,31 @@ class unit
 				name = "Giant Bat";
 				description = "Annoying flappy thing.";
 				character = "B";
-				weapon = "bat_teeth";
+				this.baseWeapon = new item("bat_teeth");
 				this.itemDrop = "bat_wing";
+				this.canDisplace = true;
 
-				maxHealth = 2;
+				maxHealth = 3;
 				maxStamina = 5;
 				perception = 3;
+				strength = 0;
+				defence = 0;
+				agility = 5;
+				level = 1;
+				break;
+
+			case "spider":
+				name = "Big Spider";
+				description = "A frighteningly large poisonous spider.";
+				character = "X";
+				this.baseWeapon = new item("spider_teeth");
+				this.itemDrop = "spider_body";
+				this.canDisplace = true;
+
+				maxHealth = 3;
+				maxStamina = 5;
+				perception = 3;
+				strength = 0;
 				defence = 0;
 				agility = 5;
 				level = 1;
@@ -67,12 +98,14 @@ class unit
 				name = "Skeleton";
 				description = "An animated skeleton held together with weak magic.";
 				character = "S";
-				weapon = "ancient_sword";
+				this.baseWeapon = new item("fists");
+				this.weapon = new item("ancient_sword");
 				this.itemDrop = "skeleton_bone";
 
-				maxHealth = 4;
-				maxStamina = 25;
+				maxHealth = 5;
+				maxStamina = 15;
 				perception = 0;
+				strength = 3;
 				defence = 2;
 				agility = 0;
 				level = 2;
@@ -82,27 +115,47 @@ class unit
 				name = "Goblin";
 				description = "An ugly green goblin.";
 				character = "G";
-				weapon = "goblin_fists";
+				this.baseWeapon = new item("goblin_fists");
 				this.itemDrop = "goblin_toe";
 
-				maxHealth = 6;
-				maxStamina = 10;
+				maxHealth = 10;
+				maxStamina = 12;
 				perception = 1;
+				strength = 2;
 				defence = 3;
 				agility = 1;
 				level = 2;
-				break;	
+				break;
+
+			case "kobold":
+				name = "Kobold";
+				description = "A scrawny kobold.";
+				character = "K";
+				this.baseWeapon = new item("goblin_fists");
+				this.weapon = new item("pickaxe");
+				this.itemDrop = "kobold_candle";
+
+				maxHealth = 6;
+				maxStamina = 12;
+				perception = 3;
+				strength = 1;
+				defence = 1;
+				agility = 1;
+				level = 2;
+				break;
 
 			case "troll":
 				name = "Troll";
 				description = "A massive club-wielding brute.";
 				character = "T";
-				weapon = "club";
+				this.baseWeapon = new item("goblin_fists");
+				this.weapon = new item("club");
 				this.itemDrop = "troll_fat";
 
-				maxHealth = 20;
-				maxStamina = 30;
+				maxHealth = 32;
+				maxStamina = 25;
 				perception = 1;
+				strength = 5;
 				defence = 2;
 				agility = 1;
 				level = 3;
@@ -112,12 +165,14 @@ class unit
 				name = "Ancient Shade";
 				description = "A terrifying and powerful ancient spirit.";
 				character = "A";
-				weapon = "longsword";
+				this.baseWeapon = new item("fists");
+				this.weapon = new item("longsword");
 				this.itemDrop = "shade_essence";
 
-				maxHealth = 12;
-				maxStamina = 25;
+				maxHealth = 22;
+				maxStamina = 20;
 				perception = 2;
+				strength = 3;
 				defence = 3;
 				agility = 2;
 				level = 3;
@@ -127,28 +182,31 @@ class unit
 				name = "Fire Imp";
 				description = "A small, combustive demon.";
 				character = "I";
-				weapon = "imp_claws";
+				this.baseWeapon = new item("imp_claws");
 				this.itemDrop = "imp_ashes";
 
-				maxHealth = 15;
+				maxHealth = 18;
 				maxStamina = 15;
 				perception = 3;
+				strength = 3;
 				defence = 1;
 				agility = 4;
 				level = 4;
 				break;
 
-			case "drake":
-				name = "Lesser Drake";
-				description = "A young but still terrifying dragon.";
-				character = "D";
-				weapon = "firebreath";
+			case "cobra":
+				name = "Massive Cobra";
+				description = "The King of King Cobras. No doubt highly poisonous.";
+				character = "Z";
+				this.baseWeapon = new item("cobra_fangs");
+				this.itemDrop = "snake_skin";
 
-				maxHealth = 50;
-				maxStamina = 50;
-				perception = 3;
-				defence = 4;
-				agility = 1;
+				maxHealth = 24;
+				maxStamina = 10;
+				perception = 4;
+				strength = 2;
+				defence = 1;
+				agility = 5;
 				level = 4;
 				break;
 
@@ -156,15 +214,34 @@ class unit
 				name = "Cat";
 				description = "Hairy baby.";
 				character = "C";
-				weapon = null;
+				this.baseWeapon = null;
+				this.canDisplace = true;
 
 				maxHealth = 1;
 				maxStamina = 15;
 				perception = 7;
+				strength = 1;
 				defence = 2;
 				agility = 100;
 				level = 1;
 				this.passive = true;
+				break;
+
+			case "drake":
+				this.class = "boss";
+				name = "Three Headed Dragon";
+				description = "A terrifying three-headed dragon. Each head seems to have it's own ability, but luckily they seem to have issues cooperating.";
+				character = "D";
+				this.baseWeapon = new item("dragon_tail");
+				this.moveDelay = 1;
+
+				maxHealth = 100;
+				maxStamina = 50;
+				perception = 5;
+				strength = 7;
+				defence = 5;
+				agility = 1;
+				level = 10;
 				break;
 
 			case "beast":
@@ -172,28 +249,36 @@ class unit
 				name = "Displacer Beast";
 				description = "A horrifying monster from the abyss, can open small portals to the abyss where certain destruction awaits!";
 				character = "B";
-				weapon = "beast_tail";
+				this.baseWeapon =  new item("beast_tail");
 
-				maxHealth = 100;
+				maxHealth = 175;
 				maxStamina = 40;
 				perception = 5;
+				strength = 3;
 				defence = 5;
 				agility = 1;
-				level = 5;
+				level = 15;
 				this.angerThreshold = 0.9;
 				break;
 
+			default:
+				throw "Unknown unit type " + typeName;
+				break;
+
 		}
+
+		if(this.weapon === null)
+			this.weapon = this.baseWeapon;
 
 		this.maxHealth = maxHealth;
 		this.health = maxHealth;
 		this.maxStamina = maxStamina;
 		this.stamina = maxStamina;
-		this.weapon = new item(weapon);
 		this.character = character;
 		this.description = description;
 		this.name = name;
 		this.perception = perception;
+		this.strength = strength;
 		this.defence = defence;
 		this.agility = agility;
 		this.level = level;
@@ -203,16 +288,23 @@ class unit
 		units.push(this);
 	}
 
+	getCharacter()
+	{
+		return this.character;
+	}
+
+	getName()
+	{
+		return this.name;
+	}
+
+	getDescription()
+	{
+		return this.description;
+	}
+
 	tick()
 	{
-		if(this.health <= 0)
-		{
-			this.die();
-			return;
-		}
-
-		//this.health += 0.25;
-
 		if(this.health > this.maxHealth)
 			this.health = this.maxHealth;
 
@@ -221,13 +313,41 @@ class unit
 		if(this.stamina > this.maxStamina)
 			this.stamina = this.maxStamina;
 
-		if(this.stamina < 0 && this.stamina + 5 > 0 && this.class != "player")
-			addLog("The " + this.name + " looks like it's about to recover.");
+		if(this.poison > 0)
+		{
+			if(this.poisonSchedule > 4)
+			{
+				this.health -= this.poison;
+				this.poison--;
+				this.poisonSchedule = 0;
+
+				if(this.class == "player")
+				{
+					if(this.poison > 0)
+						addLog("You're taking poison damage.", "color: #0A0;");
+					else
+						addLog("You're no longer poisoned.", "color: #0A0;");
+				}
+			}
+			else
+			{
+				this.poisonSchedule++;
+			}
+		}
+
+		if(this.health <= 0)
+		{
+			this.die();
+			return;
+		}
+
+		if(this.stamina < 0 && this.stamina + 5 >= 0 && this.class != "player")
+			addLog("The " + this.name + " looks like it's about to recover.", (this.class == "boss" ? "color: orange;" : "color: MediumTurquoise;"));
 
 		if(this.stun > 0)
 		{
 			if(this.class != "player")
-				addLog("The " + this.name + " is stunned.");
+				addLog("The " + this.name + " is stunned.", "color: MediumTurquoise;");
 
 			if(this.stamina >= 10)
 			{
@@ -236,11 +356,9 @@ class unit
 			}
 			else if(this.class == "player")
 			{
-				addLog("You are currently too weak to recover from your stun.");
+				addLog("You are currently too weak to recover from your stun.", "color: MediumTurquoise;");
 			}
 
-			if(this.stun <= 0 && this.class == "player")
-				yourTurn = true;
 			return;
 		}
 
@@ -255,6 +373,7 @@ class unit
 
 				let pickup = tile.items.pop();
 				inventory.push(pickup);
+				score++;
 				pickup.location = null;
 
 				for(let j = 0; j < groundItems.length; j++)
@@ -296,35 +415,25 @@ class unit
 
 			if(this.health / this.maxHealth <= this.angerThreshold)
 			{
-				addLog("The " + this.name + " seeths with anger! It smashes it's tail against the ground and the entire cavern rumbles...");
-				addLog("Huge chunks of stone fall from the ceiling, littering the ground!");
+				addLog("The " + this.name + " seeths with anger! It smashes it's tail against the ground and the entire cavern rumbles...", "color: red;");
 				gameSoundEffect.src = "./crumble.mp3";
 				gameSoundEffect.play();
-				let count = 0;
+				windowObject.classList.add("screenShake");
 
 				for(let x = this.location.x - 3; x <= this.location.x + 3; x++)
 				{
-					for(let y = this.location.y - 3; y <= this.location.x + 3; y++)
+					for(let y = this.location.y - 3; y <= this.location.y + 3; y++)
 					{
 						let tile = getWorld({x: x, y: y});
 						let roll = Math.random();
 
-						if(roll > 0.9 && tile.base.name == "Floor")
+						if(roll > 0.85 && tile.base.name == "Floor" && tile.hazard === null)
 						{
-							tile.base.remove();
-							tile.base = new tileBase("halfWall", {x: x, y: y});
+							tile.hazard = new hazard("rocks", {x: x, y: y});
 
 							if(tile.unit !== null)
-							{
-								tile.unit.health -= 5;
-								tile.unit.stun++;
-
 								if(tile.unit.class == "player")
-									addLog("Some stones fall right on top of you! You manage to avoid being crushed, but you're still injured and stunned for the moment.");
-							}
-
-							count++;
-							console.log("fell");
+									addLog("Some stones are about to collapse onto you! You should probably move out of the way...", "color: orange;");
 						}
 
 					}
@@ -343,21 +452,24 @@ class unit
 					let tile = getWorld(this.location);
 					let count = tile.items.length;
 
-					addLog("The " + this.name + " opens a black portal to the void!");
+					addLog("The " + this.name + " opens a black portal to the void!", "color: red;");
 					
 					for(let i = count - 1; i >= 0; i--)
 					{
-						addLog("The " + tile.items[i].getName() + " is sucked into the portal and destroyed!");
+						addLog("The " + tile.items[i].getName() + " is sucked into the portal and destroyed!", "color: red;");
 						tile.items[i].remove();
-						this.stamina -= 12;
+						this.stamina -= 9;
 					}
 
 					tile.items = Array();
 
 					if(this.stamina < -5)
 					{
-						addLog("The " + this.name + " looks exhausted!");
+						addLog("The " + this.name + " looks exhausted!", "color: MediumTurquoise;");
 					}
+
+					if(this.stamina < -15)
+						this.stamina = -15;
 				}
 			}
 			else
@@ -369,13 +481,14 @@ class unit
 		else
 		{		
 			let playerDist = vectorDist(this.location, player.location);
+			let tile = getWorld(this.location);
 
-			if(playerDist > 100)
+			if(playerDist > 100 && tile.hazard === null)
 			{
 				// Don't bother doing ai stuff if they're so far away
 				return;
 			}
-			else if(playerDist == 1 && !this.passive)
+			else if(playerDist == 1 && !this.passive && tile.hazard === null)
 			{
 				// Attack!
 				if(this.stamina >= 0)
@@ -383,7 +496,7 @@ class unit
 					player.attack(this);
 				}
 			}
-			else if(playerDist <= this.perception + 2 && !this.passive)
+			else if(playerDist <= this.perception + 2 && !this.passive && tile.hazard === null)
 			{
 				this.moveTowards(player.location);	
 			}
@@ -417,7 +530,7 @@ class unit
 
 						if(move === undefined)
 							moves.splice(index, 1);
-						else if(move.base.moveTo(this) && move.unit === null)
+						else if(move.base.moveTo(this) && move.unit === null && move.hazard === null)
 						{
 							this.moveTo(move.location);
 							break;
@@ -434,12 +547,26 @@ class unit
 
 	moveTo(location)
 	{
+		if(this.health <= 0)
+			return false;
+
 		if(this.stamina <= 0)
 		{
 			if(this.class == "player")
 				addLog("You are too exhausted to move.");
 
 			return false;
+		}
+
+		if(this.moveDelay > 0)
+		{
+			if(this.moveDelaySchedule > 0)
+			{
+				this.moveDelaySchedule--;
+				return false;
+			}
+			else
+				this.moveDelaySchedule = this.moveDelay;
 		}
 
 		let tile = getWorld(location);
@@ -449,7 +576,11 @@ class unit
 
 		if(!accessible)
 			return false;
-		
+
+		let displaceUnit = null;
+
+		if(tile.unit !== null)
+			displaceUnit = tile.unit;
 
 		tile.unit = this;
 		let leaveTile = getWorld(this.location);
@@ -457,44 +588,65 @@ class unit
 		leaveTile.unit = null;
 		leaveTile.base.onLeave(this);
 
+		if(displaceUnit !== null)
+		{
+			if(vectorDist(location, player.location) < 30 && this.class != "player")
+				addLog("The " + this.name + " displaces the " + displaceUnit.name + ".", "color: MediumTurquoise;");
+			leaveTile.base.moveTo(displaceUnit);
+			leaveTile.unit = displaceUnit;
+			displaceUnit.location = leaveTile.location;
+		}
+
 		this.location = location;
-		this.stamina -= 4.5;
+		this.stamina -= 3.5;
 	}
 
 	attack(attacker)
 	{
-		let damage = attacker.weapon.damage + attacker.weapon.weight;
-		attacker.stamina -= (attacker.weapon.weight * 2.5) + 5;
+		if(attacker.health <= 0 || this.health <= 0)
+			return false;
+
+		if(attacker.stamina < 0)
+			return false;
+
+		if(this.name == "Cat" && attacker.class == "player" && attacker.weapon == attacker.baseWeapon)
+		{
+			addLog("You pet the cat. It purrs loudly and then promptly ignores you.", "color: green;");
+			return false;
+		}
+
+		let damage = attacker.strength + attacker.weapon.blade + attacker.weapon.blunt;
+		attacker.stamina -= ((attacker.weapon.weight * 2.5) + 5) - attacker.strength;
 
 		// Crit roll
-		if(Math.random() < 0.05)
+		if(Math.random() < 0.05 + attacker.weapon.blade / 100)
 		{
 			damage *= 2;
 
 			if(this.class == "player")
-				addLog("The " + attacker.name + "'s " + attacker.weapon.name + " crackles with electricity, a critical attack coming right at you!");
+				addLog("The " + attacker.name + "'s " + attacker.weapon.getName() + " crackles with electricity, a critical attack coming right at you!", "color: yellow;");
 			else if(attacker.class == "player")
-				addLog("Your " + attacker.weapon.name + " crackles with electricity, a critical attack!");
+				addLog("Your " + attacker.weapon.getName() + " crackles with electricity, a critical attack!", "color: yellow;");
 		}
 		else
 		{
 			if(this.class == "player")
-				addLog("The " + attacker.name + " " + attacker.weapon.attackDescriptor + attacker.weapon.attackDescriptorPluralString + " you with their " + attacker.weapon.name + ".");
+				addLog("The " + attacker.name + " " + attacker.weapon.attackDescriptor + attacker.weapon.attackDescriptorPluralString + " toward you with its " + attacker.weapon.getName() + ".");
 			else if(attacker.class == "player")
-				addLog("You " + attacker.weapon.attackDescriptor + " your " + attacker.weapon.name + " at the " + this.name + ".");
+				addLog("You " + attacker.weapon.attackDescriptor + " your " + attacker.weapon.getName() + " towards the " + this.name + ".");
 		}
 		
 
 		
 
-		// Agility
+		// Agility rolls
 		let evaded = false;
 		for(let i = 0; i < this.agility; i++)
 		{
 			if(Math.random() < 0.05)
 				evaded = true;
 		}
-		
+
 		// Defence rolls
 		let blocked = 0;
 		for(let i = 0; i < this.defence; i++)
@@ -502,6 +654,7 @@ class unit
 			if(Math.random() < 0.1)
 				blocked++;
 		}
+
 
 		if(evaded)
 		{
@@ -512,7 +665,206 @@ class unit
 				addLog("The " + this.name + " " + (this.agility > 2 ? "nimbly" : "barely") + " dodges your attack.");
 		}
 
-		else if(blocked > 0)
+
+		// Weapon enchantments
+		if(attacker.weapon.magicalEffect !== null && damage > 0)
+		{
+			switch(attacker.weapon.magicalEffect)
+			{
+				case "concussion":
+					if(attacker.weapon.concussiveCharge === undefined)
+						attacker.weapon.concussiveCharge = 5;
+
+					if(attacker.weapon.concussiveCharge >= 5)
+					{
+						if(attacker.class == "player")
+							addLog("As soon as your attack connects, your weapon unleashes all it's magical charge! Like lightning, the energy surges into the " + this.name + " with a brilliant flash and thunderous bang!", "color: yellow;");
+						else
+							addLog("With a brilliant flash, you're concussed by the " + attacker.name + "'s " + attacker.weapon.getName() + 
+								"!", "color: orange;");
+						this.stun = 2;
+						attacker.weapon.concussiveCharge = 0;
+					}
+					else
+					{
+						if(attacker.class == "player")
+							addLog("Your weapon hums, adding to a magical tension growing within it.", "color: #22F;");
+						attacker.weapon.concussiveCharge++;
+					}
+
+					break;
+
+				case "concussion_poor":
+					if(attacker.weapon.concussiveCharge === undefined)
+						attacker.weapon.concussiveCharge = 5;
+
+					if(attacker.weapon.concussiveCharge >= 5)
+					{
+						if(Math.random() > 0.5)
+						{
+							// Curse effect, miss and stun yourself
+							if(attacker.class == "player")
+							{
+								addLog("As soon as your attack connects, your weapon unleashes all it's magical charge! But the weapon dims for just a moment, missing your opponent.", "color: orange;");
+								addLog('"Uh oh."');
+								addLog("Like lightning, the energy surges from the weapon and up your arm! You've been stunned!", "color: orange;");
+							}
+							attacker.stun = 2;
+						}
+						else
+						{
+							if(attacker.class == "player")
+								addLog("As soon as your attack connects, your weapon unleashes all it's magical charge! Like lightning, the energy surges into the " + this.name + " with a brilliant flash and thunderous bang! The " + this.name + " is stunned!", "color: yellow;");
+							else
+								addLog("With a brilliant flash, you're concussed by the " + attacker.name + "'s " + attacker.weapon.getName() + 
+								"!", "color: orange;");
+							this.stun = 2;
+						}
+
+						attacker.weapon.concussiveCharge = 0;
+					}
+					else
+					{
+						if(attacker.class == "player")
+							addLog("Your weapon hums, adding to a magical tension growing within it.", "color: #22F;");
+						attacker.weapon.concussiveCharge++;
+					}
+
+					// Loses charge twice as quickly
+					attacker.weapon.magicalCharge--;
+					break;
+
+				case "lifesteal":
+					if(attacker.class == "player")
+						addLog("You feel your weapon transfer a small amount of life force from the " + this.name + " to you.", "color: #22F;");
+					this.health--;
+					attacker.health++;
+					break;
+
+				case "regeneration":
+					if(attacker.health < attacker.maxHealth)
+					{
+						if(attacker.class == "player")
+							addLog("You're suddenly wracked with pain! The " + attacker.weapon.getName() + "'s curse is slowly healing your wounds in the most excrutiatingly painful way imaginable! The immense pain is extremely tiring.", "color: orange;");
+						attacker.health += 5;
+						attacker.stamina -= 10;
+						attacker.weapon.magicalCharge -= 3;
+					}
+					break;
+
+				case "power":
+					damage++;
+					break;
+
+				case "dullness":
+					damage--;
+					break;
+
+				case "piercing":
+					if(blocked > 0)
+					{
+						let effect = getRandom(0, blocked) + 1;
+						blocked -= effect;
+						if(attacker.class == "player")
+							addLog("Your weapon negates " + (blocked > 0 ? "all" : "some") + " of your opponent's defences.", "color: #22F;");
+						
+						attacker.weapon.magicalCharge -= effect;
+					}
+					break;
+
+				case "weight":
+					attacker.stamina -= 5;
+					break;
+
+				case "stamina":
+					attacker.stamina += 5;
+					break;
+
+				case "miss":
+					if(Math.random() > 0.8)
+					{
+						if(attacker.class == "player")
+							addLog("Despite your attack being perfectly aimed, your weapon suddenly jerks mid-flight and allows the " + this.name + " to evade it easily.", "color: orange;");
+						evaded = true;
+						damage = 0;
+						attacker.weapon.magicalCharge -= 5;
+					}
+					break;
+
+				case "bloodlust":
+					if(attacker.weapon.lastKillTurn === undefined)
+					{
+						attacker.weapon.lastKillTurn = -7;
+						attacker.weapon.kills = 0;
+					}
+
+					if(attacker.weapon.lastKillTurn > turnCount - 7)
+					{
+						// Made a kill in the last 5 turns, gets damage bonus
+						if(attacker.class == "player")
+							addLog("The " + attacker.weapon.getName() + " eagerly awaits your kill.", "color: #22F;");
+
+						damage *= (1.1 + (attacker.weapon.kills * 0.1));
+					}
+					else
+					{
+						// Penalty for not having a kill in the last five turns.
+						if(attacker.class == "player")
+							addLog("The " + attacker.weapon.getName() + " is silent.");
+						damage *= 0.8;
+						attacker.weapon.kills = 0;
+					}
+
+					if(damage - blocked > this.health)
+					{
+						if(!(attacker.weapon.lastKillTurn > turnCount - 7))
+						{
+							if(attacker.class == "player")
+								addLog("As you strike the finishing blow, your " + attacker.weapon.getName() + " glows bright red! More...", "color: #A00;");
+						}
+						else
+						{
+							if(attacker.class == "player")
+								addLog("Your " + attacker.weapon.getName() + " vibrates with excitement and grows even stronger...", "color: #A00;");
+
+							attacker.weapon.magicalCharge++;
+						}
+						attacker.weapon.lastKillTurn = turnCount;
+						attacker.weapon.kills++;
+					}
+					break;
+
+			}
+
+			if(attacker.weapon.realName != attacker.weapon.getName() && attacker.class == "player")
+			{
+				knownItems.push(attacker.weapon.realName);
+				addLog("This is a " + attacker.weapon.getName() + "!", "color: #22F;");
+				inventoryUpdate = true;
+				score += 5;
+			}
+
+			attacker.weapon.magicalCharge--;
+		}
+
+		// Destroy the weapon if it's out of magical charge
+		if(attacker.weapon.magicalCharge <= 0 && attacker.weapon.magicalCharge !== null)
+		{
+			if(attacker.class == "player")
+			{
+				for(let i = 0; i < inventory.length; i++)
+					if(inventory[i] == attacker.weapon)
+						inventory.splice(i, 1);
+
+				addLog("Your " + attacker.weapon.getName() + " runs out of the magic holding it together and crumbles to dust.", "color: MediumTurquoise;");
+				inventoryUpdate = true;
+			}
+			
+			attacker.weapon = attacker.baseWeapon;
+		}
+
+
+		if(blocked > 0 && !evaded)
 		{
 			damage -= blocked;
 
@@ -524,18 +876,18 @@ class unit
 				if(this.class == "player")
 					addLog("You manage to partially block the " + attacker.name + "'s attack.");
 				else if(attacker == player)
-					addLog("The " + this.name + " blocks some of your attack.");
+					addLog("The " + this.name + " resists some of your attack.");
 			}
 			else
 			{
 				if(this.class == "player")
 					addLog("You completely block the " + attacker.name + "'s attack!");
 				else if(attacker.class == "player")
-					addLog("The " + this.name + " blocks your attack completely!");
+					addLog("The " + this.name + " resists your attack completely!");
 			}
 		}
 
-		else
+		else if(!evaded)
 		{
 			if(this.class == "player")
 				addLog("You take the " + attacker.name + "'s attack!");
@@ -543,16 +895,16 @@ class unit
 				addLog("The " + this.name + " takes your attack!");
 
 			let stunRoll = getRandom();
-			let stunMargin = 0.0125 * attacker.weapon.weight;
+			let stunMargin = 0.0125 * (attacker.weapon.weight + attacker.weapon.blunt + attacker.strength);
 
-			if(stunRoll > (1.0 - stunMargin))
+			if(stunRoll < stunMargin)
 			{
-				if(stunRoll < (1.0 - stunMargin + ((this.stamina / this.maxStamina) / 12)))
+				if(stunRoll > (stunMargin - ((this.stamina / this.maxStamina) / 12)))
 				{
 					this.stamina /= 3;
 
 					if(this.class == "player")
-						addLog("It's a concussive blow! Luckily you were stable enough to not be stunned, but you feel drained.");
+						addLog("It's a concussive blow! Luckily you were stable enough to not be stunned, but you feel drained.", "color: orange;");
 					else if(attacker.class == "player")
 						addLog("You land a concussive blow, but the " + this.name + " manages to recover without being stunned!");
 				}
@@ -561,21 +913,31 @@ class unit
 					this.stun++;
 
 					if(this.class == "player")
-						addLog("Your vision swims from the attack, you've been stunned!");
+						addLog("Your vision swims from the attack, you've been stunned!", "color: orange;");
 					else if(attacker.class == "player")
 						addLog("You land a concussive blow, the " + this.name + " is stunned!");
 				}
 			}
 
-			if(attacker.class == "monster" && attacker.stamina < -5)
-				addLog("The " + attacker.name + " appears to have exhausted itself!");
+			if(attacker.class == "monster" && attacker.stamina <= -5)
+				addLog("The " + attacker.name + " appears to have exhausted itself!", "color: MediumTurquoise;");
 
 		}
+
+		if(attacker.weapon.poison > 0 && (blocked < damage && !evaded))
+		{
+			this.poison += attacker.weapon.poison;
+
+			if(this.class == "player" && this.poison == attacker.weapon.poison)
+				addLog("You've been poisioned!", "color: #0A0;");
+		}
+
+
 
 		this.health -= damage;
 
 		if(this.health <= 0)
-			this.die();
+			this.die(attacker);
 
 	}
 
@@ -603,31 +965,31 @@ class unit
 		if(Math.abs(distanceX) >= Math.abs(distanceY))
 		{
 			// y-distance is shorter, move along x-axis towards destination
-			if(directionX.unit !== null || directionX.base.moveTo(this))
+			if((directionX.unit !== null && directionX.hazard === null) || directionX.base.moveTo(this))
 				move = directionX;
 		}
 
 		if(Math.abs(distanceY) >= Math.abs(distanceX) || move === null)
 		{
 			// Move along y-axis
-			if(directionY.unit !== null || directionY.base.moveTo(this))
+			if((directionY.unit !== null && directionY.hazard === null) || directionY.base.moveTo(this))
 				move = directionY;
 		}
 
 		if(Math.abs(distanceY) >= Math.abs(distanceX) && move === null)
 		{
 			// Edge case
-			if(directionX.unit !== null || directionX.base.moveTo(this))
+			if((directionX.unit !== null && directionX.hazard === null) || directionX.base.moveTo(this))
 				move = directionX;
 		}
 
-		if(move !== null)
+		if(move !== null && move.hazard === null)
 		{
 			this.moveTo(move.location);
 		}
 	}
 
-	die()
+	die(killer)
 	{
 		if(this.class != "player")
 			addLog("The " + this.name + " is dead.");
@@ -638,12 +1000,15 @@ class unit
 
 		if(this.itemDrop !== undefined)
 		{
-			if(roll < 0.4)
-				drop = null;
-			else if(roll < 0.9)
+			if(roll > 1.05)
+				drop = new item(treasureDrops[getRandom(0, treasureDrops.length - 1)], this.location);
+			else if(roll > 0.8)
+				drop = new item(otherDrops[getRandom(0, otherDrops.length - 1)], this.location);
+			if(roll > 0.7 && drop === undefined) // Don't drop junk if we've already dropped something useful
 				drop = new item((this.itemDrop === null ? "droppings" : this.itemDrop), this.location);
 			else
-				drop = new item(otherDrops[getRandom(0, otherDrops.length - 1)], this.location);
+				drop = null;
+				
 		}
 
 		let tile = getWorld(this.location);
@@ -661,6 +1026,57 @@ class unit
 			gameStage = 3;
 		}
 
+		score += 10 * this.level;
+		kills++;
+
+		if(killer !== undefined)
+		{
+			killer.addExp(this.level * getRandom(1, 3));
+		}
+
 		delete this;
+	}
+
+	addExp(amount)
+	{
+		if(amount === undefined)
+			return false;
+
+		this.exp += amount;
+
+		if(this.exp < 0)
+			this.exp = 0;
+
+		let levels = 0;
+		while(Math.pow(1.3, this.level + levels) <= this.exp)
+		{
+			this.exp -= Math.pow(1.3, this.level + levels);
+			levels++;
+		}
+
+		if(levels > 0)
+			this.levelup(levels);
+	}
+
+	levelup(amount)
+	{
+		if(amount === undefined)
+			amount = 1;
+
+		this.maxHealth += (2.5 * amount);
+		this.health += this.maxHealth * 0.20;
+
+		this.maxStamina += (5 * amount);
+		this.stamina += this.maxStamina * 0.20;
+
+		this.defence += (0.75 * amount);
+		this.agility += (0.75 * amount);
+		this.strength += (0.50 * amount);
+		this.level += (1 * amount);
+
+		if(this.class == "player")
+		{
+			addLog("You just advanced to level " + (this.level - 10) + ", congratulations!", "color: #FF0;");
+		}
 	}
 }

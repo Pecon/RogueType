@@ -2,8 +2,10 @@ class tileBase
 {
 	constructor(typeName, location)
 	{
+		let success = true;
+
 		this.class = "tileBase";
-		this.location = location;
+		this.location = {x: location.x, y: location.y};
 		this.type = typeName;
 		this.discovered = false;
 		this.locked = false;
@@ -68,14 +70,15 @@ class tileBase
 				if(Math.random() > 0.6)
 				{
 					this.locked = true;
-					this.lockHealth = getRandom(2, 10);
+					this.lockHealth = getRandom(5, 12);
+
 				}
 				break;
 
 			case "bossDoor":
 				description = "A very sturdy looking wooden door. It looks like it would be very difficult to break down if were locked...";
 				name = "Sturdy Door";
-				character = '+';
+				character = '/';
 				permitsVision = false;
 				permitsTravel = true;
 				this.locked = true;
@@ -106,6 +109,7 @@ class tileBase
 				permitsVision = true;
 
 				console.log("error tile " + typeName + " not recognized.");
+				success = false;
 				break;
 		}
 		
@@ -114,6 +118,29 @@ class tileBase
 		this.character = character;
 		this.permitsTravel = permitsTravel;
 		this.permitsVision = permitsVision;
+	}
+
+	getName()
+	{
+		return this.name;
+	}
+
+	getDescription()
+	{
+		return this.description;
+	}
+
+	getCharacter()
+	{
+		if(this.type == "door" || this.type == "strongDoor")
+		{
+			if(this.locked)
+				return "+";
+			else
+				return "/";
+		}
+
+		return this.character;
 	}
 
 	moveTo(unit)
@@ -130,12 +157,12 @@ class tileBase
 				if(unit.name == "Displacer Beast")
 				{
 					success = true;
-					addLog("The " + unit.name + " opens a black portal to the void!");
+					addLog("The " + unit.name + " opens a black portal to the void!", "color: red;");
 
 					if(tile.unit.class == "player")
-						addLog("You are sucked into the portal and destroyed instantly.");
+						addLog("You are sucked into the portal and destroyed instantly.", "color: red;");
 					else
-						addLog("The " + tile.unit.name + " is sucked into the portal and destroyed instantly!");
+						addLog("The " + tile.unit.name + " is sucked into the portal and destroyed instantly!", "color: red;");
 
 
 					tile.unit.health = 0;
@@ -144,6 +171,11 @@ class tileBase
 
 					unit.stamina -= 10;
 				}
+			}
+			else if(tile.unit.canDisplace && !unit.canDisplace)
+			{
+				message = "You walk right past the " + tile.unit.name + ".";
+				success = true;
 			}
 			else
 			{
@@ -161,7 +193,7 @@ class tileBase
 					break;
 
 				case "fakeWall":
-					message = "You approach the wall and realize it's mostly etherial, you're able to walk right through it even though it looked solid.";
+					//message = "You approach the wall and realize it's mostly etherial, you're able to walk right through it even though it looked solid.";
 					success = true;
 					break;
 
@@ -234,7 +266,11 @@ class tileBase
 					break;
 
 				case "exitPortal":
-					if(gameStage < 3)
+					if(unit.class != "player")
+					{
+						success = false;
+					}
+					else if(gameStage == 2)
 					{
 						message = "The portal refuses to let you enter it!";
 						success = false;
@@ -243,6 +279,8 @@ class tileBase
 					{
 						addLog("You enter the portal and finally return home.");
 						victoryMusic.play();
+
+						addLog("In " + turnCount + " turns, you slew " + kills + " creatures and earned " + score + " points!", "color: #22F;");
 
 						message = "Game over. Thanks for playing!";
 						success = true;
@@ -296,18 +334,18 @@ class tileBase
 		switch(this.type)
 		{
 			case "wall":
-				message = "You slam your " + unit.weapon.name + " into the wall. There is no give at all, and you're slightly stunned by the incredible shock of it.";
+				message = "You slam your " + unit.weapon.getName() + " into the wall. There is no give at all, and you're slightly stunned by the incredible shock of it.";
 				success = false;
 				unit.stun += 1;
 				break;
 
 			case "fakeWall":
-				message = "You swing your " + unit.weapon.name + " at the wall. Instead of hitting it, your " + unit.weapon.name + " suddenly phases through the wall, like it wasn't there at all! Is this wall just an illusion?";
+				message = "You swing your " + unit.weapon.getName() + " at the wall. Instead of hitting it, your " + unit.weapon.getName() + " suddenly phases through the wall, like it wasn't there at all! Is this wall just an illusion?";
 				success = false;
 				break;
 
 			case "halfWall":
-				message = "You swing your " + unit.weapon.name + " at the rubble. The force of your swing propels it partially into the rubble, but succeeds at nothing else.";
+				message = "You swing your " + unit.weapon.getName() + " at the rubble. The force of your swing propels it partially into the rubble, but succeeds at nothing else.";
 				success = false;
 				break;
 
@@ -319,14 +357,14 @@ class tileBase
 			case "door":
 				if(this.locked)
 				{
-					message = "You " + unit.weapon.attackDescriptor + " your " + unit.weapon.name + " into the dingy wooden door. The lock is forced back into the unlocked position with a clang!";
+					message = "You " + unit.weapon.attackDescriptor + " your " + unit.weapon.getName() + " into the dingy wooden door. The lock is forced back into the unlocked position with a clang!";
 					success = true;
 					this.locked = false;
 					this.lockHealth = 0;
 				}
 				else
 				{
-					message = "You " + unit.weapon.attackDescriptor + " your " + unit.weapon.name + " into the dingy wooden door. The door isn't locked, so it flails around on it's hinge for a few moments from the attack.";
+					message = "You " + unit.weapon.attackDescriptor + " your " + unit.weapon.getName() + " into the dingy wooden door. The door isn't locked, so it flails around on it's hinge for a few moments from the attack.";
 					success = true;
 				}
 
@@ -335,16 +373,16 @@ class tileBase
 			case "strongDoor":
 				if(this.locked)
 				{
-					this.lockHealth -= unit.weapon.weight;
+					this.lockHealth -= unit.weapon.blunt + unit.weapon.weight;
 
 					if(this.lockHealth > 0)
 					{
-						message = "You " + unit.weapon.attackDescriptor + " your " + unit.weapon.name + " into the strong wooden door. The door shudders and gets noticably weaker but remains locked for now.";
+						message = "You " + unit.weapon.attackDescriptor + " your " + unit.weapon.getName() + " into the strong wooden door. The door shudders and gets noticably weaker but remains locked for now.";
 						success = false;
 					}
 					else
 					{
-						message = "You " + unit.weapon.attackDescriptor + " your " + unit.weapon.name + " into the strong wooden door. With a clang the lock is finally forced back into the unlocked position, and the door swings open a bit from the remainder of the attack.";
+						message = "You " + unit.weapon.attackDescriptor + " your " + unit.weapon.getName() + " into the strong wooden door. With a clang the lock is finally forced back into the unlocked position, and the door swings open a bit from the remainder of the attack.";
 						success = true;
 						this.locked = false;
 						this.lockHealth = 0;
@@ -352,19 +390,19 @@ class tileBase
 				}
 				else
 				{
-					message = "You " + unit.weapon.attackDescriptor + " your " + unit.weapon.name + " into the strong wooden door. It's not locked, so it swings open a bit from the attack and then slowly settles back into position.";
+					message = "You " + unit.weapon.attackDescriptor + " your " + unit.weapon.getName() + " into the strong wooden door. It's not locked, so it swings open a bit from the attack and then slowly settles back into position.";
 					success = true;
 				}
 
 				break;
 
 			case "bossDoor":
-				message = "You " + unit.weapon.attackDescriptor + " your " + unit.weapon.name + " into the strong wooden door. It's not locked, so it swings open a bit from the attack and then slowly settles back into position.";
+				message = "You " + unit.weapon.attackDescriptor + " your " + unit.weapon.getName() + " into the strong wooden door. It's not locked, so it swings open a bit from the attack and then slowly settles back into position.";
 				success = true;
 				break;
 
 			case "sealedDoor":
-				message = "You futily swing your " + unit.weapon.name + " at the magically sealed door, but it might as well be made of solid adamantium for how much it gives.";
+				message = "You futily swing your " + unit.weapon.getName() + " at the magically sealed door, but it might as well be made of solid adamantium for how much it gives.";
 				success = false;
 				break;
 
@@ -388,45 +426,4 @@ class tileBase
 
 		return delete this;
 	}
-
-
-	/*moveTo()
-	{
-		let message, success;
-
-		switch(this.typeName)
-		{
-			case "wall":
-				
-				break;
-
-			case "fakeWall":
-				
-				break;
-
-			case "halfWall":
-				
-				break;
-
-			case "floor":
-
-				break;
-
-			case "door":
-
-				break;
-
-			case "strongDoor":
-
-				break;
-
-			case "sealedDoor":
-
-				break;
-
-			default:
-
-				break;
-		}
-	}*/
 }

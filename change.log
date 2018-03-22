@@ -1,0 +1,60 @@
+v1.4
+- Added the ability for units to displace eachother if they have the canDisplace property. This fixes issues with cats blocking hallways, but also lets things move past bats since it didn't make sense for bats to physically block people's path.
+- Reworded the combat text.
+- Fixed a bug where the disintegrating potion could disintegrate the player's fist.
+- Added a smooth transition between the title screen and the game.
+- Added title screen music (waiting on original music from jazz)
+- Increased the player's starting health from 25 to 30. This should help reduce the incidents of getting instakilled by the higher level monsters when the player felt they had plenty of health.
+- On smaller displays, the game will now sacrifice layout to try and better fit the available screen space.
+- Poison potions are no longer lethal unless the player is already at extremely low health. 
+- Added slight healing effect to agility and defence potions to make them a little more useful.
+
+v1.5
+- Having a boss stage on the map is no longer required. This enables map creators to opt for a map with no boss.
+- Weapon enchantments and curses! Enchantments and curses can now be identified like potions, but you're probably not likely to run into two of the same thing.
+- Many wordings have been updated.
+- The Potion of Identification can now identify weapons, and it's chance to identify multiple items has been increased.
+- Level Up Potion has been added, increases all player stats permanently and does not need to be identified. Only appears in the treasure drop table.
+- Monsters now have a chance to drop items from the treasure drop table. (Needed because weapons are now expendable via enchantments)
+- Moved the Bat weapon out of the treasure drop table since it's a pretty bad weapon. This means that monsters have a fair chance of dropping it.
+- Added brass knuckles to acompany the Bat weapon in the standard drop table.
+- Updated css to include a few nice animations (also adds a proper animation for fadeout when the game starts)
+- Added title music, again by jazz cat!
+
+v1.6 
+- Unlocked doors are now displayed with a '/' character to differentiate them from locked doors which retain the '+' character.
+- Added color coding to a number of messages in the log. I'm not totally decided on a specific key for the color coding, I'll need a bit of input on this.
+- The game now collects some stats while you play that display at the end of the game or when you die.
+- Attempted to optimize the html for a better experience loading the game.
+- Movement no longer hinders stamina recovery quite as much.
+- Added some error checking to map loading which can help map creators pinpoint errors in their maps.
+- Added Endurance and Bloodlust enchantments.
+- Cursed bats and brass knuckles can no longer get the 'dullness' curse, this was a bit too mean since that made them just as weak and fighting bare-handed.
+
+v1.7
+- Combat update. Many weapons and monsters have had their values moved around to balance them around these changes. Includes the introduction of a strength stat on characters which influences base damage as well as stamina loss. Heavy weapons can no longer be held by characters with a strength stat that is too low to attack with them.
+- Added exp and levelling. This paves the way to a system where the player can pick and choose stats to level up, but for the moment just adds a little bit into everything each level.
+- Added poison mechanic, player takes damage equal to poison level every five turns, and the poison level deincrements at the same interval. This makes poison extremely problematic in large amounts, but not a big deal if in small portions.
+- Added Poisonous Spider low-level monster, Kobold medium-level monster, and Massive Cobra high-level monster.
+- Added various new potions relevant to this update. Exp potion, Potion of Forgetting, and Antipoison potion (The antipoison does not need to be identified).
+- Added new flail weapon.
+
+v1.7.1
+- Main menu now displays 'Loading...' again after switching the map until the map has finished loading.
+- Tweaked around a lot of character values, continuing balance from the last update.
+- New favicon.
+- Assorted bug fixes, and new bugs!
+
+v1.8.0
+- Fixed some inconsistencies with how defence and agility potions work.
+- Other bug fixes.
+- Identified items will now show a description relevant to that identified item. 
+- Reduced the size of the font used by the game about 83%, inital loading time is much lower now.
+- New hazard class enables the creation of hazards on map tiles. So far all this does for the game is change how the displacer beast's tail smash attack works- the ceiling tiles don't fall during the same turn. Instead, the falling rocks show up as hazards for the next turn, which gives the player exactly one turn to get out of the way. As a consequence to this, the falling rocks now have much greater consequences if you are hit by them. Hazards are also one of a few pieces of groundwork needed for adding wands and the eventual Dragon boss.
+- Updated AI to avoid hazards.
+- Potion of forgetting now un-identifies itself as well as another random item, which makes it much more evil.
+
+v1.9.0
+- New settings menu that allows configuration of keybinds, and a setting to enable/disable sound. These settings persist between refreshes as long as your browser keeps the game's cookie data.
+- The game log has been inverted so that new text shows up at the top of the log. In theory this is easier to read while you are watching the map screen.
+- Fixed the message log and inventory sometimes scrolling from keyboard input.
