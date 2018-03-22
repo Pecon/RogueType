@@ -55,6 +55,9 @@ v1.8.0
 - Potion of forgetting now un-identifies itself as well as another random item, which makes it much more evil.
 
 v1.9.0
-- New settings menu that allows configuration of keybinds, and a setting to enable/disable sound. These settings persist between refreshes as long as your browser keeps the game's cookie data.
+- New options menu that allows configuration of keybinds, and a setting to enable/disable sound. These settings persist between refreshes as long as your browser keeps the game's cookie data.
 - The game log has been inverted so that new text shows up at the top of the log. In theory this is easier to read while you are watching the map screen.
+- The game log also has a fake scrolling effect now.
 - Fixed the message log and inventory sometimes scrolling from keyboard input.
+- Fixed potion of identification identifying itself and not identifying weapons.
+- A few other bug fixes.

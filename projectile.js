@@ -31,6 +31,20 @@ class projectile
 				throw "Unknown type for projectile " + typeName;
 				return;
 		}
+
+		this.tile = undefined;
+		let currentTile = getWorld(this.getLocation());
+
+		if(currentTile.projectile !== null)
+		{
+			this.explode();
+			currentTile.explode();
+		}
+		else
+		{
+			currentTile.projectile = this;
+			this.tile = currentTile;
+		}
 	}
 
 	getName()
@@ -48,9 +62,19 @@ class projectile
 		return this.character;
 	}
 
+	getLocation()
+	{
+		return {x: Math.round(this.location.x), y: Math.round(this.location.y)};
+	}
+
+	getExactLocation()
+	{
+		return {x: this.location, y: this.location};
+	}
+
 	tick()
 	{
-
+		
 	}
 
 	collide(collided)

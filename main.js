@@ -570,7 +570,7 @@ function loadMap(mapText, mapInfo, customMap)
 	{
 		for(let y = 0; y < worldDimensionY; y++)
 		{
-			let tile = {"base": null, "items": Array(), "unit": null, "hazard": null, "location": {"x": x, "y": y}};
+			let tile = {"base": null, "items": Array(), "unit": null, "hazard": null, "projectile": null, "location": {"x": x, "y": y}};
 			tile.base = new tileBase("wall", {x, y});
 			world[x][y] = tile;
 		}
@@ -1442,7 +1442,7 @@ function getWorld(location)
 		location = {x: -1, y: -1};
 
 	let tile;
-	let normal = {base: new tileBase("wall", location), unit: null, items: Array(), hazard: null};
+	let normal = {base: new tileBase("wall", location), unit: null, items: Array(), hazard: null, projectile: null};
 	try
 	{
 		tile = world[location.x][location.y];
@@ -1481,6 +1481,16 @@ function westOf(location)
 function vectorDist(locationA, locationB)
 {
 	return Math.sqrt(Math.pow(locationB.x - locationA.x, 2) + Math.pow(locationB.y - locationA.y, 2));
+}
+
+function vectorAdd(locationA, locationB)
+{
+	return {x: locationA.x + locationB.x, y: locationA.y + locationB.y};
+}
+
+function vectorSub(locationA, locationB)
+{
+	return {x: locationA.x - locationB.x, y: locationA.y - locationB.y};
 }
 
 Array.matrix = function(numrows, numcols, initial) 
