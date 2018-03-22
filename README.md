@@ -1,3 +1,5 @@
+<img src="https://pecon.us/Rogue/" alt="RogueType Logo" />
+
 # RogueType
 A browser-based roguelike game with handmade maps instead of randomly generated ones. Custom maps can be created and imported easily.
 
@@ -8,7 +10,8 @@ Out of both laziness and an odd desire to make my own map for the game, I opted 
 ## Map Creation
 Want to create a map for RogueType? I'd recommend playing the game through to the boss at least before attempting this, since it gives you a better feel for everything. Other than that, you really just need a text editor and an online text sharing site (ideally one you log in to so that you can update your map later if you want to), something like pastebin or github gist. Once you've got that look at `level.dat` from this repository for reference so you can ensure you're doing things right. Simply use a text editor (or ideally ascii art software) to make your map, and use the table below for reference when placing things in your map. If you use a text editor, you'll probably find it's easiest to first fill the entire contents of the map with walls and then use the insert key to write over individual tiles within it.
 
-```x - A solid wall.
+```
+x - A solid wall.
 . - Open floorspace.
 S - The starting point for the player, only one.
 + - A normal door
