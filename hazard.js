@@ -107,6 +107,7 @@ class hazard
 					if(tile.unit.class == "player")
 						addLog("You're burned by the massive flames!", "color: orange;");
 				}
+				break;
 
 			case "dragonfire":
 				if(tile.unit !== null)
