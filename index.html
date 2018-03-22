@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+<head>
+	<title>RogueType</title>
+	<meta charset="utf8">
+
+	<script async src="./main.js"></script>
+	<script async src="./tilebase.js"></script>
+	<script async src="./unit.js"></script>
+	<script async src="./item.js"></script>
+	<link rel="stylesheet" href="./main.css" />
+</head>
+<body>
+	<div id="welcome" class="controls" ><h1>RogueType</h1><h2>A Roguelike game by Pecon, featuring music by Jazz Cat</h2>
+		<br />
+		<pre style="font-family: 'neoletters';">Movement: W,A,S,D
+
+Combat: Arrow keys
+
+Wait/Rest: Spacebar
+
+Hover the mouse over any tile or item for a description.
+
+It is recommended that you press F11 to fullscreen your browser.
+
+
+
+<span id="start" class="start">Press any key to start.</span>
+		</pre>
+	</div>
+	<div class="pageContainer">
+		<span id="inventory" class="inventoryContainer"></span>
+		<span id="container" class="gameContainer"></span>
+		<span class="stats">
+			<p>Health</p>
+			<pre id="healthIndicator"></pre>
+			<br />
+			<br />
+			<p>Stamina</p>
+			<pre id="staminaIndicator"></pre>
+		</span>
+		<br />
+		<div class="gameLog" id="log"></div>
+	</div>
+</body>
+</html>

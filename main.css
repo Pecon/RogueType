@@ -1,0 +1,211 @@
+@font-face
+{
+	font-family: "neoletters";
+	src: url('./neoletters.ttf');
+	-webkit-font-smoothing: none;
+	-moz-font-smoothing: none;
+	-osx-font-smoothing: none;
+	font-smoothing: none;
+}
+
+html
+{
+	height: 100%;
+	width: 100%;
+}
+
+body
+{
+	color: #DDD;
+	font-family: "neoletters";
+	font-size: 16px;
+	text-align: center;
+
+	user-select: none;
+}
+
+h1
+{
+	font-size: 24px;
+}
+
+h2
+{
+	font-size: 20px;
+}
+
+.controls
+{
+	font-family: "neoletters";
+
+	position: fixed;
+	top: 0px;
+	left: 0px;
+
+	height: calc(100% - 32px);
+	width: calc(100% - 32px);
+
+	border-style: solid;
+	border-color: #DDD;
+	border-width: 16px;
+	margin: 0px;
+	padding: 0px;
+
+	background-color: #000;
+
+	z-index: 50;
+}
+
+.start
+{
+	animation: blinker 2s ease infinite;
+	display: none;
+}
+
+@keyframes blinker
+{
+	50%{opacity: 0;}
+}
+
+.pageContainer
+{
+	background-color: #000;
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	
+	height: 100%;
+	width: 100%;
+	z-index: 0;
+}
+
+.gameContainer
+{
+	display: inline-block;
+
+	/*height: 360px;*/
+
+	padding-top: 0px;
+	line-height: 0px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 10px;
+}
+
+.inventoryContainer
+{
+	position: absolute;
+	top: 7px;
+	left: 7px;
+	margin: 3px;
+
+	width: 250px;
+	height: calc(100% - 20px);
+	overflow-y: scroll;
+	overflow-x: hidden;
+
+	text-align: left;
+}
+
+.inventoryItem
+{
+	background-color: #DDD;
+	color: #222;
+
+	height: 24px;
+	padding: 2px;
+	padding-top: 4px;
+	padding-right: 0px;
+	margin: 1px;
+	margin-right: 0px;
+}
+
+.compactInventoryItem
+{
+	background-color: #DDD;
+	color: #222;
+
+	height: 16px;
+	font-size: 12px;
+	padding: 1px;
+	padding-right: 0px;
+	margin: 1px;
+	margin-right: 0px;
+}
+
+
+button.inventoryItem
+{
+	width: 47px;
+	height: 20px;
+	border-left-width: 2px;
+	border-right-width: 2px;
+	border-top-width: 0px;
+	border-bottom-width: 0px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	padding-right: 0px;
+
+	font-family: inherit;
+	font-size: 13px;
+}
+
+button.compactInventoryItem
+{
+	width: 40px;
+	height: 16px;
+	font-size: 12px;
+	font-family: inherit;
+}
+
+.stats
+{
+	position: absolute;
+	top: 7px;
+	right: 7px;
+	margin: 3px;
+
+	width: 250px;
+
+	text-align: center;
+}
+
+.gameSquare
+{
+	/*height: 15px;*/
+	width: 10px;
+
+	line-height: 17px;
+
+	/*overflow: hidden;*/
+
+	padding: 0px;
+	margin: 0px;
+	border-width: 0px;
+
+	display: inline-block;
+}
+
+.gameLog
+{
+	display: block;
+
+	padding: 0px;
+	border-width: 0px;
+
+	width: 800px;
+	height: calc(100% - 450px);
+	overflow-y: scroll;
+	overflow-x: hidden;
+	overflow-wrap: break-word;
+	
+
+	margin-top: 15px;
+	margin-bottom: 10px;
+	margin-left: auto;
+	margin-right: auto;
+
+	white-space: pre;
+	text-align: left;
+}
