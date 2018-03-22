@@ -19,8 +19,8 @@ M - A common monster spawn
 T - A rare item spawn (mainly weapons for now)
 F - Boss stage trigger door (only place one of these, ideally the boss room should face southwards from the door)
 B - The Boss.
-P - Exit portal that finishes the game after The Boss is killed.```
-
+P - Exit portal that finishes the game after The Boss is killed.
+```
 Note: Any characters in the map which are not recognized as valid types will display as errors in-game.
 
 ## Credits and license
