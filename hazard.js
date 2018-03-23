@@ -44,6 +44,20 @@ class hazard
 				color = "orange";
 				lifetime = 1;
 				break;
+				
+			case "speartrap_off":
+				name = "Spear Trap (Inactive)";
+				description = "Holes in the floor.. suspicious.";
+				character = ",";
+				lifetime = -1;
+				break;
+				
+			case "speartrap_on":
+				name = "Spear Trap (Active)";
+				description = "Spears came through the floor!";
+				character = "!";
+				lifetime = 5;
+				break;
 
 			default:
 				throw "Unknown hazard type " + typeName;
@@ -136,12 +150,42 @@ class hazard
 				}
 
 				break;
+				
+			case: "speartrap_off":
+				if(tile.unit !== null) {
+					tile.unit.health -= 4
+					tile.unit.stun++
+					if(tile.unit.class == "player")
+					{
+						addLog("You're impaled by hidden spears!");
+					} else {
+						addLog("The " + tile.unit.getName() + " is impaled by hidden spears!");
+					}
+					stopTicking(this);
+					getWorld(this.location).hazard = new hazard("speartrap_on",this.location);
+				}
+				break;
+			case: "speartrap_on":
+				if(tile.unit !== null) {
+					tile.unit.health -= 2
+					if(tile.unit.class == "player")
+					{
+						addLog("You walk through the spears.");
+					} else {
+						addLog("The " + tile.unit.getName() + " moves through the spears!");
+					}
+				}
+				break;
 		}
+		if(this.lifeTime != -1) {
+			this.lifetime--;
+		}
+		
 
-		this.lifetime--;
-
-		if(this.lifetime <= 0)
+		if(this.lifetime == 0) {
 			this.remove();
+		}
+			
 	}
 
 	remove()
@@ -158,6 +202,10 @@ class hazard
 
 			case "dragonfire":
 				getWorld(this.location).hazard = new hazard("bigfire", this.location);
+				break;
+				
+			case "speartrap_on":
+				getWorld(this.location).hazard = new hazard("speartrap_off", this.location);
 				break;
 		}
 	}
