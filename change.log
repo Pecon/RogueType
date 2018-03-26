@@ -61,3 +61,7 @@ v1.9.0
 - Fixed the message log and inventory sometimes scrolling from keyboard input.
 - Fixed potion of identification identifying itself and not identifying weapons.
 - A few other bug fixes.
+
+v1.10.0
+- Added spear trap hazard (currently unimplemented)
+- Added projectile class (unimplemented)

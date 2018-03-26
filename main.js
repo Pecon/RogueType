@@ -1540,6 +1540,7 @@ var inventory = Array();
 var knownItems = Array();
 var groundItems = Array();
 var tickGroup = Array();
+var projectiles = Array();
 var units = Array();
 var yourTurn, inventoryUpdate, quickActionUsed = false;
 var treasureDrops = Array("longsword", "longsword", "rapier", "rapier", "mace", "mace", "sledgehammer", "greatsword", "flail", "levelup_potion");

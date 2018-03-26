@@ -18,7 +18,7 @@ class projectile
 		}
 
 		this.location = {x: location.x, y: location.y};
-		this.vector = {x: vector.x, y: vector.y};
+		this.rotation = {x: vector.x, y: vector.y};
 
 		switch(typeName)
 		{
@@ -45,6 +45,8 @@ class projectile
 			currentTile.projectile = this;
 			this.tile = currentTile;
 		}
+
+		projectiles.push(this);
 	}
 
 	getName()
@@ -74,16 +76,103 @@ class projectile
 
 	tick()
 	{
+		this.location = vectorAdd(this.getExactLocation(), this.rotation);
+		this.tile.projectile = null;
+		let newTile = getWorld(this.getLocation());
+
+		if(newTile != this.tile)
+		{
+			if(newTile.projectile !== null)
+			{
+				this.explode();
+				newTile.projectile.explode();
+			}
+
+			this.tile = newTile;
+			this.tile.projectile = this;
+
+			if(this.tile.unit !== null)
+			{
+				this.collideUnit(this.tile.unit);
+				return;
+			}
+
+			if(!this.tile.base.permitsVision)
+			{
+				this.collideWall(this.tile.base);
+			}
+		}
 		
 	}
 
-	collide(collided)
+	collideUnit(unit)
 	{
+		switch(this.type)
+		{
+			case "fireball":
+				if(unit.class == "player")
+					addLog("You're immolated by the fireball!");
+				else
+					addLog("The " + unit.getName() + " is immolated by the fireball!");
 
+				break;
+
+		}
+
+
+		this.explode();
+	}
+
+	collideWall(tileBase)
+	{
+		switch(this.type)
+		{
+			case "fireball":
+				addLog("The fireball slams into the " + tileBase.getName() + " and explodes!");
+				break;
+		}
+
+		this.explode();
+	}
+
+	explode()
+	{
+		switch(this.type)
+		{
+			case "fireball":
+				let location = this.getLocation();
+
+				for(let x = location.x - 2; x <= location.x + 2; x++)
+				{
+					for(let y = location.y - 2; y <= location.y + 2; y++)
+					{
+						let tile = getWorld({x: x, y: y});
+
+						if(!tile.base.permitsTravel)
+							continue;
+
+						if(tile.hazard !== null)
+							tile.hazard.remove();
+
+						tile.hazard = new hazard("bigfire");
+					}
+				}
+				break;
+		}
+
+		this.remove();
 	}
 
 	remove()
 	{
+		for(let i = 0; i < projectiles.length; i++)
+			if(projectiles[i] == this)
+			{
+				projectiles.splice(i, 1);
+				break;
+			}
 
+		if(this.tile.projectile == this)
+			this.tile.projectile = null;
 	}
 }

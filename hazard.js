@@ -31,7 +31,7 @@ class hazard
 
 			case "dragonfire":
 				name = "Dragon Fire";
-				description = "A tremendous fire burns here.";
+				description = "A tremendous fire rages here.";
 				character = "#";
 				color = "red";
 				lifetime = 10;
@@ -47,7 +47,7 @@ class hazard
 				
 			case "speartrap_off":
 				name = "Spear Trap (Inactive)";
-				description = "Holes in the floor.. suspicious.";
+				description = "Holes in the floor... suspicious.";
 				character = ",";
 				lifetime = -1;
 				break;
@@ -106,7 +106,7 @@ class hazard
 			case "fire":
 				if(tile.unit !== null)
 				{
-					tile.unit.health -= 2;
+					tile.unit.health -= 3;
 
 					if(tile.unit.class == "player")
 						addLog("You're burned by the flames!", "color: orange;");
@@ -116,7 +116,7 @@ class hazard
 			case "bigfire":
 				if(tile.unit !== null)
 				{
-					tile.unit.health -= 4;
+					tile.unit.health -= 6;
 
 					if(tile.unit.class == "player")
 						addLog("You're burned by the massive flames!", "color: orange;");
@@ -126,7 +126,7 @@ class hazard
 			case "dragonfire":
 				if(tile.unit !== null)
 				{
-					tile.unit.health -= 8;
+					tile.unit.health -= 10;
 
 					if(tile.unit.class == "player")
 						addLog("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", "color: orange;");
@@ -139,7 +139,7 @@ class hazard
 
 				if(tile.unit !== null)
 				{
-					tile.unit.health -= 40;
+					tile.unit.health -= 20;
 					tile.unit.stamina -= 20;
 					tile.unit.stun++;
 
@@ -152,37 +152,40 @@ class hazard
 				break;
 				
 			case: "speartrap_off":
-				if(tile.unit !== null) {
-					tile.unit.health -= 4
-					tile.unit.stun++
+				if(tile.unit !== null)
+				{
+					tile.unit.health -= 4;
+					tile.unit.stun++;
 					if(tile.unit.class == "player")
-					{
 						addLog("You're impaled by hidden spears!");
-					} else {
+					else
 						addLog("The " + tile.unit.getName() + " is impaled by hidden spears!");
-					}
-					stopTicking(this);
-					getWorld(this.location).hazard = new hazard("speartrap_on",this.location);
+
+					this.remove();
+					getWorld(this.location).hazard = new hazard("speartrap_on", this.location);
 				}
 				break;
+
 			case: "speartrap_on":
-				if(tile.unit !== null) {
-					tile.unit.health -= 2
+				if(tile.unit !== null)
+				{
+					tile.unit.health -= 2;
 					if(tile.unit.class == "player")
-					{
 						addLog("You walk through the spears.");
-					} else {
+					else
 						addLog("The " + tile.unit.getName() + " moves through the spears!");
-					}
 				}
 				break;
 		}
-		if(this.lifeTime != -1) {
+
+		if(this.lifeTime != -1)
+		{
 			this.lifetime--;
 		}
 		
 
-		if(this.lifetime == 0) {
+		if(this.lifetime == 0)
+		{
 			this.remove();
 		}
 			

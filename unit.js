@@ -1012,7 +1012,9 @@ class unit
 		}
 
 		let tile = getWorld(this.location);
-		tile.unit = null;
+
+		if(tile.unit == this)
+			tile.unit = null;
 
 		for(let i = 0; i < units.length; i++)
 		{
