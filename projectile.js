@@ -11,7 +11,7 @@ class projectile
 			return;
 		}
 
-		if(vector === undefined || location === null)
+		if(vector === undefined || vector === null)
 		{
 			throw "No vector provided for projectile.";
 			return;
