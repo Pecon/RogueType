@@ -23,24 +23,47 @@ class projectile
 		switch(typeName)
 		{
 			case "fireball":
+				this.name = "Fire Ball";
 				this.character = "*";
-				this.directDamage = 9;
+				this.directDamage = 2;
+				break;
+
+			case "frostbolt":
+				this.name = "Frost Bolt";
+				this.character = "-";
+				this.directDamage = 8;
 				break;
 
 			case "firestorm":
+				this.name = "Fire Storm";
 				this.character = "*";
-				this.directDamage = 30;
+				this.directDamage = 20;
 				break;
 
 			case "giestflame":
+				this.name = "Giestflame";
 				this.character = "*";
-				this.directDamage = 5;
+				this.directDamage = 3.5;
+				break;
+
+			case "snowball":
+				this.name = "Snowball";
+				this.character = "+";
+				this.directDamage = 2.5;
 				break;
 
 			case "magic_missle":
+				this.name = "Magic Missle";
 				this.character = "-";
-				this.directDamage = 15;
+				this.directDamage = 9;
 				this.bouncesLeft = 3;
+				break;
+
+			case "concussive_missle":
+				this.name = "Concussion Missle";
+				this.character = "-";
+				this.directDamage = 5;
+				break;
 
 			default:
 				throw "Unknown type for projectile " + typeName;
@@ -125,13 +148,15 @@ class projectile
 				if(this.tile.hazard !== null)
 					this.tile.hazard.remove();
 
-				this.tile.hazard = new hazard("bigfire");
+				this.tile.hazard = new hazard("bigfire", this.getLocation());
 				break;
 		}
 	}
 
 	collideUnit(unit)
 	{
+		let doExplosion = true;
+
 		switch(this.type)
 		{
 			case "fireball":
@@ -142,14 +167,30 @@ class projectile
 
 				break;
 
+			case "frostbolt":
+				if(unit.class == "player")
+					addLog("You're chilled by the frost bolt!");
+				else
+					addLog("The " + unit.getName() + " is chilled by the frost bolt!");
+
+					unit.stamina -= 15;
+				break;
+
 			case "firestorm":
 				if(unit.class == "player")
 					addLog("You're caught directly in the firestorm!");
 				else if(unit.health < this.directDamage)
-					addLog("The " + unit.getName() + " is vaporized by the firestorm!");
+				{
+					addLog("The " + unit.getName() + " is vaporized by the firestorm, but it keeps going!");
+					doExplosion = false;
+				}
 				else
 					addLog("The " + unit.getName() + " is caught directly in the firestorm!");
 
+				if(this.tile.hazard !== null)
+					this.tile.hazard.remove();
+
+				this.tile.hazard = new hazard("bigfire", this.getLocation());
 				break;
 
 			case "giestflame":
@@ -160,20 +201,37 @@ class projectile
 
 				break;
 
+			case "snowball":
+				if(unit.class == "player")
+					addLog("You're pelted by the snowball!");
+				else
+					addLog("The " + unit.getName() + " is chilled by the snowball!");
+
+				unit.stamina -= 5;
+				break;
+
 			case "magic_missle":
 				if(unit.class == "player")
 					addLog("The magic missle shoves you down as it explodes on you!");
 				else
-					addLog("The magic missle explodes on " + unit.getName() + "!");
+					addLog("The magic missle explodes on the " + unit.getName() + "!");
 
 				break;
 
+			case "concussive_missle":
+				unit.stun += getRandom(1, 3);
 
-
+				if(unit.class == "player")
+					addLog("The concussive missle knocks the wind out of you!");
+				else
+					addLog("The concussive missle stuns the " + unit.getName() + "!");
+				break;
 		}
 
 		unit.health -= this.directDamage;
-		this.explode();
+
+		if(doExplosion)
+			this.explode();
 	}
 
 	collideWall(tileBase)
@@ -184,12 +242,20 @@ class projectile
 				addLog("The fireball slams into the " + tileBase.getName().toLowerCase() + " and explodes!");
 				break;
 
+			case "frostbolt":
+				addLog("The frostbolt leaves an icy mark on the " + tileBase.getName().toLowerCase() + " as it hits.");
+				break;
+
 			case "firestorm":
 				addLog("The firestorm ends as it crashes into the " + tileBase.getName().toLowerCase() + ".");
 				break;
 
 			case "giestflame":
 				addLog("The giestflame fizzles out as it hits the " + tileBase.getName().toLowerCase() + ".");
+				break;
+
+			case "snowball":
+				addLog("The snowball makes a small splat as it collides with the " + tileBase.getName().toLowerCase() + ".");
 				break;
 
 			case "magic_missle":
@@ -202,6 +268,11 @@ class projectile
 				}
 				else
 					addLog("The magic missle explodes as it hits the " + tileBase.getName().toLowerCase() + "!");
+				break;
+
+			case "concussive_missle":
+				addLog("The concussive missle makes a loud bang as it hits the " + tileBase.getName().toLowerCase() + "!");
+				break;
 		}
 
 		this.explode();
@@ -209,16 +280,43 @@ class projectile
 
 	explode()
 	{
+		let location;
+
 		switch(this.type)
 		{
 			case "fireball":
-				let location = this.getLocation();
-				console.log("fireball explosion");
+				location = this.getLocation();
 
 				for(let x = location.x - 2; x <= location.x + 2; x++)
 				{
 					for(let y = location.y - 2; y <= location.y + 2; y++)
 					{
+						let tile = getWorld({x: x, y: y});
+
+						if(!tile.base.permitsTravel)
+							continue;
+
+						if(tile.hazard !== null)
+							tile.hazard.remove();
+
+						if(tile.unit !== null)
+							tile.unit.health -= 4;
+
+						tile.hazard = new hazard("bigfire", tile.location);
+					}
+				}
+				break;
+
+			case "magic_missle":
+				location = this.getLocation();
+
+				for(let x = location.x - 1; x <= location.x + 1; x++)
+				{
+					for(let y = location.y - 1; y <= location.y + 1; y++)
+					{
+						if(Math.random() > 0.3)
+							continue;
+
 						let tile = getWorld({x: x, y: y});
 
 						if(!tile.base.permitsTravel)
