@@ -27,6 +27,21 @@ class projectile
 				this.directDamage = 9;
 				break;
 
+			case "firestorm":
+				this.character = "*";
+				this.directDamage = 30;
+				break;
+
+			case "giestflame":
+				this.character = "*";
+				this.directDamage = 5;
+				break;
+
+			case "magic_missle":
+				this.character = "-";
+				this.directDamage = 15;
+				this.bouncesLeft = 3;
+
 			default:
 				throw "Unknown type for projectile " + typeName;
 				return;
@@ -71,7 +86,7 @@ class projectile
 
 	getExactLocation()
 	{
-		return {x: this.location, y: this.location};
+		return {x: this.location.x, y: this.location.y};
 	}
 
 	tick()
@@ -100,9 +115,19 @@ class projectile
 			if(!this.tile.base.permitsVision)
 			{
 				this.collideWall(this.tile.base);
+				return;
 			}
 		}
-		
+
+		switch(this.type)
+		{
+			case "firestorm":
+				if(this.tile.hazard !== null)
+					this.tile.hazard.remove();
+
+				this.tile.hazard = new hazard("bigfire");
+				break;
+		}
 	}
 
 	collideUnit(unit)
@@ -117,9 +142,37 @@ class projectile
 
 				break;
 
+			case "firestorm":
+				if(unit.class == "player")
+					addLog("You're caught directly in the firestorm!");
+				else if(unit.health < this.directDamage)
+					addLog("The " + unit.getName() + " is vaporized by the firestorm!");
+				else
+					addLog("The " + unit.getName() + " is caught directly in the firestorm!");
+
+				break;
+
+			case "giestflame":
+				if(unit.class == "player")
+					addLog("You're burned by the giestflame!");
+				else
+					addLog("The " + unit.getName() + " is burned by the giestflame!");
+
+				break;
+
+			case "magic_missle":
+				if(unit.class == "player")
+					addLog("The magic missle shoves you down as it explodes on you!");
+				else
+					addLog("The magic missle explodes on " + unit.getName() + "!");
+
+				break;
+
+
+
 		}
 
-
+		unit.health -= this.directDamage;
 		this.explode();
 	}
 
@@ -128,8 +181,27 @@ class projectile
 		switch(this.type)
 		{
 			case "fireball":
-				addLog("The fireball slams into the " + tileBase.getName() + " and explodes!");
+				addLog("The fireball slams into the " + tileBase.getName().toLowerCase() + " and explodes!");
 				break;
+
+			case "firestorm":
+				addLog("The firestorm ends as it crashes into the " + tileBase.getName().toLowerCase() + ".");
+				break;
+
+			case "giestflame":
+				addLog("The giestflame fizzles out as it hits the " + tileBase.getName().toLowerCase() + ".");
+				break;
+
+			case "magic_missle":
+				if(this.bouncesLeft > 0)
+				{
+					this.bouncesLeft--;
+					this.rotation = vectorScale(this.rotation, -1);
+					addLog("The magic missle bounces off the " + tileBase.getName().toLowerCase() + " like a rubber ball!");
+					return;
+				}
+				else
+					addLog("The magic missle explodes as it hits the " + tileBase.getName().toLowerCase() + "!");
 		}
 
 		this.explode();
@@ -141,6 +213,7 @@ class projectile
 		{
 			case "fireball":
 				let location = this.getLocation();
+				console.log("fireball explosion");
 
 				for(let x = location.x - 2; x <= location.x + 2; x++)
 				{
@@ -154,7 +227,10 @@ class projectile
 						if(tile.hazard !== null)
 							tile.hazard.remove();
 
-						tile.hazard = new hazard("bigfire");
+						if(tile.unit !== null)
+							tile.unit.health -= 4;
+
+						tile.hazard = new hazard("bigfire", tile.location);
 					}
 				}
 				break;
@@ -174,5 +250,6 @@ class projectile
 
 		if(this.tile.projectile == this)
 			this.tile.projectile = null;
+
 	}
 }

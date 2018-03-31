@@ -151,7 +151,7 @@ class hazard
 
 				break;
 				
-			case: "speartrap_off":
+			case "speartrap_off":
 				if(tile.unit !== null)
 				{
 					tile.unit.health -= 4;
@@ -166,7 +166,7 @@ class hazard
 				}
 				break;
 
-			case: "speartrap_on":
+			case "speartrap_on":
 				if(tile.unit !== null)
 				{
 					tile.unit.health -= 2;

@@ -157,6 +157,11 @@ function updateDisplay()
 					if(tile.unit !== null)
 						title = title + "\n + " + tile.unit.getName();
 				}
+
+				else if(tile.projectile !== null)
+				{
+					character = tile.projectile.getCharacter();
+				}
 				
 				if(tile.items.length > 0)
 				{
@@ -332,9 +337,9 @@ function loadCookie()
 		if(document.cookie.substr(0, 5) == "data=")
 		{
 			let loadData = atob(document.cookie.substr(5));
-			console.log(loadData);
+			//console.log(loadData);
 			loadData = JSON.parse(loadData);
-			console.log(loadData);
+			//console.log(loadData);
 
 			if(loadData.cookieFormat === undefined)
 			{
@@ -342,8 +347,8 @@ function loadCookie()
 			}
 			else
 			{
-				console.log("Loaded game data");
-				console.log(loadData);
+				//console.log("Loaded game data");
+				//console.log(loadData);
 				gameData = loadData;
 			}
 		}
@@ -993,7 +998,7 @@ function loadMap(mapText, mapInfo, customMap)
 			{
 				yourTurn = false;
 				quickActionUsed = true;
-				enemyTurn();
+				bulletTime();
 			}
 		}
 		else if(player.stun > 0)
@@ -1124,6 +1129,29 @@ function enemyTurn()
 	}
 
 	//console.log("Turn calculation time: " + ((new Date().getTime() - turnTime) / 1000) + "ms");
+}
+
+function bulletTime(iteration)
+{
+	iteration++;
+
+	if(iteration > 50)
+		return;
+
+	if(projectiles.length == 0)
+	{
+		enemyTurn();
+		return;
+	}
+
+	let bulletTimeGroup = projectiles.slice();
+	for(let i = 0; i < bulletTimeGroup.length; i++)
+	{
+		bulletTimeGroup[i].tick();
+	}
+
+	updateDisplay();
+	window.setTimeout(bulletTime, 100, iteration);
 }
 
 function startTicking(thing)
@@ -1398,6 +1426,12 @@ function drink(slot)
 			updateDisplay();
 		}
 	}
+}
+
+function zap(slot)
+{
+	if(!yourTurn)
+		return;
 }
 
 function drop(slot)
