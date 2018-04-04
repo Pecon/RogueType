@@ -20,6 +20,7 @@ class item
 		this.description = "An item with no usable properties.";
 		this.dropped = false;
 		this.canDrop = true;
+		this.rareLoot = false;
 
 		switch(type)
 		{
@@ -300,11 +301,22 @@ class item
 				this.attackDescriptor = "swing";
 				break;
 
+			case "dagger":
+				this.class = "weapon";
+				this.name = "dagger";
+				this.character = 'd';
+				this.description = "A small dagger. It seems like a poor choice of weapon, but better than nothing. It hardly weighs anything.";
+				this.weight = 1;
+				this.blunt = 0;
+				this.blade = 2;
+				this.attackDescriptor = "thrust";
+				break;
+
 			case "rapier":
 				this.class = "weapon";
 				this.name = "rapier";
 				this.character = 'r';
-				this.description = "A light, slender and pointy blade. It looks like a moderately effective weapon. It hardly weighs anything.";
+				this.description = "A light, slender and pointy blade. It looks like a moderately effective weapon. It's not very heavy.";
 				this.weight = 2;
 				this.blunt = 0;
 				this.blade = 3;
@@ -355,15 +367,120 @@ class item
 				this.attackDescriptor = "heave";
 				break;
 
+			case "zweihander":
+				this.class = "weapon";
+				this.name = "zweihander";
+				this.character = "z";
+				this.description = "A fearsome, wildly oversized blade which is somehow much lighter than it looks. This must be a rare weapon! It's very heavy.";
+				this.weight = 5;
+				this.blunt = 2;
+				this.blade = 8;
+				this.attackDescriptor = "heave";
+				break;
+
+			case "odachi":
+				this.class = "weapon";
+				this.name = "ōdachi";
+				this.character = "o";
+				this.description = "Basically an oversized katana. This must be a rare weapon! It's somewhat heavy.";
+				this.weight = 3;
+				this.blunt = 0;
+				this.blade = 6;
+				this.attackDescriptor = "heave";
+				break;
+
+			case "nunchucks":
+				this.class = "weapon";
+				this.name = "nunchucks";
+				this.character = "o";
+				this.description = "Two sets of short sticks attached to each-other by a short chain. This must be a rare weapon! It hardly weighs anything.";
+				this.weight = 1;
+				this.blunt = 5;
+				this.blade = 0;
+				this.attackDescriptor = "swing";
+				break;
+
+			case "scimitar":
+				this.class = "weapon";
+				this.name = "scimitar";
+				this.character = "s";
+				this.description = "A vicious curved sword notable in desert regions. This must be a rare weapon! It's somewhat heavy.";
+				this.weight = 2.5;
+				this.blunt = 1;
+				this.blade = 5;
+				this.attackDescriptor = "swipe";
+				break;
+
+			case "muramasa":
+				this.class = "weapon";
+				this.name = "Muramasa Katana";
+				this.character = "m";
+				this.description = "A fearsome katana created by the famous swordsmith Sengo Muramasa. This must be an ultra rare weapon! It's somewhat heavy.";
+				this.weight = 3;
+				this.blunt = 0;
+				this.blade = 9;
+				this.attackDescriptor = "slash";
+				this.rareLoot = true;
+				break;
+
+			case "kusanagi":
+				this.class = "weapon";
+				this.name = "Kusanagi-no-Tsurugi";
+				this.character = "k";
+				this.description = "A legendary sword found within the tail of the fearsome Yamata-no-Orochi. This must be an ultra rare weapon! It's practically weightless.";
+				this.weight = 0;
+				this.blunt = 0;
+				this.blade = 7;
+				this.attackDescriptor = "thrust";
+				this.rareLoot = true;
+				break;
+
+			case "joyeuse":
+				this.class = "weapon";
+				this.name = "Joyeuse";
+				this.character = "j";
+				this.description = "The elegant personal sword of Charlemagne. This must be an ultra rare weapon! It's very heavy.";
+				this.weight = 4;
+				this.blunt = 0;
+				this.blade = 10;
+				this.attackDescriptor = "slash";
+				this.rareLoot = true;
+				break;
+
+			case "nyantana":
+				this.class = "weapon";
+				this.name = "Nyantana";
+				this.character = "n";
+				this.description = "It's a katana, but the pommel looks like a cat head and you swear you can hear a cat meowing somewhere when you swing it... This must be an ultra rare weapon! It's extremely lightweight.";
+				this.weight = 1;
+				this.blunt = 0;
+				this.blade = 8;
+				this.attackDescriptor = "nyaa";
+				this.baseWeapon = true;
+				this.rareLoot = true;
+				break;
+
 			case "wand_fireball":
 				this.class = "wand";
 				this.name = "Unidentified Wand";
 				this.realName = "Wand of Fireball";
 				this.character = 'w';
 				this.description = "A crooked wooden rod, gleaming with magical power.";
-				this.realDescription = "A wand enchanted with a reliably powerful fireball spell.";
+				this.realDescription = "A wand enchanted with a powerful fireball spell.";
 				this.projectile = "fireball";
-				this.magicalCost = 3;
+				this.magicalCost = 6;
+				break;
+
+			case "wand_frostbolt":
+				this.class = "wand";
+				this.name = "Unidentified Wand";
+				this.realName = "Wand of Frostbolt";
+				this.character = 'w';
+				this.description = "A crooked wooden rod, gleaming with magical power.";
+				this.realDescription = "A wand enchanted with a moderate frost spell.";
+				this.projectile = "frostbolt";
+				this.magicalCost = 4;
+				break;
 
 			case "wand_firestorm":
 				this.class = "wand";
@@ -374,6 +491,8 @@ class item
 				this.realDescription = "A pyromaniac's dream come true, this wand is enchanted with a terrifying and powerful fire spell.";
 				this.projectile = "firestorm";
 				this.magicalCost = 8;
+				this.rareLoot = true;
+				break;
 
 			case "wand_giestflame":
 				this.class = "wand";
@@ -384,6 +503,18 @@ class item
 				this.realDescription = "A wand enchanted with a minor fire spell.";
 				this.projectile = "giestflame";
 				this.magicalCost = 1;
+				break;
+
+			case "wand_snowball":
+				this.class = "wand";
+				this.name = "Unidentified Wand";
+				this.realName = "Wand of Snowball";
+				this.character = 'w';
+				this.description = "A crooked wooden rod, gleaming with magical power.";
+				this.realDescription = "A wand enchanted with a minor ice spell.";
+				this.projectile = "snowball";
+				this.magicalCost = 1;
+				break;
 
 			case "wand_missle":
 				this.class = "wand";
@@ -393,7 +524,19 @@ class item
 				this.description = "A crooked wooden rod, gleaming with magical power.";
 				this.realDescription = "A wand enchanted with a magic missle spell.";
 				this.projectile = "magic_missle";
+				this.magicalCost = 3;
+				break;
+
+			case "wand_concussion":
+				this.class = "wand";
+				this.name = "Unidentified Wand";
+				this.realName = "Wand of Concussion";
+				this.character = 'w';
+				this.description = "A crooked wooden rod, gleaming with magical power.";
+				this.realDescription = "A wand enchanted with a concussive missle spell that will stun enemies.";
+				this.projectile = "concussive_missle";
 				this.magicalCost = 6;
+				break;
 
 			case "health_potion":
 				this.class = "consumable";
@@ -406,6 +549,17 @@ class item
 				this.staminaEffect = 0;
 				break;
 
+			case "super_health_potion":
+				this.class = "consumable";
+				this.name = "Unidentified Potion";
+				this.realName = "Super Health Potion";
+				this.character = 'p';
+				this.description = "A small flask filled with an unknown potion.";
+				this.realDescription = "An extremely potent healing potion.";
+				this.healthEffect = 35;
+				this.staminaEffect = 0;
+				break;
+
 			case "stamina_potion":
 				this.class = "consumable";
 				this.name = "Unidentified Potion";
@@ -415,6 +569,17 @@ class item
 				this.realDescription = "A potent energizing potion.";
 				this.healthEffect = 0;
 				this.staminaEffect = 50;
+				break;
+
+			case "super_stamina_potion":
+				this.class = "consumable";
+				this.name = "Unidentified Potion";
+				this.realName = "Super Stamina Potion";
+				this.character = 'p';
+				this.description = "A small flask filled with an unknown potion.";
+				this.realDescription = "An extremely potent energizing potion.";
+				this.healthEffect = 0;
+				this.staminaEffect = 80;
 				break;
 
 			case "energy_potion":
@@ -578,6 +743,7 @@ class item
 				this.healthEffect = 30;
 				this.staminaEffect = 50;
 				this.specialEffect = "levelup";
+				this.rareLoot = true;
 				break;
 
 			case "antipoison_potion":
@@ -588,6 +754,16 @@ class item
 				this.healthEffect = 0;
 				this.staminaEffect = 0;
 				this.specialEffect = "antipoison";
+				break;
+
+			case "super_antipoison_potion":
+				this.class = "consumable";
+				this.name = "Super Antipoison";
+				this.character = 'a';
+				this.description = 'A small, labelled vial of powerful poison-neutralizing potion.';
+				this.healthEffect = 0;
+				this.staminaEffect = 0;
+				this.specialEffect = "antipoison+";
 				break;
 
 			default:
@@ -675,6 +851,10 @@ class item
 			}
 
 		}
+		else if(this.class == "wand")
+		{
+			this.magicalCharge = getRandom(10, 40);
+		}
 
 
 		if(this.realName == null)
@@ -739,6 +919,7 @@ class item
 		if(this.isIdentifed())
 			return;
 
+		inventoryUpdate = true;
 		knownItems.push(this.realName);
 		score += 5;
 	}
@@ -771,22 +952,69 @@ class item
 
 	remove()
 	{
-		let currentTile = getWorld(this.location);
+		if(this.location === null)
+		{
+			for(let i = 0; i < inventory.length; i++)
+				if(inventory[i] == this)
+				{
+					inventory.splice(i, 1);
+					inventoryUpdate = true;
+					break;
+				}
+		}
+		else
+		{
+			let currentTile = getWorld(this.location);
 
-		for(let i = 0; i < currentTile.items.length; i++)
-			if(currentTile.items[i] == this)
-			{
-				currentTile.items.splice(i, 1);
-				break;
-			}
+			for(let i = 0; i < currentTile.items.length; i++)
+				if(currentTile.items[i] == this)
+				{
+					currentTile.items.splice(i, 1);
+					break;
+				}
 
-		for(let j = 0; j < groundItems.length; j++)
-			if(groundItems[j] == this)
-			{
-				groundItems.splice(j, 1);
-				break;
-			}
+			for(let i = 0; i < groundItems.length; i++)
+				if(groundItems[i] == this)
+				{
+					groundItems.splice(i, 1);
+					break;
+				}
+		}
 
 		return delete this;
+	}
+
+	zapWand(unit, direction)
+	{
+		if(this.class != "wand")
+			return;
+
+		if(unit === undefined)
+			return;
+
+		if(direction.x === undefined || direction.y === undefined)
+		{
+			throw "No appropriate direction supplied for wand cast.";
+			return;
+		}
+
+		new projectile(this.projectile, unit.location, direction, unit);
+
+		this.magicalCharge -= this.magicalCost;
+
+		if(this.magicalCharge <= 0)
+		{
+			if(unit.class == "player")
+				addLog("The " + this.getName() + " runs out of magical energy and crumbles into faintly glowing ashes.");
+
+			this.remove();
+		}
+		else if(!this.isIdentifed())
+		{
+			this.identify();
+
+			if(unit.class == "player")
+				addLog("This is " + aOrAn(this.getName()) + " " + this.getName() + "!", "color: #22F;");
+		}
 	}
 }

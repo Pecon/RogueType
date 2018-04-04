@@ -175,9 +175,21 @@ function updateDisplay()
 						title = title + "\n + " + tile.items[0].getName() + " - " + tile.items[0].getDescription();
 					}
 
+					if(tile.items[0].rareLoot)
+					{
+						style += " color: black;";
+						displayTile.classList.add("treasureGlow");
+					}
+
 					for(let i = 1; i < tile.items.length; i++)
 					{
 						title = title + "\n + " + tile.items[i].getName() + " - " + tile.items[i].getDescription();
+
+						if(tile.items[i].rareLoot)
+						{
+							style += " color: black;";
+							displayTile.classList.add("treasureGlow");
+						}
 					}
 
 					if(tile.unit === null)
@@ -236,6 +248,8 @@ function updateDisplay()
 				html = html + ' <button onclick="equip(' + i + ')" class="' + className +'" ' + allButtonsProperties + '>Hold</button>';
 			else if(inventory[i].class == "consumable")
 				html = html + ' <button onclick="drink(' + i + ')" class="' + className +'" ' + allButtonsProperties + '>Use</button>';
+			else if(inventory[i].class == "wand")
+				html = html + ' <button onclick="zap(' + i + ')" class="' + className +'" ' + allButtonsProperties + '>Zap</button>';
 
 			if(gameStage == 2 && inventory[i] != player.weapon && inventory[i].canDrop)
 				html = html + ' <button onclick="drop(' + i + ')" class="' + className +'" ' + allButtonsProperties + '>Drop</button>';
@@ -334,12 +348,29 @@ function loadCookie()
 {
 	if(document.cookie !== undefined)
 	{
-		if(document.cookie.substr(0, 5) == "data=")
+		let cookieData = document.cookie;
+
+		let found = cookieData.match(/data=(.+);/);
+		console.log(found);
+
+		if(found === null)
+			found = cookieData.match(/data=(.+)$/);
+
+		if(found !== null)
 		{
-			let loadData = atob(document.cookie.substr(5));
-			//console.log(loadData);
-			loadData = JSON.parse(loadData);
-			//console.log(loadData);
+			console.log(found);
+
+			try
+			{
+				loadData = atob(found[1]);
+				loadData = JSON.parse(loadData);
+			}
+			catch(e)
+			{
+				window.alert("Game data is malformed. Resetting to defaults. You will need to reconfigure your options and reload your custom maps if you had any.");
+				saveCookie();
+				return;
+			}
 
 			if(loadData.cookieFormat === undefined)
 			{
@@ -347,10 +378,13 @@ function loadCookie()
 			}
 			else
 			{
-				//console.log("Loaded game data");
-				//console.log(loadData);
 				gameData = loadData;
 			}
+		}
+		else
+		{
+			console.log("No cookie.");
+			saveCookie();
 		}
 	}
 }
@@ -670,11 +704,11 @@ function loadMap(mapText, mapInfo, customMap)
 				world[x][y].unit = new unit("cat", {x, y});
 			case "T":
 				world[x][y].base = new tileBase("floor", {x, y});
-				world[x][y].items[0] = new item(treasureDrops[getRandom(0, treasureDrops.length - 1)], {x, y});
+				world[x][y].items[0] = new item(getUncommonDrop(7), {x, y});
 				break;
 			case "?":
 				world[x][y].base = new tileBase("floor", {x, y});
-				world[x][y].items[0] = new item(otherDrops[getRandom(0, otherDrops.length - 1)], {x, y});
+				world[x][y].items[0] = new item(getCommonDrop(3), {x, y});
 				break;
 			case "B":
 				world[x][y].base = new tileBase("floor", {x, y});
@@ -719,8 +753,8 @@ function loadMap(mapText, mapInfo, customMap)
 		if(e.repeat)
 			return;
 
-		let key = e.key;
-		// console.log(key);
+		let key = e.key.toLowerCase();
+		//console.log(key);
 
 		if(gameStage === 0 && key.substr(0, 1) == " ")
 		{
@@ -743,13 +777,13 @@ function loadMap(mapText, mapInfo, customMap)
 		}
 		else if(gameData.options.movementKeys == "arrowkeys")
 		{
-			if(key == 'ArrowUp')
+			if(key == 'arrowup')
 				key = 'moveUp';
-			else if(key == 'ArrowLeft')
+			else if(key == 'arrowleft')
 				key = 'moveLeft';
-			else if(key == 'ArrowDown')
+			else if(key == 'arrowdown')
 				key = 'moveDown';
-			else if(key == 'ArrowRight')
+			else if(key == 'arrowright')
 				key = 'moveRight';
 		}
 		else if(gameData.options.movementKeys == "ijkl")
@@ -800,13 +834,13 @@ function loadMap(mapText, mapInfo, customMap)
 		// Attack keybinds
 		if(gameData.options.combatKeys == "arrowkeys")
 		{
-			if(key == 'ArrowUp')
+			if(key == 'arrowup')
 				key = 'attackUp';
-			else if(key == 'ArrowLeft')
+			else if(key == 'arrowleft')
 				key = 'attackLeft';
-			else if(key == 'ArrowDown')
+			else if(key == 'arrowdown')
 				key = 'attackDown';
-			else if(key == 'ArrowRight')
+			else if(key == 'arrowright')
 				key = 'attackRight';
 		}
 		else if(gameData.options.combatKeys == "wasd")
@@ -873,7 +907,7 @@ function loadMap(mapText, mapInfo, customMap)
 		}
 		else if(gameData.options.waitKey == "return")
 		{
-			if(key == 'Enter')
+			if(key == 'enter')
 				key = 'wait';
 		}
 		else if(gameData.options.waitKey == "z")
@@ -881,6 +915,8 @@ function loadMap(mapText, mapInfo, customMap)
 			if(key == 'z')
 				key = 'wait';
 		}
+
+		//console.log("\"" + key + "\"");
 
 		if(player.compulsiveAction !== null)
 		{
@@ -892,6 +928,42 @@ function loadMap(mapText, mapInfo, customMap)
 
 			key = player.compulsiveAction;
 			player.compulsiveAction = null;
+		}
+
+		if(zapSelect !== null)
+		{
+			switch(key)
+			{
+				case "attackUp":
+					zapSelect.zapWand(player, {x: 0, y: -1});
+					break;
+
+				case "attackDown":
+					zapSelect.zapWand(player, {x: 0, y: 1});
+					break;
+
+				case "attackRight":
+					zapSelect.zapWand(player, {x: 1, y: 0});
+					break;
+
+				case "attackLeft":
+					zapSelect.zapWand(player, {x: -1, y: 0});
+					break;
+
+				case "wait":
+					zapSelect = null;
+					yourTurn = true;
+					addLog("Zap cancelled.");
+					return;
+
+				default:
+					addLog("Use the attack keys to select a direction to zap. Press " + gameData.options.waitKey + " to cancel.");
+					return;
+			}
+
+			zapSelect = null;
+			bulletTime();
+			return;
 		}
 
 		if(yourTurn)
@@ -1006,7 +1078,7 @@ function loadMap(mapText, mapInfo, customMap)
 			if(key == "wait")
 			{
 				addLog("You wait in place.");
-				enemyTurn();
+				bulletTime();
 			}
 			
 		}
@@ -1151,7 +1223,7 @@ function bulletTime(iteration)
 	}
 
 	updateDisplay();
-	window.setTimeout(bulletTime, 100, iteration);
+	window.setTimeout(bulletTime, 40, iteration);
 }
 
 function startTicking(thing)
@@ -1202,7 +1274,7 @@ function equip(slot)
 
 		inventoryUpdate = true;
 		//if(quickActionUsed)
-			enemyTurn();
+			bulletTime();
 		//else
 		//	quickActionUsed = true;
 	}
@@ -1278,7 +1350,7 @@ function drink(slot)
 
 					for(let i = 0; i < inventory.length; i++)
 					{
-						if(inventory[i].class == "consumable" || (inventory[i].class == "weapon" && inventory[i].baseWeapon == false))
+						if(inventory[i].class == "consumable" || inventory[i].class == "wand" || (inventory[i].class == "weapon" && inventory[i].baseWeapon == false))
 						{
 							if(!inventory[i].isIdentifed() && inventory[i].realName != "Potion of Identification")
 							{
@@ -1398,6 +1470,23 @@ function drink(slot)
 						addLog("Nothing happens, because you were not poisoned... What a waste.");
 					}
 					break;
+
+				case "antipoison+":
+					if(player.poison > 16)
+					{
+						player.poison -= 16;
+						addLog("You feel a lot better, but the poison still isn't completely neutralized.", "color: #0A0;");
+					}
+					else if(player.poison > 0)
+					{
+						player.poison = 0;
+						addLog("The poison is neutralized completely, you feel much better.", "color: #0A0;");
+					}
+					else
+					{
+						addLog("Nothing happens, because you were not poisoned... What a waste.");
+					}
+					break;
 			}
 		}
 
@@ -1414,16 +1503,14 @@ function drink(slot)
 				addLog("I don't think that had any further effect.");
 		}
 		
-		inventory.splice(slot, 1);
-		delete drink;
+		drink.remove();
 
-		inventoryUpdate = true;
 		if(quickActionUsed)
-			enemyTurn();
+			bulletTime();
 		else
 		{
 			quickActionUsed = true;
-			updateDisplay();
+			bulletTime();
 		}
 	}
 }
@@ -1432,6 +1519,18 @@ function zap(slot)
 {
 	if(!yourTurn)
 		return;
+
+	let item = inventory[slot];
+
+	if(item === undefined)
+		return;
+
+	if(item.class != "wand")
+		return;
+
+	addLog("Select a direction to zap using the attack keys. Press " + gameData.options.waitKey + " to cancel.");
+	yourTurn = false;
+	zapSelect = item;
 }
 
 function drop(slot)
@@ -1461,13 +1560,63 @@ function drop(slot)
 
 		inventoryUpdate = true;
 		if(quickActionUsed)
-			enemyTurn();
+			bulletTime();
 		else
 		{
 			quickActionUsed = true;
 			updateDisplay();
 		}
 	}
+}
+
+// Drop lists
+var commonDrops = Array("health_potion", "stamina_potion", "energy_potion", "refresh_potion", "posion_potion", "fatigue_potion", "disintegrate_potion", "placebo_potion", "identify_potion", "defence_potion", "frail_potion", "agility_potion", "slug_potion", "exp_potion", "forget_potion", "antipoison_potion", "disc", "coin", "key", "bat", "knuckles", "dagger");
+var uncommonDrops = Array("longsword", "rapier", "mace", "sledgehammer", "greatsword", "flail", "wand_giestflame", "wand_snowball");
+var rareDrops = Array("wand_fireball", "wand_frostbolt", "wand_missle", "wand_concussion", "super_health_potion", "super_stamina_potion", "super_antipoison_potion", "zweihander", "odachi", "nunchucks", "scimitar");
+var ultraRareDrops = Array("wand_firestorm", "levelup_potion", "muramasa", "kusanagi", "joyeuse", "nyantana");
+
+function getCommonDrop(levelModifier)
+{
+	let roll = Math.random();
+
+	if(roll > (0.90 - Math.log(levelModifier) / 5))
+	{
+		// Upgraded to uncommon drop list
+		return getUncommonDrop(levelModifier);
+	}
+
+	return commonDrops[getRandom(0, commonDrops.length - 1)];
+}
+
+function getUncommonDrop(levelModifier)
+{
+	let roll = Math.random();
+
+	if(roll > (0.95 - Math.log(levelModifier) / 25))
+	{
+		// Upgraded to rare drop list
+		return getRareDrop(levelModifier);
+	}
+
+	return uncommonDrops[getRandom(0, uncommonDrops.length - 1)];
+}
+
+function getRareDrop(levelModifier)
+{
+	let roll = Math.random();
+
+	if(roll > (0.98 - Math.log(levelModifier) / 100))
+	{
+		// Upgraded to ultra rare drop list
+		return getUltraRareDrop(levelModifier);
+	}
+
+	return rareDrops[getRandom(0, rareDrops.length - 1)];
+}
+
+function getUltraRareDrop(levelModifier)
+{
+	return ultraRareDrops[getRandom(0, ultraRareDrops.length - 1)];
 }
 
 function getWorld(location)
@@ -1527,6 +1676,11 @@ function vectorSub(locationA, locationB)
 	return {x: locationA.x - locationB.x, y: locationA.y - locationB.y};
 }
 
+function vectorScale(location, scale)
+{
+	return {x: location.x * scale, y: location.y * scale};
+}
+
 Array.matrix = function(numrows, numcols, initial) 
 {
 	let array = [];
@@ -1577,8 +1731,7 @@ var tickGroup = Array();
 var projectiles = Array();
 var units = Array();
 var yourTurn, inventoryUpdate, quickActionUsed = false;
-var treasureDrops = Array("longsword", "longsword", "rapier", "rapier", "mace", "mace", "sledgehammer", "greatsword", "flail", "levelup_potion");
-var otherDrops = Array("health_potion", "stamina_potion", "energy_potion", "refresh_potion", "posion_potion", "fatigue_potion", "disintegrate_potion", "placebo_potion", "identify_potion", "defence_potion", "frail_potion", "agility_potion", "slug_potion", "exp_potion", "forget_potion", "antipoison_potion", "disc", "coin", "key", "bat", "knuckles");
+var zapSelect = null;
 var windowObject, containerObject, logObject, focusGrabberObject, mapSelectorObject, inventoryObject, healthObject, staminaObject, expObject = null;
 var map = Array.matrix(80, 24, false);
 var worldDimensionX = 1;

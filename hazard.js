@@ -37,6 +37,14 @@ class hazard
 				lifetime = 10;
 				break;
 
+			case "chilly":
+				name = "Cold Zone";
+				description = "The air here is below freezing.";
+				character = "░";
+				color = "cyan";
+				lifetime = 15;
+				break;
+
 			case "rocks":
 				name = "Falling rocks";
 				description = "A ton of rocks are about to fall here!";
@@ -130,6 +138,16 @@ class hazard
 
 					if(tile.unit.class == "player")
 						addLog("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", "color: orange;");
+				}
+				break;
+
+			case "chilly":
+				if(tile.unit !== null)
+				{
+					tile.unit.stamina -= 10;
+
+					if(tile.unit.class == "player")
+						addLog("It's freezing cold here!", "color: cyan;");
 				}
 				break;
 

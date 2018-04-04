@@ -1,6 +1,6 @@
 class projectile
 {
-	constructor(typeName, location, vector)
+	constructor(typeName, location, vector, sourceUnit)
 	{
 		this.class = "projectile";
 		this.type = typeName;
@@ -17,8 +17,12 @@ class projectile
 			return;
 		}
 
+		if(sourceUnit === undefined)
+			sourceUnit = null;
+
 		this.location = {x: location.x, y: location.y};
 		this.rotation = {x: vector.x, y: vector.y};
+		this.sourceUnit = sourceUnit;
 
 		switch(typeName)
 		{
@@ -232,6 +236,11 @@ class projectile
 
 		if(doExplosion)
 			this.explode();
+
+		if(unit.health <= 0)
+		{
+			unit.die(this.sourceUnit);
+		}
 	}
 
 	collideWall(tileBase)
@@ -304,6 +313,13 @@ class projectile
 
 						tile.hazard = new hazard("bigfire", tile.location);
 					}
+				}
+				break;
+
+			case "frostbolt":
+				if(this.tile.hazard === null)
+				{
+					this.tile.hazard = new hazard("chilly", this.tile.location);
 				}
 				break;
 

@@ -391,6 +391,24 @@ button
 	}
 }
 
+@keyframes treasureGlow
+{
+	0%
+	{
+		background: linear-gradient(to bottom, #fefcea 0%, #f1da36 100%);
+	}
+
+	50%
+	{
+		background: linear-gradient(to bottom, #f1da36 0%, #fefcea 100%);
+	}
+
+	100%
+	{
+		background: linear-gradient(to bottom, #fefcea 0%, #f1da36 100%);
+	}
+}
+
 @keyframes hazardBackground
 {
 	0%
@@ -508,6 +526,14 @@ button.compactInventoryItem
 .bossMonster
 {
 	color: red;
+}
+
+.treasureGlow
+{
+	animation-name: treasureGlow;
+	animation-duration: 0.5s;
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
 }
 
 .hazardBackground

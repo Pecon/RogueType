@@ -57,7 +57,7 @@ class unit
 				strength = 1;
 				defence = 1;
 				agility = 3;
-				level = 1;
+				level = 2;
 				break;
 
 			case "bat":
@@ -124,7 +124,7 @@ class unit
 				strength = 2;
 				defence = 3;
 				agility = 1;
-				level = 2;
+				level = 3;
 				break;
 
 			case "kobold":
@@ -141,7 +141,7 @@ class unit
 				strength = 1;
 				defence = 1;
 				agility = 1;
-				level = 2;
+				level = 3;
 				break;
 
 			case "troll":
@@ -158,7 +158,7 @@ class unit
 				strength = 5;
 				defence = 2;
 				agility = 1;
-				level = 3;
+				level = 5;
 				break;
 
 			case "shade":
@@ -175,7 +175,7 @@ class unit
 				strength = 3;
 				defence = 3;
 				agility = 2;
-				level = 3;
+				level = 4;
 				break;
 
 			case "imp":
@@ -207,7 +207,7 @@ class unit
 				strength = 2;
 				defence = 1;
 				agility = 5;
-				level = 4;
+				level = 5;
 				break;
 
 			case "cat":
@@ -217,11 +217,11 @@ class unit
 				this.baseWeapon = null;
 				this.canDisplace = true;
 
-				maxHealth = 1;
+				maxHealth = 10;
 				maxStamina = 15;
 				perception = 7;
 				strength = 1;
-				defence = 2;
+				defence = 3;
 				agility = 100;
 				level = 1;
 				this.passive = true;
@@ -241,7 +241,7 @@ class unit
 				strength = 7;
 				defence = 5;
 				agility = 1;
-				level = 10;
+				level = 15;
 				break;
 
 			case "beast":
@@ -838,7 +838,7 @@ class unit
 
 			if(attacker.weapon.realName != attacker.weapon.getName() && attacker.class == "player")
 			{
-				knownItems.push(attacker.weapon.realName);
+				attacker.weapon.identify();
 				addLog("This is a " + attacker.weapon.getName() + "!", "color: #22F;");
 				inventoryUpdate = true;
 				score += 5;
@@ -852,12 +852,8 @@ class unit
 		{
 			if(attacker.class == "player")
 			{
-				for(let i = 0; i < inventory.length; i++)
-					if(inventory[i] == attacker.weapon)
-						inventory.splice(i, 1);
-
 				addLog("Your " + attacker.weapon.getName() + " runs out of the magic holding it together and crumbles to dust.", "color: MediumTurquoise;");
-				inventoryUpdate = true;
+				attacker.weapon.remove();
 			}
 			
 			attacker.weapon = attacker.baseWeapon;
@@ -1000,11 +996,9 @@ class unit
 
 		if(this.itemDrop !== undefined)
 		{
-			if(roll > 1.05)
-				drop = new item(treasureDrops[getRandom(0, treasureDrops.length - 1)], this.location);
-			else if(roll > 0.8)
-				drop = new item(otherDrops[getRandom(0, otherDrops.length - 1)], this.location);
-			if(roll > 0.7 && drop === undefined) // Don't drop junk if we've already dropped something useful
+			if(roll > 0.8)
+				drop = new item(getCommonDrop(this.level), this.location);
+			else if(roll > 0.7 && drop === undefined) // Don't drop junk if we've already dropped something useful
 				drop = new item((this.itemDrop === null ? "droppings" : this.itemDrop), this.location);
 			else
 				drop = null;

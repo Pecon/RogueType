@@ -62,6 +62,11 @@ v1.9.0
 - Fixed potion of identification identifying itself and not identifying weapons.
 - A few other bug fixes.
 
-v1.10.0
+v2.0.0
+- Magical wands have been added! Have fun burning your enemies to a crisp with your trusty wand of fireball!
+- Added a few enhanced versions of standard potions.
+- Added a number of enhanced weapons.
+- Item rarity system overhaul, there are now four tiers of item rarity. Common (potions, very weak weapons, junk), Uncommon (standard weapons, enhanced potions, basic wands), Rare (stronger weapons, standard wands, level up potion), and Ultra Rare (very powerful weapons and wands).
+- Easter eggs?
 - Added spear trap hazard (currently unimplemented)
-- Added projectile class (unimplemented)
+- The game cookie is now handled a bit better.
