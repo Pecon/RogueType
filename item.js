@@ -392,7 +392,7 @@ class item
 			case "nunchucks":
 				this.class = "weapon";
 				this.name = "nunchucks";
-				this.character = "o";
+				this.character = "n";
 				this.description = "Two sets of short sticks attached to each-other by a short chain. This must be a rare weapon! It hardly weighs anything.";
 				this.weight = 1;
 				this.blunt = 5;
