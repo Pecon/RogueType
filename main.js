@@ -151,7 +151,9 @@ function updateDisplay()
 					character = tile.hazard.getCharacter();
 					title = tile.hazard.getName() + "\n" + tile.hazard.getDescription() + "\n";
 
-					displayTile.classList.add("hazardBackground");
+					if(tile.hazard.useHazardFlash)
+						displayTile.classList.add("hazardBackground");
+					
 					style = style + "color: " + tile.hazard.color + ";";
 
 					if(tile.unit !== null)

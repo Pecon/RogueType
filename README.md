@@ -20,6 +20,7 @@ M - A common monster spawn
 ! - A high-level monster spawn
 ? - A common item spawn (mainly potions for now)
 T - A rare item spawn (mainly weapons for now)
+, - A spear trap.
 F - Boss stage trigger door (only place one of these, ideally the boss room should face southwards from the door)
 B - The Boss.
 P - Exit portal that finishes the game after The Boss is killed.
