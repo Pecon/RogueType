@@ -484,6 +484,12 @@ class item
 				this.blade = 6;
 				this.attackDescriptor = "slash";
 				this.rareLoot = true;
+				
+				//give it some enchantments
+				this.enchanted = true;
+				this.cursed = false;
+				this.effect = "concussion";
+				this.magicalCharge = 10;
 				break;
 
 			case "wand_fireball":
