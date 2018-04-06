@@ -100,6 +100,14 @@ class tileBase
 				permitsVision = true;
 				permitsTravel = true;
 				break;
+				
+			case "altar":
+				description = "A marble altar that glows with divine energy.";
+				name = "Marble Altar";
+				character = "┯";
+				permitsVision = true;
+				permitsTravel = false;
+				break;	
 
 			default:
 				description = "A nondescript tile. Something probably went wrong with the world generator.";
@@ -288,6 +296,10 @@ class tileBase
 						gameStage = 4;
 					}
 					break;
+				case "altar": 
+					message = "You smash your hip on the edge of the marble altar. Ouch!";
+					success = false;
+					break;
 
 				default:
 					message = "You step into the glitch, and suddenly reappear where you were before." + this.typeName;
@@ -403,6 +415,11 @@ class tileBase
 
 			case "sealedDoor":
 				message = "You futily swing your " + unit.weapon.getName() + " at the magically sealed door, but it might as well be made of solid adamantium for how much it gives.";
+				success = false;
+				break;
+				
+			case "altar":
+				message = "You smash your " + unit.weapon.getName() + " at the magically altar, but its stone stays pristine.";
 				success = false;
 				break;
 

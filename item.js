@@ -57,6 +57,7 @@ class item
 				this.name = "Spider Carcass";
 				this.character = "c";
 				this.description = "The carcass of a dead spider.";
+				this.canDrop = true;
 				break;
 
 			case "skeleton_bone":
@@ -121,6 +122,19 @@ class item
 				this.character = "k";
 				this.description = "A battered old key.";
 				break;
+				
+			case "corpseHero": 
+				this.class = "junk";
+				this.name = "Hero Skull";
+				this.character = "k";
+				this.description = "The skull of a heroic champion that perished in the dungeon.";
+				break;
+			case "corpseCleric": 
+				this.class = "junk";
+				this.name = "Priest Skull";
+				this.character = "k";
+				this.description = "The skull of a lowly healer that perished in the dungeon.";
+				break;				
 
 			case "fists":
 				this.class = "weapon";
@@ -765,6 +779,9 @@ class item
 				this.staminaEffect = 0;
 				this.specialEffect = "antipoison+";
 				break;
+				
+			
+
 
 			default:
 				throw "Unknown item type " + type;
@@ -862,6 +879,11 @@ class item
 
 		if(location !== null)
 			this.moveTo(location);
+	}
+	
+	getClass() 
+	{
+		return this.class;
 	}
 
 	getName()

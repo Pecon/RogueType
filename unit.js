@@ -41,7 +41,7 @@ class unit
 
 				maxHealth = 25;
 				maxStamina = 20;
-				level = 10;
+				level = 10; 
 				break;
 
 			case "rat":
@@ -368,8 +368,8 @@ class unit
 
 			for(let i = tile.items.length; i > 0; i--)
 			{
-				if(tile.items[tile.items.length - 1].dropped)
-					continue;
+				//if(tile.items[tile.items.length - 1].dropped)
+				//	continue;
 
 				let pickup = tile.items.pop();
 				inventory.push(pickup);
