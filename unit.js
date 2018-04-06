@@ -368,8 +368,8 @@ class unit
 
 			for(let i = tile.items.length; i > 0; i--)
 			{
-				//if(tile.items[tile.items.length - 1].dropped)
-				//	continue;
+				if(tile.items[tile.items.length - 1].dropped)
+					continue;
 
 				let pickup = tile.items.pop();
 				inventory.push(pickup);
