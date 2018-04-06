@@ -654,6 +654,10 @@ function loadMap(mapText, mapInfo, customMap)
 			case ".":
 				world[x][y].base = new tileBase("floor", {x, y});
 				break;
+			case ",":
+				world[x][y].base = new tileBase("floor", {x, y});
+				world[x][y].hazard = new Hazard("speartrap_off", {x,y});
+				break;
 			case "+":
 				world[x][y].base = new tileBase("door", {x, y});
 				break;
