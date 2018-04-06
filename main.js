@@ -153,7 +153,6 @@ function updateDisplay()
 
 					if(tile.hazard.useHazardFlash)
 						displayTile.classList.add("hazardBackground");
-					
 					style = style + "color: " + tile.hazard.color + ";";
 
 					if(tile.unit !== null)
@@ -253,7 +252,7 @@ function updateDisplay()
 			else if(inventory[i].class == "wand")
 				html = html + ' <button onclick="zap(' + i + ')" class="' + className +'" ' + allButtonsProperties + '>Zap</button>';
 
-			if(gameStage == 2 && inventory[i] != player.weapon && inventory[i].canDrop)
+			if((inventory[i] != player.weapon) && (inventory[i].canDrop == true))
 				html = html + ' <button onclick="drop(' + i + ')" class="' + className +'" ' + allButtonsProperties + '>Drop</button>';
 
 
@@ -656,7 +655,7 @@ function loadMap(mapText, mapInfo, customMap)
 				break;
 			case ",":
 				world[x][y].base = new tileBase("floor", {x, y});
-				world[x][y].hazard = new Hazard("speartrap_off", {x,y});
+				world[x][y].hazard = new hazard("speartrap_off", {x,y});
 				break;
 			case "+":
 				world[x][y].base = new tileBase("door", {x, y});
@@ -726,7 +725,13 @@ function loadMap(mapText, mapInfo, customMap)
 			case "F":
 				world[x][y].base = new tileBase("bossDoor", {x, y});
 				break;
-
+			case "A":
+				world[x][y].base = new tileBase("altar", {x, y});
+				break;
+			case "J":
+				world[x][y].base = new tileBase("floor", {x, y});
+				world[x][y].items[0] = new item(getJunkDrop(0), {x, y});
+				break;
 			default:
 				world[x][y].base = new tileBase("wall", {x, y});
 				errors++;
@@ -1544,27 +1549,69 @@ function drop(slot)
 	if(!yourTurn)
 		return;
 
-	let item = inventory[slot];
+	let droppingItem = inventory[slot];
 
-	if(item === undefined)
+	if(droppingItem === undefined)
 		return;
 
-	if(!item.canDrop)
+	if(!droppingItem.canDrop)
 	{
 		addLog("You can't drop that.");
 		return;
 	}
 
-	if(item != player.weapon)
+	if(droppingItem != player.weapon)
 	{
-		addLog("You drop the " + item.getName() + "...");
+		let tile = getWorld(northOf(player.location));
+		
+		if(tile.base.getName() == "Marble Altar") {
 
-		inventory.splice(slot, 1);
-		item.moveTo(player.location);
-		groundItems.push(item);
-		item.dropped = true;
-
+			if(droppingItem.getName() == "Spider Carcass") {
+				addLog("You put the " + droppingItem.getName() + " on the altar.");
+				addLog("A magical light fills the room and consumes the " + droppingItem.getName());
+				addLog("A smouldering potion is left on the altar...");
+				droppingItem.remove();
+				let newItem = new item("antipoison_potion");
+				inventory.push(newItem);
+			} else if(droppingItem.getName() == "Hero Skull") {
+				addLog("You put the " + droppingItem.getName() + " on the altar.");
+				addLog("A magical light fills the room and consumes the " + droppingItem.getName());
+				addLog("A smouldering potion is left on the altar...");
+				droppingItem.remove();
+				
+				//try to override the weapon since they autoenchant
+				weapon = new item("lightbringer");
+				weapon.enchanted = true;
+				weapon.cursed = false;
+				weapon.effect = "concussion";
+				weapon.magicalCharge = 10;
+				weapon.identify();
+				
+				inventory.push(weapon);
+				
+			} else if(droppingItem.getName() == "Priest Skull") {
+				addLog("You put the " + droppingItem.getName() + " on the altar.");
+				addLog("A magical light fills the room and consumes the " + droppingItem.getName());
+				addLog("A smouldering potion is left on the altar...");
+				droppingItem.remove();
+				inventory.push(new item("health_potion"));
+			} else {
+				addLog("You drop the " + droppingItem.getName() + "...");
+				inventory.splice(slot, 1);
+				droppingItem.moveTo(player.location);
+				groundItems.push(droppingItem);
+				droppingItem.dropped = true;
+			}
+		} else {
+			addLog("You drop the " + droppingItem.getName() + "...");
+			inventory.splice(slot, 1);
+			droppingItem.moveTo(player.location);
+			groundItems.push(droppingItem);
+			droppingItem.dropped = true;
+		}
+		
 		inventoryUpdate = true;
+		
 		if(quickActionUsed)
 			bulletTime();
 		else
@@ -1572,14 +1619,20 @@ function drop(slot)
 			quickActionUsed = true;
 			updateDisplay();
 		}
+		
 	}
 }
 
 // Drop lists
+var junkDrops = Array("corpseHero","corpseCleric");
 var commonDrops = Array("health_potion", "stamina_potion", "energy_potion", "refresh_potion", "posion_potion", "fatigue_potion", "disintegrate_potion", "placebo_potion", "identify_potion", "defence_potion", "frail_potion", "agility_potion", "slug_potion", "exp_potion", "forget_potion", "antipoison_potion", "disc", "coin", "key", "bat", "knuckles", "dagger");
 var uncommonDrops = Array("longsword", "rapier", "mace", "sledgehammer", "greatsword", "flail", "wand_giestflame", "wand_snowball");
 var rareDrops = Array("wand_fireball", "wand_frostbolt", "wand_missle", "wand_concussion", "super_health_potion", "super_stamina_potion", "super_antipoison_potion", "zweihander", "odachi", "nunchucks", "scimitar");
 var ultraRareDrops = Array("wand_firestorm", "levelup_potion", "muramasa", "kusanagi", "joyeuse", "nyantana");
+
+function getJunkDrop(levelModifier) {
+	return junkDrops[getRandom(0, junkDrops.length - 1)];
+}
 
 function getCommonDrop(levelModifier)
 {

@@ -41,7 +41,7 @@ class unit
 
 				maxHealth = 25;
 				maxStamina = 20;
-				level = 10;
+				level = 10; 
 				break;
 
 			case "rat":
