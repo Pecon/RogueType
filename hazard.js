@@ -5,6 +5,7 @@ class hazard
 		this.class = "hazard";
 		this.type = typeName;
 		this.location = {x: location.x, y: location.y};
+		this.useHazardFlash = true;
 		let name = "";
 		let description = "";
 		let character = "?";
@@ -58,6 +59,8 @@ class hazard
 				description = "Holes in the floor... suspicious.";
 				character = ",";
 				lifetime = -1;
+				color: "inherit";
+				this.useHazardFlash = false;
 				break;
 				
 			case "speartrap_on":
@@ -65,6 +68,8 @@ class hazard
 				description = "Spears came through the floor!";
 				character = "!";
 				lifetime = 5;
+				color: "inherit";
+				this.useHazardFlash = false;
 				break;
 
 			default:

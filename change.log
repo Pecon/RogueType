@@ -70,3 +70,7 @@ v2.0.0
 - Easter eggs?
 - Added spear trap hazard (currently unimplemented)
 - The game cookie is now handled a bit better.
+
+v2.0.1
+- Fixed a bug with the boss room door.
+- Spear traps have been implemented on the normal difficulty map, with implementation on the hard map planned. (credit ToasterBiome aka: Waru)

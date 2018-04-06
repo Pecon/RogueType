@@ -241,7 +241,7 @@ class tileBase
 					else
 					{
 						// Force them to move through the door
-						unit.compulsiveAction = "s";
+						unit.compulsiveAction = "moveDown";
 
 						if(getWorld(southOf(unit.location)).unit !== null)
 							getWorld(southOf(unit.location)).unit.die();
