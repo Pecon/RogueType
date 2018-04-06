@@ -13,6 +13,7 @@ class item
 			groundItems.push(this);
 		}
 
+		this.type = type;
 		this.class = "junk";
 		this.name = "Error";
 		this.realName = null;
@@ -57,7 +58,6 @@ class item
 				this.name = "Spider Carcass";
 				this.character = "c";
 				this.description = "The carcass of a dead spider.";
-				this.canDrop = true;
 				break;
 
 			case "skeleton_bone":
@@ -129,6 +129,7 @@ class item
 				this.character = "k";
 				this.description = "The skull of a heroic champion that perished in the dungeon.";
 				break;
+
 			case "corpseCleric": 
 				this.class = "junk";
 				this.name = "Priest Skull";
@@ -146,6 +147,7 @@ class item
 				this.blade = 0;
 				this.attackDescriptor = "swing";
 				this.baseWeapon = true;
+				this.canDrop = false;
 				break;
 
 			case "goblin_fists":
@@ -478,11 +480,12 @@ class item
 				this.class = "weapon";
 				this.name = "Lightbringer";
 				this.character = "l";
-				this.description = "The slim and slender Lightbringer is fortold to bring radiance even to the darkest places.";
+				this.description = "The slim and beautiful Lightbringer is foretold to bring radiance even to the darkest places.";
 				this.weight = 0;
 				this.blunt = 0;
 				this.blade = 6;
 				this.attackDescriptor = "slash";
+				this.baseWeapon = true;
 				this.rareLoot = true;
 				
 				//give it some enchantments
@@ -814,9 +817,6 @@ class item
 
 			if(this.poison === undefined)
 				this.poison = 0;
-
-			if(this.baseWeapon)
-				this.canDrop = false;
 
 			if(this.attackDescriptorPluralString === undefined)
 				this.attackDescriptorPluralString = "s";

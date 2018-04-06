@@ -106,7 +106,7 @@ class tileBase
 				name = "Marble Altar";
 				character = "┯";
 				permitsVision = true;
-				permitsTravel = false;
+				permitsTravel = true;
 				break;	
 
 			default:
@@ -296,9 +296,10 @@ class tileBase
 						gameStage = 4;
 					}
 					break;
+
 				case "altar": 
-					message = "You smash your hip on the edge of the marble altar. Ouch!";
-					success = false;
+					message = "You climb onto the altar.";
+					success = true;
 					break;
 
 				default:
@@ -309,7 +310,7 @@ class tileBase
 		}
 		
 
-		if(message !== null && unit == player)
+		if(message !== null && unit.class == "player")
 			addLog(message);
 
 		return success;
