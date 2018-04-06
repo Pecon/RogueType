@@ -1580,13 +1580,11 @@ function drop(slot)
 				droppingItem.remove();
 				
 				//try to override the weapon since they autoenchant
-				weapon = new item("longsword");
+				weapon = new item("lightbringer");
 				weapon.enchanted = true;
 				weapon.cursed = false;
 				weapon.effect = "concussion";
 				weapon.magicalCharge = 10;
-				weapon.realName = "Lightbringer";
-				weapon.realDescription = "The slim and slender Lightbringer is fortold to bring radiance even to the darkest places. The enchantment will slowly build up energy during combat, and then release all of it in a concussive blast once fully charged."
 				weapon.identify();
 				
 				inventory.push(weapon);
