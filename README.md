@@ -32,7 +32,7 @@ The entire game and contents is created by Pecon, aside from a couple exceptions
 
 **Jazz Cat** - Original soundtrack.  
 **Oren Watson** - Neoletters font face ( http://www.orenwatson.be/fontdemo.htm )  
-**ToasterBiome** - Small code contributions ( https://github.com/ToasterBiome )  
+**baiomu** - Small code contributions ( https://github.com/ToasterBiome )  
 **Zeustal** - Writing inspirations, default map contribution.  
 
 RogueType is *not* released under an open-source license. You must have my (and the people listed above when relevant to what they contributed) explicit permission to host, modify, or monetize this software; however, that said, I won't generally care about you hosting or modifying the game as long as due credit is kept and the game philosophy is kept intact. Feel free to fork if you stick to that.
