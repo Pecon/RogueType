@@ -243,12 +243,14 @@ function updateDisplay()
 			let html = name.substr(0, 1).toUpperCase() + name.substr(1);
 
 			if(inventory[i] == player.weapon)
-				html = html + " (Held)";
+				html = html + " (Equipped)";
+
+			html = html + "<br />\n";
 
 			if(inventory[i].class == "weapon" && name != "fists" && player.weapon != inventory[i])
-				html = html + ' <button onclick="equip(' + i + ')" class="' + className +'" ' + allButtonsProperties + '>Hold</button>';
+				html = html + ' <button onclick="equip(' + i + ')" class="' + className +'" ' + allButtonsProperties + '>Equip</button>';
 			else if(inventory[i].class == "consumable")
-				html = html + ' <button onclick="drink(' + i + ')" class="' + className +'" ' + allButtonsProperties + '>Use</button>';
+				html = html + ' <button onclick="drink(' + i + ')" class="' + className +'" ' + allButtonsProperties + '>Drink</button>';
 			else if(inventory[i].class == "wand")
 				html = html + ' <button onclick="zap(' + i + ')" class="' + className +'" ' + allButtonsProperties + '>Zap</button>';
 
@@ -352,14 +354,12 @@ function loadCookie()
 		let cookieData = document.cookie;
 
 		let found = cookieData.match(/data=(.+);/);
-		console.log(found);
 
 		if(found === null)
 			found = cookieData.match(/data=(.+)$/);
 
 		if(found !== null)
 		{
-			console.log(found);
 
 			try
 			{
@@ -384,7 +384,6 @@ function loadCookie()
 		}
 		else
 		{
-			console.log("No cookie.");
 			saveCookie();
 		}
 	}

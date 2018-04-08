@@ -451,40 +451,60 @@ button
 	text-align: left;
 }
 
-.inventoryItem
+p.inventoryItem
 {
 	background-color: #DDD;
 	color: #222;
 
-	height: 24px;
-	max-height: 44px;
-	line-height: 16px;
-	overflow-wrap: break-word;
+	height: 22px;
+	line-height: 24px;
+	overflow: hidden;
 	padding: 2px;
 	padding-top: 4px;
 	padding-right: 0px;
 	margin: 1px;
 	margin-right: 0px;
+
+	transition-property: height;
+	transition-duration: 0.2s;
+	transition-timing-function: ease;
 }
 
-.compactInventoryItem
+p.inventoryItem:hover
+{
+	height: 50px;
+}
+
+p.compactInventoryItem
 {
 	background-color: #DDD;
 	color: #222;
 
 	height: 16px;
 	font-size: 12px;
-	line-height: 12px;
+	line-height: 16px;
+	overflow: hidden;
 	padding: 1px;
 	padding-right: 0px;
 	margin: 1px;
 	margin-right: 0px;
+
+	transition-property: height;
+	transition-duration: 0.2s;
+	transition-timing-function: ease;
+}
+
+p.compactInventoryItem:hover
+{
+	height: 36px;
 }
 
 
 button.inventoryItem
 {
-	width: 42px;
+	background-color: #DDD;
+	color: #222;
+
 	height: 20px;
 	border-left-width: 2px;
 	border-right-width: 2px;
@@ -492,8 +512,8 @@ button.inventoryItem
 	border-bottom-width: 0px;
 	padding-top: 0px;
 	padding-bottom: 0px;
-	padding-left: 0px;
-	padding-right: 0px;
+	padding-left: 2px;
+	padding-right: 2px;
 
 	font-family: inherit;
 	font-size: 16px;
@@ -501,7 +521,9 @@ button.inventoryItem
 
 button.compactInventoryItem
 {
-	width: 35px;
+	background-color: #DDD;
+	color: #222;
+
 	height: 16px;
 	font-size: 12px;
 	font-family: inherit;

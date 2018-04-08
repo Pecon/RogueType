@@ -1027,7 +1027,8 @@ class unit
 
 		if(killer !== undefined)
 		{
-			killer.addExp(this.level * getRandom(1, 3));
+			if(killer.class == "player" && killer != this)
+				killer.addExp(this.level * getRandom(1, 3));
 		}
 
 		delete this;

@@ -71,6 +71,8 @@ v2.0.0
 - Added spear trap hazard (currently unimplemented)
 - The game cookie is now handled a bit better.
 
-v2.0.1
+v2.1.0
 - Fixed a bug with the boss room door.
 - Spear traps have been implemented on the normal difficulty map, with implementation on the hard map planned. (credit ToasterBiome aka: baiomu)
+- You no longer can gain exp for killing yourself. (As hilarious and obscure this interaction was, it defeated the point of some 'dangerous' actions since you would often level up from the exp you gained from killing yourself, which would then often heal you above the threshold for dying)
+- You now have to hover the mouse over inventory items to see their action buttons.
