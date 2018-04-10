@@ -364,31 +364,7 @@ class unit
 
 		if(this.class == "player")
 		{
-			let tile = getWorld(this.location);
-
-			for(let i = tile.items.length; i > 0; i--)
-			{
-				if(tile.items[tile.items.length - 1].dropped)
-					continue;
-
-				let pickup = tile.items.pop();
-				inventory.push(pickup);
-				score++;
-				pickup.location = null;
-
-				for(let j = 0; j < groundItems.length; j++)
-				{
-					if(groundItems[j] == pickup)
-					{
-						groundItems.splice(j, 1);
-						break;
-					}
-				}
-
-				inventoryUpdate = true;
-				addLog("You pick up the " + pickup.getName() + ".");
-			}
-
+			// Don't run AI code
 			return;
 		}
 		else if(this.class == "boss")
@@ -595,6 +571,32 @@ class unit
 			leaveTile.base.moveTo(displaceUnit);
 			leaveTile.unit = displaceUnit;
 			displaceUnit.location = leaveTile.location;
+		}
+
+		if(this.class == "player")
+		{
+			for(let i = tile.items.length; i > 0; i--)
+			{
+				// if(tile.items[tile.items.length - 1].dropped)
+				// 	continue;
+
+				let pickup = tile.items.pop();
+				inventory.push(pickup);
+				score++;
+				pickup.location = null;
+
+				for(let j = 0; j < groundItems.length; j++)
+				{
+					if(groundItems[j] == pickup)
+					{
+						groundItems.splice(j, 1);
+						break;
+					}
+				}
+
+				inventoryUpdate = true;
+				addLog("You pick up the " + pickup.getName() + ".");
+			}
 		}
 
 		this.location = location;

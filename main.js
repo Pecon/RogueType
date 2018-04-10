@@ -10,6 +10,7 @@ function attempt_init()
 	healthObject = document.getElementById("healthIndicator");
 	staminaObject = document.getElementById("staminaIndicator");
 	expObject = document.getElementById("expIndicator");
+	statusObject = document.getElementById("statusIndicators");
 
 
 	if(containerObject === null || logObject === null)
@@ -237,10 +238,11 @@ function updateDisplay()
 
 		for(let i = 0; i < inventory.length; i++)
 		{
-			let element = document.createElement("p");
+			let element = document.createElement("div");
 			element.classList.add(className);
 			let name = inventory[i].getName();
 			let html = name.substr(0, 1).toUpperCase() + name.substr(1);
+			let usable = true;
 
 			if(inventory[i] == player.weapon)
 				html = html + " (Equipped)";
@@ -253,10 +255,14 @@ function updateDisplay()
 				html = html + ' <button onclick="drink(' + i + ')" class="' + className +'" ' + allButtonsProperties + '>Drink</button>';
 			else if(inventory[i].class == "wand")
 				html = html + ' <button onclick="zap(' + i + ')" class="' + className +'" ' + allButtonsProperties + '>Zap</button>';
+			else
+				usable = false;
 
 			if((inventory[i] != player.weapon) && (inventory[i].canDrop == true))
 				html = html + ' <button onclick="drop(' + i + ')" class="' + className +'" ' + allButtonsProperties + '>Drop</button>';
 
+			if(usable)
+				html += ' <img class="inventoryTick" src="./DownTick2.png" />';
 
 			element.innerHTML = html;
 			element.title = inventory[i].getDescription();
@@ -286,6 +292,19 @@ function updateDisplay()
 		text = text + (i < expRatio ? "█" : "-");
 	}
 	expObject.textContent = text;
+
+	// Statuses
+	let html = "";
+	if(player.stun > 0)
+		html += '<img class="statusIcon" src="./Stun2.png" title="Stunned - You cannot move or attack while stunned. Stamina is consumed each turn to recover from stun status; if you don\'t have enough stamina the stun will extend until you do." /> ' + player.stun + "\n";
+	if(player.poison > 0)
+		html += '<img class="statusIcon" src="./Poison2.png" title="Poisoned - You will take damage equal to your poison status every five turns." /> ' + player.poison + "\n";
+	if(player.stamina < 0)
+		html += '<img class="statusIcon" src="./Exhaustion.png" title="Exhausted - You\'re exhausted! You\'ll need to wait a few turns to recover or drink a stamina potion of some sort." /> ' + Math.ceil(player.stamina / 5 * -1) + "\n";
+	if(player.compulsiveAction !== null)
+		html += '<img class="statusIcon" src="./ControlLoss.png" title="No Control - You\'re being forced to do a specific action this turn." /> \n';
+
+	statusObject.innerHTML = html;
 }
 
 function addLog(text, style)
@@ -1794,7 +1813,7 @@ var projectiles = Array();
 var units = Array();
 var yourTurn, inventoryUpdate, quickActionUsed = false;
 var zapSelect = null;
-var windowObject, containerObject, logObject, focusGrabberObject, mapSelectorObject, inventoryObject, healthObject, staminaObject, expObject = null;
+var windowObject, containerObject, logObject, focusGrabberObject, mapSelectorObject, inventoryObject, healthObject, staminaObject, expObject, statusObject = null;
 var map = Array.matrix(80, 24, false);
 var worldDimensionX = 1;
 var worldDimensionY = 1;
@@ -1806,7 +1825,7 @@ var turnTime = new Date().getTime();
 // Default game configuration data
 var gameData = 
 {
-	cookieFormat: 2,
+	cookieFormat: 3,
 
 	options: 
 	{

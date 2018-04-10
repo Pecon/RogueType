@@ -1045,7 +1045,7 @@ class item
 		if(this.magicalCharge <= 0)
 		{
 			if(unit.class == "player")
-				addLog("The " + this.getName() + " runs out of magical energy and crumbles into faintly glowing ashes.");
+				addLog("The " + this.getName() + " runs out of magical energy and crumbles into faintly glowing ashes.", "color: MediumTurquoise;");
 
 			this.remove();
 		}

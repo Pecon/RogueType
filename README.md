@@ -28,11 +28,11 @@ P - Exit portal that finishes the game after The Boss is killed.
 Note: Any characters in the map which are not recognized as valid types will display as errors in-game.
 
 ## Credits and license
-The entire game and contents is created by Pecon, aside from a couple exceptions
 
+**Pecon** - Original creator, majority of code and design. ( https://github.com/Pecon )
 **Jazz Cat** - Original soundtrack.  
-**Oren Watson** - Neoletters font face ( http://www.orenwatson.be/fontdemo.htm )  
-**baiomu** - Small code contributions ( https://github.com/ToasterBiome )  
-**Zeustal** - Writing inspirations, default map contribution.  
+**Oren Watson** - Neoletters font face. ( http://www.orenwatson.be/fontdemo.htm )  
+**baiomu** - Small code and feature contributions. ( https://github.com/ToasterBiome )  
+**Zeustal** - Writing inspirations, some pixel graphics, and default map contribution.  
 
-RogueType is *not* released under an open-source license. You must have my (and the people listed above when relevant to what they contributed) explicit permission to host, modify, or monetize this software; however, that said, I won't generally care about you hosting or modifying the game as long as due credit is kept and the game philosophy is kept intact. Feel free to fork if you stick to that.
+RogueType is *not* released under an open-source license. You must have my (and the other people listed above when relevant to what they contributed) explicit permission to host, modify, or monetize the code and content contained in this game; however, that said, I won't generally care about you hosting or modifying the game as long as due credit is kept and the game philosophy is kept intact. Feel free to fork if you stick to that.

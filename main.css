@@ -22,6 +22,8 @@ body
 	text-align: center;
 
 	user-select: none;
+	-mox-user-select: none;
+	-webkit-user-select: none;
 }
 
 .version
@@ -196,6 +198,10 @@ button
 
 		white-space: pre;
 		text-align: left;
+
+		user-select: text;
+		-mox-user-select: text;
+		-webkit-user-select: text;
 	}
 
 	.stats
@@ -273,6 +279,10 @@ button
 
 		white-space: pre;
 		text-align: left;
+
+		user-select: text;
+		-mox-user-select: text;
+		-webkit-user-select: text;
 	}
 }
 
@@ -451,7 +461,7 @@ button
 	text-align: left;
 }
 
-p.inventoryItem
+div.inventoryItem
 {
 	background-color: #DDD;
 	color: #222;
@@ -466,16 +476,18 @@ p.inventoryItem
 	margin-right: 0px;
 
 	transition-property: height;
-	transition-duration: 0.2s;
+	transition-duration: 0.1s;
 	transition-timing-function: ease;
+
+	position: relative;
 }
 
-p.inventoryItem:hover
+div.inventoryItem:hover
 {
 	height: 50px;
 }
 
-p.compactInventoryItem
+div.compactInventoryItem
 {
 	background-color: #DDD;
 	color: #222;
@@ -490,11 +502,13 @@ p.compactInventoryItem
 	margin-right: 0px;
 
 	transition-property: height;
-	transition-duration: 0.2s;
+	transition-duration: 0.1s;
 	transition-timing-function: ease;
+
+	position: relative;
 }
 
-p.compactInventoryItem:hover
+div.compactInventoryItem:hover
 {
 	height: 36px;
 }
@@ -527,6 +541,29 @@ button.compactInventoryItem
 	height: 16px;
 	font-size: 12px;
 	font-family: inherit;
+}
+
+img.inventoryTick
+{
+	width: 16px;
+
+	position: absolute;
+	top: 6px;
+	right: 6px;
+}
+
+img.statusIcon
+{
+	position: relative;
+	top: 5px;
+
+	width: 32px;
+}
+
+#statusIndicators
+{
+	font-size: 28px;
+	line-height: 32px;
 }
 
 .gameSquare
