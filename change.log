@@ -77,5 +77,6 @@ v2.1.0
 - Some work has been done regarding the implementation of altars, but is not accessible yet. (credit ToasterBiome aka: baiomu)
 - You no longer can gain exp for killing yourself. (As hilarious and obscure this interaction was, it defeated the point of some 'dangerous' actions since you would often level up from the exp you gained from killing yourself, which would then often heal you above the threshold for dying)
 - You now have to hover the mouse over inventory items to see their action buttons. This makes the inventory interface much cleaner and addresses some issues with buttons overflowing off inventory entries. (credit Zeustal for tick graphic)
+- The inventory is now sorted, and junk items now "stack" so that duplicates of them do not take up so much space.
 - Item dropping is now enabled for all stages of the game. I personally recommend not dropping anything, but I guess you can now if you really want to.
 - Statuses such as poison, stun, and exhaustion are now displayed underneath the other status counters. (credit Zeustal for status graphics)

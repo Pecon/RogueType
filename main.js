@@ -112,7 +112,7 @@ function attempt_init()
 function updateDisplay()
 {
 	let origin = {x: player.location.x - 39, y: player.location.y - 12};
-	containerObject.style = "visibility: hidden;";
+	containerObject.style = "display: none;";
 
 	for(let screenY = 0; screenY < 24; screenY++)
 	{
@@ -214,7 +214,7 @@ function updateDisplay()
 		}
 	}
 
-	containerObject.style = "visibility: visible;";
+	containerObject.style = "";
 
 	// Update inventory
 	if(inventoryUpdate)
@@ -235,31 +235,75 @@ function updateDisplay()
 			inventoryUpdate = true;
 		}
 
+		// Sort inventory
+		inventory.sort(inventorySwap);
 
+		let stackInventory = Array();
 		for(let i = 0; i < inventory.length; i++)
+		{
+			if(inventory[i].canStack)
+			{
+				let found = false;
+
+				for(let j = 0; j < stackInventory.length; j++)
+				{
+					if(stackInventory.itemType == inventory[i].type)
+					{
+						stackInventory.stack.push(inventory[i]);
+						stackInventory.referenceIndexes.push(i);
+						found = true;
+						break;
+					}
+				}
+
+				if(!found)
+				{
+					stackInventory.push(
+					{
+						itemType: inventory[i].type, 
+						stack: Array(inventory[i]), 
+						referenceIndexes: [i]
+					});
+				}
+			}
+			else
+			{
+				stackInventory.push(
+				{
+					itemType: inventory[i].type, 
+					stack: Array(inventory[i]), 
+					referenceIndexes: [i]
+				});
+			}
+			
+		}
+
+
+		for(let i = 0; i < stackInventory.length; i++)
 		{
 			let element = document.createElement("div");
 			element.classList.add(className);
-			let name = inventory[i].getName();
-			let html = name.substr(0, 1).toUpperCase() + name.substr(1);
+			let item = stackInventory[i].stack[0];
+			let name = item.getName();
+			let html = (stackInventory[i].stack.length > 1 ? "x" + stackInventory[i].stack.length + " " : "") + name.substr(0, 1).toUpperCase() + name.substr(1);
 			let usable = true;
 
-			if(inventory[i] == player.weapon)
+			if(item == player.weapon)
 				html = html + " (Equipped)";
 
 			html = html + "<br />\n";
 
-			if(inventory[i].class == "weapon" && name != "fists" && player.weapon != inventory[i])
-				html = html + ' <button onclick="equip(' + i + ')" class="' + className +'" ' + allButtonsProperties + '>Equip</button>';
-			else if(inventory[i].class == "consumable")
-				html = html + ' <button onclick="drink(' + i + ')" class="' + className +'" ' + allButtonsProperties + '>Drink</button>';
-			else if(inventory[i].class == "wand")
-				html = html + ' <button onclick="zap(' + i + ')" class="' + className +'" ' + allButtonsProperties + '>Zap</button>';
+			if(item.class == "weapon" && name != "fists" && player.weapon != item)
+				html = html + ' <button onclick="equip(' + stackInventory[i].referenceIndexes[0] + ')" class="' + className +'" ' + allButtonsProperties + '>Equip</button>';
+			else if(item.class == "consumable")
+				html = html + ' <button onclick="drink(' + stackInventory[i].referenceIndexes[0] + ')" class="' + className +'" ' + allButtonsProperties + '>Drink</button>';
+			else if(item.class == "wand")
+				html = html + ' <button onclick="zap(' + stackInventory[i].referenceIndexes[0] + ')" class="' + className +'" ' + allButtonsProperties + '>Zap</button>';
 			else
 				usable = false;
 
-			if((inventory[i] != player.weapon) && (inventory[i].canDrop == true))
-				html = html + ' <button onclick="drop(' + i + ')" class="' + className +'" ' + allButtonsProperties + '>Drop</button>';
+			if((item != player.weapon) && (item.canDrop == true))
+				html = html + ' <button onclick="drop(' + stackInventory[i].referenceIndexes[0] + ')" class="' + className +'" ' + allButtonsProperties + '>Drop</button>';
 
 			if(usable)
 				html += ' <img class="inventoryTick" src="./DownTick2.png" />';
@@ -305,6 +349,40 @@ function updateDisplay()
 		html += '<img class="statusIcon" src="./ControlLoss.png" title="No Control - You\'re being forced to do a specific action this turn." /> \n';
 
 	statusObject.innerHTML = html;
+}
+
+function inventorySwap(a, b)
+{
+	let weightA = getInventoryWeight(a);
+	let weightB = getInventoryWeight(b);
+
+	if(weightA > weightB)
+		return -1;
+	else if(weightB > weightA)
+		return 1;
+	else
+		return 0;
+}
+
+function getInventoryWeight(item)
+{
+	switch(item.class)
+	{
+		case "junk":
+			return 0;
+
+		case "consumable":
+			return 1;
+
+		case "wand":
+			return 2;
+
+		case "weapon":
+			return 3;
+
+		default:
+			return -1;
+	}
 }
 
 function addLog(text, style)

@@ -29,7 +29,7 @@ Note: Any characters in the map which are not recognized as valid types will dis
 
 ## Credits and license
 
-**Pecon** - Original creator, majority of code and design. ( https://github.com/Pecon )
+**Pecon** - Original creator, majority of code and design. ( https://github.com/Pecon )  
 **Jazz Cat** - Original soundtrack.  
 **Oren Watson** - Neoletters font face. ( http://www.orenwatson.be/fontdemo.htm )  
 **baiomu** - Small code and feature contributions. ( https://github.com/ToasterBiome )  

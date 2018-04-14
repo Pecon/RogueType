@@ -21,6 +21,7 @@ class item
 		this.description = "An item with no usable properties.";
 		this.dropped = false;
 		this.canDrop = true;
+		this.canStack = false;
 		this.rareLoot = false;
 
 		switch(type)
@@ -30,6 +31,7 @@ class item
 				this.name = "Monster Droppings";
 				this.character = "d";
 				this.description = "Ew.";
+				this.canStack = true;
 				break;
 
 			case "rat_meat":
@@ -37,6 +39,7 @@ class item
 				this.name = "Rat Meat";
 				this.character = "m";
 				this.description = "Probably not good for eating.";
+				this.canStack = true;
 				break;
 
 			case "goblin_toe":
@@ -44,6 +47,7 @@ class item
 				this.name = "Goblin Toe";
 				this.character = "t";
 				this.description = "A goblin's big toe. It's smelly.";
+				this.canStack = true;
 				break;
 
 			case "bat_wing":
@@ -51,6 +55,7 @@ class item
 				this.name = "Bat Wing";
 				this.character = "w";
 				this.description = "Thin, supple bat wing.";
+				this.canStack = true;
 				break;
 
 			case "spider_body":
@@ -58,6 +63,7 @@ class item
 				this.name = "Spider Carcass";
 				this.character = "c";
 				this.description = "The carcass of a dead spider.";
+				this.canStack = true;
 				break;
 
 			case "skeleton_bone":
@@ -65,6 +71,7 @@ class item
 				this.name = "Femur";
 				this.character = "b";
 				this.description = "A human femur bone.";
+				this.canStack = true;
 				break;
 
 			case "kobold_candle":
@@ -72,6 +79,7 @@ class item
 				this.name = "candle";
 				this.character = "c";
 				this.description = "A partially used candle from a kobold.";
+				this.canStack = true;
 				break;
 
 			case "troll_fat":
@@ -79,6 +87,7 @@ class item
 				this.name = "Troll Fat";
 				this.character = "f";
 				this.description = "Slimy troll fat.";
+				this.canStack = true;
 				break;
 
 			case "shade_essence":
@@ -86,6 +95,7 @@ class item
 				this.name = "Shade Essence";
 				this.character = "e";
 				this.description = "A fine black powder.";
+				this.canStack = true;
 				break;
 
 			case "imp_ashes":
@@ -93,6 +103,7 @@ class item
 				this.name = "Impeous Ashes";
 				this.character = "a";
 				this.description = "Ashes from a dead demon.";
+				this.canStack = true;
 				break;
 
 			case "snake_skin":
@@ -100,6 +111,7 @@ class item
 				this.name = "Snake Skin";
 				this.character = "s";
 				this.description = "Scaly skin from a giant snake.";
+				this.canStack = true;
 				break;
 
 			case "disc":
@@ -107,6 +119,7 @@ class item
 				this.name = "Disc";
 				this.character = "d";
 				this.description = "A tiny disc.";
+				this.canStack = true;
 				break;
 
 			case "coin":
@@ -114,6 +127,7 @@ class item
 				this.name = "Rusty Coin";
 				this.character = "c";
 				this.description = "A rusty old coin.";
+				this.canStack = true;
 				break;
 
 			case "key":
@@ -121,6 +135,7 @@ class item
 				this.name = "Battered Key";
 				this.character = "k";
 				this.description = "A battered old key.";
+				this.canStack = true;
 				break;
 				
 			case "corpseHero": 
@@ -128,6 +143,7 @@ class item
 				this.name = "Hero Skull";
 				this.character = "k";
 				this.description = "The skull of a heroic champion that perished in the dungeon.";
+				this.canStack = true;
 				break;
 
 			case "corpseCleric": 
@@ -135,6 +151,7 @@ class item
 				this.name = "Priest Skull";
 				this.character = "k";
 				this.description = "The skull of a lowly healer that perished in the dungeon.";
+				this.canStack = true;
 				break;				
 
 			case "fists":
