@@ -117,7 +117,7 @@ class unit
 				defence = 2;
 				agility = 0;
 				level = 2;
-				this.frostResist = 0.1;
+				this.frostResist = 0.0;
 				break;
 
 			case "goblin":
@@ -186,8 +186,8 @@ class unit
 				defence = 3;
 				agility = 2;
 				level = 4;
-				this.frostResist = 0.2;
-				this.fireResist = 1.5;
+				this.frostResist = 0.0;
+				this.fireResist = 2.0;
 				break;
 
 			case "imp":
@@ -240,7 +240,7 @@ class unit
 				level = 1;
 				this.passive = true;
 				this.fireResist = 0.01;
-				this.frostResist = 0.01;
+				this.frostResist = 0.0;
 				this.earthResist = 0.01;
 				break;
 
@@ -259,7 +259,7 @@ class unit
 				defence = 5;
 				agility = 1;
 				level = 15;
-				this.fireResist = 0.1;
+				this.fireResist = 0.0;
 				this.frostResist = 0.5;
 				this.earthResist = 0.8;
 				break;
@@ -280,7 +280,7 @@ class unit
 				level = 15;
 				this.fireResist = 0.8;
 				this.frostResist = 0.3;
-				this.earthResist = 0.1;
+				this.earthResist = 0.0;
 
 				this.angerThreshold = 0.9;
 				break;
@@ -588,25 +588,25 @@ class unit
 		if(Math.abs(distanceX) >= Math.abs(distanceY))
 		{
 			// y-distance is shorter, move along x-axis towards destination
-			if((directionX.unit !== null && directionX.hazard === null) || directionX.base.moveTo(this))
+			if((directionX.unit !== null && (directionX.hazard === null || this.class == "boss")) || directionX.base.moveTo(this))
 				move = directionX;
 		}
 
 		if(Math.abs(distanceY) >= Math.abs(distanceX) || move === null)
 		{
 			// Move along y-axis
-			if((directionY.unit !== null && directionY.hazard === null) || directionY.base.moveTo(this))
+			if((directionY.unit !== null && (directionY.hazard === null || this.class == "boss")) || directionY.base.moveTo(this))
 				move = directionY;
 		}
 
 		if(Math.abs(distanceY) >= Math.abs(distanceX) && move === null)
 		{
 			// Edge case
-			if((directionX.unit !== null && directionX.hazard === null) || directionX.base.moveTo(this))
+			if((directionX.unit !== null && (directionX.hazard === null || this.class == "boss")) || directionX.base.moveTo(this))
 				move = directionX;
 		}
 
-		if(move !== null && move.hazard === null)
+		if(move !== null && (move.hazard === null || this.class == "boss"))
 		{
 			this.moveTo(move.location);
 		}
@@ -902,8 +902,8 @@ class unit
 					else
 					{
 						// Penalty for not having a kill in the last five turns.
-						if(attacker.class == "player")
-							addLog("The " + attacker.weapon.getName() + " is silent.");
+						// if(attacker.class == "player")
+						// 	addLog("The " + attacker.weapon.getName() + " is silent.");
 						damage *= 0.8;
 						attacker.weapon.kills = 0;
 					}
@@ -1023,11 +1023,7 @@ class unit
 
 
 
-		this.damage(damage, null, null);
-
-		if(this.health <= 0)
-			this.die(attacker);
-
+		this.damage(damage, attacker, null);
 	}
 
 	damage(amount, attacker, damageType)

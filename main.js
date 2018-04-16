@@ -200,7 +200,7 @@ function updateDisplay()
 					}
 				}
 
-				title = title + "\rx: " + tile.location.x + " y: " + tile.location.y;
+				// title = title + "\rx: " + tile.location.x + " y: " + tile.location.y;
 				
 				if(displayTile.innerHTML != character)
 					displayTile.innerHTML = character;
@@ -352,11 +352,11 @@ function updateDisplay()
 		if(player.weapon.lastKillTurn > turnCount - 8)
 		{
 			html += '<img class="statusIcon" src="./Bloodlust.png" title="Bloodlust - Your weapon deals 10% additional damage for each stack of bloodlust." />' + player.weapon.kills + '\n';
-			html += '<img class="statusIcon" src="./Greylust.png" title="Bloodlust cooldown - When this timer runs out you will lose all stacks of bloodlust. Gaining a stack of bloodlust resets this counter.' + (turnCount - player.weapon.lastKillTurn - 8) * -1 + '\n';
+			html += '<img class="statusIcon" src="./Greylust.png" title="Bloodlust cooldown - When this timer runs out you will lose all stacks of bloodlust. Gaining a stack of bloodlust resets this counter." />' + (turnCount - player.weapon.lastKillTurn - 8) * -1 + '\n';
 		}
-		else if(player.weapon.identified())
+		else if(player.weapon.isIdentifed())
 		{
-			html += 'Reduced damage \n';
+			html += '<img class="statusIcon" src="./placeholder_status.png" title="Damage Reduction - Something is reducing the effectiveness of your melee attacks." /> \n';
 		}
 	}
 

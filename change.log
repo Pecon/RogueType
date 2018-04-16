@@ -79,5 +79,6 @@ v2.1.0
 - You now have to hover the mouse over inventory items to see their action buttons. This makes the inventory interface much cleaner and addresses some issues with buttons overflowing off inventory entries. (credit Zeustal for tick graphic)
 - The inventory is now sorted, and junk items now "stack" so that duplicates of them do not take up so much space.
 - Item dropping is now enabled for all stages of the game. I personally recommend not dropping anything, but I guess you can now if you really want to.
-- Statuses such as poison, stun, exhaustion and more are now displayed underneath the other status counters. (credit Zeustal for status graphics)
+- Statuses such as poison, stun, exhaustion, loss of control, and certain enchantment information are now displayed underneath the other stat counters. (credit Zeustal for all status graphics)
 - Attacking monsters from a distance should now cause them to aggro properly.
+- Increased the size of the boss room in The Dungeon on easy and normal to make things just slightly less claustrophobic.

@@ -231,7 +231,7 @@ class projectile
 				break;
 
 			case "concussive_missle":
-				unit.stun += getRandom(1, 3);
+				unit.stun += Math.floor(getRandom(1, 3) * unit.earthResist);
 
 				if(unit.class == "player")
 					addLog("The concussive missle knocks the wind out of you!");
@@ -255,7 +255,7 @@ class projectile
 			damage = 0;
 
 			if(this.sourceUnit.class == "player")
-			addLog("The " + unit.getName() + " appears immune to be immune to that kind of element!");
+				addLog("The " + unit.getName() + " appears immune to be immune to that kind of element!");
 		}
 
 		unit.damage(damage, this.sourceUnit, this.element);
