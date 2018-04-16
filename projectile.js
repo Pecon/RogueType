@@ -23,6 +23,7 @@ class projectile
 		this.location = {x: location.x, y: location.y};
 		this.rotation = {x: vector.x, y: vector.y};
 		this.sourceUnit = sourceUnit;
+		this.element = "arcane";
 
 		switch(typeName)
 		{
@@ -30,30 +31,35 @@ class projectile
 				this.name = "Fire Ball";
 				this.character = "*";
 				this.directDamage = 2;
+				this.element = "fire";
 				break;
 
 			case "frostbolt":
 				this.name = "Frost Bolt";
 				this.character = "-";
 				this.directDamage = 8;
+				this.element = "frost";
 				break;
 
 			case "firestorm":
 				this.name = "Fire Storm";
 				this.character = "*";
 				this.directDamage = 20;
+				this.element = "fire";
 				break;
 
 			case "giestflame":
 				this.name = "Giestflame";
 				this.character = "*";
 				this.directDamage = 3.5;
+				this.element = "fire";
 				break;
 
 			case "snowball":
 				this.name = "Snowball";
 				this.character = "+";
 				this.directDamage = 2.5;
+				this.element = "frost";
 				break;
 
 			case "magic_missle":
@@ -61,12 +67,14 @@ class projectile
 				this.character = "-";
 				this.directDamage = 9;
 				this.bouncesLeft = 3;
+				this.element = "arcane";
 				break;
 
 			case "concussive_missle":
 				this.name = "Concussion Missle";
 				this.character = "-";
 				this.directDamage = 5;
+				this.element = "earth";
 				break;
 
 			default:
@@ -177,7 +185,7 @@ class projectile
 				else
 					addLog("The " + unit.getName() + " is chilled by the frost bolt!");
 
-					unit.stamina -= 15;
+					unit.stamina -= (15 * unit.frostResist);
 				break;
 
 			case "firestorm":
@@ -211,7 +219,7 @@ class projectile
 				else
 					addLog("The " + unit.getName() + " is chilled by the snowball!");
 
-				unit.stamina -= 5;
+				unit.stamina -= (5 * unit.frostResist);
 				break;
 
 			case "magic_missle":
@@ -232,15 +240,28 @@ class projectile
 				break;
 		}
 
-		unit.health -= this.directDamage;
+		let damage = this.directDamage;
+
+		if(this.element == "fire")
+			damage *= unit.fireResist;
+		else if(this.element == "frost")
+			damage *= unit.frostResist;
+		else if(this.element == "earth")
+			damage *= unit.earthResist;
+
+
+		if(damage <= 0)
+		{
+			damage = 0;
+
+			if(this.sourceUnit.class == "player")
+			addLog("The " + unit.getName() + " appears immune to be immune to that kind of element!");
+		}
+
+		unit.damage(damage, this.sourceUnit, this.element);
 
 		if(doExplosion)
 			this.explode();
-
-		if(unit.health <= 0)
-		{
-			unit.die(this.sourceUnit);
-		}
 	}
 
 	collideWall(tileBase)
@@ -309,7 +330,7 @@ class projectile
 							tile.hazard.remove();
 
 						if(tile.unit !== null)
-							tile.unit.health -= 4;
+							tile.unit.damage(4 * tile.unit.fireResist, this.sourceUnit, this.element);
 
 						tile.hazard = new hazard("bigfire", tile.location);
 					}

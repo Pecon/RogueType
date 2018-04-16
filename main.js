@@ -200,7 +200,7 @@ function updateDisplay()
 					}
 				}
 
-				//title = title + "\rx: " + tile.location.x + " y: " + tile.location.y;
+				title = title + "\rx: " + tile.location.x + " y: " + tile.location.y;
 				
 				if(displayTile.innerHTML != character)
 					displayTile.innerHTML = character;
@@ -247,10 +247,10 @@ function updateDisplay()
 
 				for(let j = 0; j < stackInventory.length; j++)
 				{
-					if(stackInventory.itemType == inventory[i].type)
+					if(stackInventory[j].itemType == inventory[i].type)
 					{
-						stackInventory.stack.push(inventory[i]);
-						stackInventory.referenceIndexes.push(i);
+						stackInventory[j].stack.push(inventory[i]);
+						stackInventory[j].referenceIndexes.push(i);
 						found = true;
 						break;
 					}
@@ -277,7 +277,7 @@ function updateDisplay()
 			}
 			
 		}
-
+		// console.log(stackInventory);
 
 		for(let i = 0; i < stackInventory.length; i++)
 		{
@@ -347,6 +347,18 @@ function updateDisplay()
 		html += '<img class="statusIcon" src="./Exhaustion.png" title="Exhausted - You\'re exhausted! You\'ll need to wait a few turns to recover or drink a stamina potion of some sort." /> ' + Math.ceil(player.stamina / 5 * -1) + "\n";
 	if(player.compulsiveAction !== null)
 		html += '<img class="statusIcon" src="./ControlLoss.png" title="No Control - You\'re being forced to do a specific action this turn." /> \n';
+	if(player.weapon.magicalEffect == "bloodlust")
+	{
+		if(player.weapon.lastKillTurn > turnCount - 8)
+		{
+			html += '<img class="statusIcon" src="./Bloodlust.png" title="Bloodlust - Your weapon deals 10% additional damage for each stack of bloodlust." />' + player.weapon.kills + '\n';
+			html += '<img class="statusIcon" src="./Greylust.png" title="Bloodlust cooldown - When this timer runs out you will lose all stacks of bloodlust. Gaining a stack of bloodlust resets this counter.' + (turnCount - player.weapon.lastKillTurn - 8) * -1 + '\n';
+		}
+		else if(player.weapon.identified())
+		{
+			html += 'Reduced damage \n';
+		}
+	}
 
 	statusObject.innerHTML = html;
 }
@@ -361,7 +373,7 @@ function inventorySwap(a, b)
 	else if(weightB > weightA)
 		return 1;
 	else
-		return 0;
+		return a.getName().localeCompare(b.getName());
 }
 
 function getInventoryWeight(item)
@@ -616,8 +628,6 @@ function addMap()
 
 function confirmAddMap(map)
 {
-	//console.log(customMaps[customMaps.length - 1]);
-	//console.log(map);
 	if(gameData.customMaps[gameData.customMaps.length - 1] == map)
 	{
 		saveCookie();
@@ -1200,7 +1210,6 @@ function loadMap(mapText, mapInfo, customMap)
 			if(mapInfo.src == gameData.customMaps[i].src)
 			{
 				conflict = true;
-				//console.log("Map already in list.");
 				break;
 			}
 		}

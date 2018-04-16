@@ -119,7 +119,7 @@ class hazard
 			case "fire":
 				if(tile.unit !== null)
 				{
-					tile.unit.health -= 3;
+					tile.unit.damage(3 * tile.unit.fireResist, null, "fire");
 
 					if(tile.unit.class == "player")
 						addLog("You're burned by the flames!", "color: orange;");
@@ -129,7 +129,7 @@ class hazard
 			case "bigfire":
 				if(tile.unit !== null)
 				{
-					tile.unit.health -= 6;
+					tile.unit.damage(6 * tile.unit.fireResist, null, "fire");
 
 					if(tile.unit.class == "player")
 						addLog("You're burned by the massive flames!", "color: orange;");
@@ -139,7 +139,7 @@ class hazard
 			case "dragonfire":
 				if(tile.unit !== null)
 				{
-					tile.unit.health -= 10;
+					tile.unit.damage((6 * tile.unit.fireResist) + 4, null, "fire");
 
 					if(tile.unit.class == "player")
 						addLog("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", "color: orange;");
@@ -149,7 +149,7 @@ class hazard
 			case "chilly":
 				if(tile.unit !== null)
 				{
-					tile.unit.stamina -= 10;
+					tile.unit.stamina -= (10 * tile.unit.frostResist);
 
 					if(tile.unit.class == "player")
 						addLog("It's freezing cold here!", "color: cyan;");
@@ -162,8 +162,8 @@ class hazard
 
 				if(tile.unit !== null)
 				{
-					tile.unit.health -= 20;
-					tile.unit.stamina -= 20;
+					tile.unit.damage(20 * tile.unit.earthResist, null, "earth");
+					tile.unit.stamina -= (20 * tile.unit.earthResist);
 					tile.unit.stun++;
 
 					if(tile.unit.class == "player")
@@ -177,7 +177,7 @@ class hazard
 			case "speartrap_off":
 				if(tile.unit !== null)
 				{
-					tile.unit.health -= 4;
+					tile.unit.damage(4, null, "stab");
 					tile.unit.stun++;
 					if(tile.unit.class == "player")
 						addLog("You're impaled by hidden spears!");
@@ -192,7 +192,7 @@ class hazard
 			case "speartrap_on":
 				if(tile.unit !== null)
 				{
-					tile.unit.health -= 2;
+					tile.unit.damage(2, null, "stab");
 					if(tile.unit.class == "player")
 						addLog("You walk through the spears.");
 					else

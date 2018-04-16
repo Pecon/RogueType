@@ -17,6 +17,14 @@ class unit
 		this.poisonSchedule = 0;
 		this.moveDelay = 0;
 		this.moveDelaySchedule = 0;
+		this.aggro = 0;
+
+		// Element modifiers
+		// 1.0 is no change. Lower value will create resistance, higher values will create vulnerability.
+		this.fireResist = 1.0;
+		this.frostResist = 1.0;
+		this.earthResist = 1.0;
+
 		let maxHealth = 100;
 		let maxStamina = 100;
 		let character = '?';
@@ -109,6 +117,7 @@ class unit
 				defence = 2;
 				agility = 0;
 				level = 2;
+				this.frostResist = 0.1;
 				break;
 
 			case "goblin":
@@ -159,6 +168,7 @@ class unit
 				defence = 2;
 				agility = 1;
 				level = 5;
+				this.earthResist = 0.2;
 				break;
 
 			case "shade":
@@ -176,6 +186,8 @@ class unit
 				defence = 3;
 				agility = 2;
 				level = 4;
+				this.frostResist = 0.2;
+				this.fireResist = 1.5;
 				break;
 
 			case "imp":
@@ -192,6 +204,7 @@ class unit
 				defence = 1;
 				agility = 4;
 				level = 4;
+				this.frostResist = 2.0;
 				break;
 
 			case "cobra":
@@ -208,6 +221,7 @@ class unit
 				defence = 1;
 				agility = 5;
 				level = 5;
+				this.frostResist = 1.5; // 50% frost vulnerability
 				break;
 
 			case "cat":
@@ -225,6 +239,9 @@ class unit
 				agility = 100;
 				level = 1;
 				this.passive = true;
+				this.fireResist = 0.01;
+				this.frostResist = 0.01;
+				this.earthResist = 0.01;
 				break;
 
 			case "drake":
@@ -242,6 +259,9 @@ class unit
 				defence = 5;
 				agility = 1;
 				level = 15;
+				this.fireResist = 0.1;
+				this.frostResist = 0.5;
+				this.earthResist = 0.8;
 				break;
 
 			case "beast":
@@ -258,6 +278,10 @@ class unit
 				defence = 5;
 				agility = 1;
 				level = 15;
+				this.fireResist = 0.8;
+				this.frostResist = 0.3;
+				this.earthResist = 0.1;
+
 				this.angerThreshold = 0.9;
 				break;
 
@@ -367,7 +391,7 @@ class unit
 			// Don't run AI code
 			return;
 		}
-		else if(this.class == "boss")
+		else if(this.class == "boss") // Displacer beast boss code
 		{
 			if(gameStage < 2)
 				return;
@@ -454,7 +478,7 @@ class unit
 				this.moveTowards(player.location);
 			}
 		}
-		else
+		else // Generic AI code
 		{		
 			let playerDist = vectorDist(this.location, player.location);
 			let tile = getWorld(this.location);
@@ -472,13 +496,28 @@ class unit
 					player.attack(this);
 				}
 			}
+			else if(this.aggro > 0 && tile.hazard === null)
+			{
+				if(playerDist <= this.perception + 2 && !this.passive)
+				{
+					if(this.aggro < 3)
+						this.aggro = 3;
+
+					this.target = player.location;
+				}
+				
+				this.moveTowards(this.target);
+			}
 			else if(playerDist <= this.perception + 2 && !this.passive && tile.hazard === null)
 			{
-				this.moveTowards(player.location);	
+				this.target = player.location;
+				this.aggro = 3;
+
+				this.moveTowards(this.target);	
 			}
 			else
 			{
-				if(Math.random() > 0.8)
+				if(Math.random() > 0.8 && tile.hazard === null)
 				{
 					//Wait
 				}
@@ -499,6 +538,8 @@ class unit
 					if(getWorld(westOf(this.location)).base.permitsTravel)
 						moves.push(getWorld(westOf(this.location)));
 
+					let movesBackup = moves.slice();
+
 					while(moves.length > 0)
 					{
 						let index = getRandom(0, moves.length - 1);
@@ -509,16 +550,66 @@ class unit
 						else if(move.base.moveTo(this) && move.unit === null && move.hazard === null)
 						{
 							this.moveTo(move.location);
-							break;
+							return;
 						}
 						else
 							moves.splice(index, 1);
 					}
 
+					// Prevent monsters from standing still while engulfed by hazards
+					if(tile.hazard !== null)
+						this.moveTo(movesBackup[getRandom(0, movesBackup.length - 1)]);
 				}
 			}
 		}
 
+	}
+
+	moveTowards(location)
+	{
+		let distanceX = this.location.x - location.x;
+		let distanceY = this.location.y - location.y;
+		let directionX, directionY, move = null;
+
+		if(distanceX > 0)
+			directionX = getWorld(westOf(this.location));
+		else if(distanceX < 0)
+			directionX = getWorld(eastOf(this.location));
+		else
+			directionX = getWorld(this.location);
+
+		if(distanceY > 0)
+			directionY = getWorld(northOf(this.location));
+		else if(distanceY < 0)
+			directionY = getWorld(southOf(this.location));
+		else
+			directionY = getWorld(this.location);
+
+		if(Math.abs(distanceX) >= Math.abs(distanceY))
+		{
+			// y-distance is shorter, move along x-axis towards destination
+			if((directionX.unit !== null && directionX.hazard === null) || directionX.base.moveTo(this))
+				move = directionX;
+		}
+
+		if(Math.abs(distanceY) >= Math.abs(distanceX) || move === null)
+		{
+			// Move along y-axis
+			if((directionY.unit !== null && directionY.hazard === null) || directionY.base.moveTo(this))
+				move = directionY;
+		}
+
+		if(Math.abs(distanceY) >= Math.abs(distanceX) && move === null)
+		{
+			// Edge case
+			if((directionX.unit !== null && directionX.hazard === null) || directionX.base.moveTo(this))
+				move = directionX;
+		}
+
+		if(move !== null && move.hazard === null)
+		{
+			this.moveTo(move.location);
+		}
 	}
 
 	moveTo(location)
@@ -796,11 +887,11 @@ class unit
 				case "bloodlust":
 					if(attacker.weapon.lastKillTurn === undefined)
 					{
-						attacker.weapon.lastKillTurn = -7;
+						attacker.weapon.lastKillTurn = -8;
 						attacker.weapon.kills = 0;
 					}
 
-					if(attacker.weapon.lastKillTurn > turnCount - 7)
+					if(attacker.weapon.lastKillTurn > turnCount - 8)
 					{
 						// Made a kill in the last 5 turns, gets damage bonus
 						if(attacker.class == "player")
@@ -932,62 +1023,28 @@ class unit
 
 
 
-		this.health -= damage;
+		this.damage(damage, null, null);
 
 		if(this.health <= 0)
 			this.die(attacker);
 
 	}
 
-	moveTowards(location)
+	damage(amount, attacker, damageType)
 	{
-		// Move towards the player
-		let distanceX = this.location.x - location.x;
-		let distanceY = this.location.y - location.y;
-		let directionX, directionY, move = null;
-
-		if(distanceX > 0)
-			directionX = getWorld(westOf(this.location));
-		else if(distanceX < 0)
-			directionX = getWorld(eastOf(this.location));
-		else
-			directionX = getWorld(this.location);
-
-		if(distanceY > 0)
-			directionY = getWorld(northOf(this.location));
-		else if(distanceY < 0)
-			directionY = getWorld(southOf(this.location));
-		else
-			directionY = getWorld(this.location);
-
-		if(Math.abs(distanceX) >= Math.abs(distanceY))
+		if(attacker != undefined)
 		{
-			// y-distance is shorter, move along x-axis towards destination
-			if((directionX.unit !== null && directionX.hazard === null) || directionX.base.moveTo(this))
-				move = directionX;
+			this.target = attacker.location;
+			this.aggro = 6;
 		}
 
-		if(Math.abs(distanceY) >= Math.abs(distanceX) || move === null)
-		{
-			// Move along y-axis
-			if((directionY.unit !== null && directionY.hazard === null) || directionY.base.moveTo(this))
-				move = directionY;
-		}
+		this.health -= amount;
 
-		if(Math.abs(distanceY) >= Math.abs(distanceX) && move === null)
-		{
-			// Edge case
-			if((directionX.unit !== null && directionX.hazard === null) || directionX.base.moveTo(this))
-				move = directionX;
-		}
-
-		if(move !== null && move.hazard === null)
-		{
-			this.moveTo(move.location);
-		}
+		if(this.health <= 0)
+			this.die(attacker, damageType);
 	}
 
-	die(killer)
+	die(killer, damageType)
 	{
 		if(this.class != "player")
 			addLog("The " + this.name + " is dead.");
@@ -1027,7 +1084,7 @@ class unit
 		score += 10 * this.level;
 		kills++;
 
-		if(killer !== undefined)
+		if(killer != undefined)
 		{
 			if(killer.class == "player" && killer != this)
 				killer.addExp(this.level * getRandom(1, 3));
