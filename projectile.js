@@ -23,6 +23,7 @@ class projectile
 		this.location = {x: location.x, y: location.y};
 		this.rotation = {x: vector.x, y: vector.y};
 		this.sourceUnit = sourceUnit;
+		this.range = null;
 		this.element = "arcane";
 
 		switch(typeName)

@@ -590,6 +590,36 @@ class item
 				this.magicalCost = 6;
 				break;
 
+			case "scroll_identify":
+				this.class = "book";
+				this.name = "Unidentified Scroll";
+				this.realName = "Scroll of Identification";
+				this.character = "s";
+				this.description = "A magical scroll written in an ancient language.";
+				this.realDescription = "This scroll contains a spell that will identify other items in your inventory.";
+				this.readEffect = "identify";
+				break;
+
+			case "scroll_recharge":
+				this.class = "book";
+				this.name = "Unidentified Scroll";
+				this.realName = "Scroll of Recharge";
+				this.character = "s";
+				this.description = "A magical scroll written in an ancient language.";
+				this.realDescription = "This scroll contains a spell that will completely recharge the enchantment on your weapon.";
+				this.readEffect = "recharge";
+				break;
+
+			case "scroll_cleanse":
+				this.class = "book";
+				this.name = "Unidentified Scroll";
+				this.realName = "Scroll of Cleansing";
+				this.character = "s";
+				this.description = "A magical scroll written in an ancient language.";
+				this.realDescription = "This scroll contains a spell that will remove all hazards from the immediate area, and will free you from stuns or exhaustion.";
+				this.readEffect = "cleanse";
+				break;
+
 			case "health_potion":
 				this.class = "consumable";
 				this.name = "Unidentified Potion";
@@ -703,17 +733,17 @@ class item
 				this.specialEffect = "placebo";
 				break;
 
-			case "identify_potion":
-				this.class = "consumable";
-				this.name = "Unidentified Potion";
-				this.realName = "Potion of Identification";
-				this.character = 'p';
-				this.description = "A small flask filled with an unknown potion.";
-				this.realDescription = "Helps identify unknown items.";
-				this.healthEffect = 0;
-				this.staminaEffect = 0;
-				this.specialEffect = "identification";
-				break;
+			// case "identify_potion":
+			// 	this.class = "consumable";
+			// 	this.name = "Unidentified Potion";
+			// 	this.realName = "Potion of Identification";
+			// 	this.character = 'p';
+			// 	this.description = "A small flask filled with an unknown potion.";
+			// 	this.realDescription = "Helps identify unknown items.";
+			// 	this.healthEffect = 0;
+			// 	this.staminaEffect = 0;
+			// 	this.specialEffect = "identification";
+			// 	break;
 
 			case "defence_potion":
 				this.class = "consumable";
@@ -971,10 +1001,13 @@ class item
 		return false;
 	}
 
-	identify()
+	identify(announce)
 	{
 		if(this.isIdentifed())
 			return;
+
+		if(announce != undefined)
+			addLog("You identified your " + this.name + " !", "color: blue;");
 
 		inventoryUpdate = true;
 		knownItems.push(this.realName);

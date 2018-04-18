@@ -294,11 +294,13 @@ function updateDisplay()
 			html = html + "<br />\n";
 
 			if(item.class == "weapon" && name != "fists" && player.weapon != item)
-				html = html + ' <button onclick="equip(' + stackInventory[i].referenceIndexes[0] + ')" class="' + className +'" ' + allButtonsProperties + '>Equip</button>';
+				html += ' <button onclick="equip(' + stackInventory[i].referenceIndexes[0] + ')" class="' + className +'" ' + allButtonsProperties + '>Equip</button>';
 			else if(item.class == "consumable")
-				html = html + ' <button onclick="drink(' + stackInventory[i].referenceIndexes[0] + ')" class="' + className +'" ' + allButtonsProperties + '>Drink</button>';
+				html += ' <button onclick="drink(' + stackInventory[i].referenceIndexes[0] + ')" class="' + className +'" ' + allButtonsProperties + '>Drink</button>';
 			else if(item.class == "wand")
-				html = html + ' <button onclick="zap(' + stackInventory[i].referenceIndexes[0] + ')" class="' + className +'" ' + allButtonsProperties + '>Zap</button>';
+				html += ' <button onclick="zap(' + stackInventory[i].referenceIndexes[0] + ')" class="' + className +'" ' + allButtonsProperties + '>Zap</button>';
+			else if(item.class == "book")
+				html += ' <button onclick="read(' + stackInventory[i].referenceIndexes[0] + ')" class="' + className + '" ' + allButtonsProperties + '>Read</button>';
 			else
 				usable = false;
 
@@ -337,7 +339,7 @@ function updateDisplay()
 	}
 	expObject.textContent = text;
 
-	// Statuses
+	// Status icons
 	let html = "";
 	if(player.stun > 0)
 		html += '<img class="statusIcon" src="./Stun2.png" title="Stunned - You cannot move or attack while stunned. Stamina is consumed each turn to recover from stun status; if you don\'t have enough stamina the stun will extend until you do." /> ' + player.stun + "\n";
@@ -358,6 +360,10 @@ function updateDisplay()
 		{
 			html += '<img class="statusIcon" src="./placeholder_status.png" title="Damage Reduction - Something is reducing the effectiveness of your melee attacks." /> \n';
 		}
+	}
+	else if(player.weapon.magicalEffect == "dullness")
+	{
+		html += '<img class="statusIcon" src="./placeholder_status.png" title="Damage Reduction - Something is reducing the effectiveness of your melee attacks." /> \n';
 	}
 
 	statusObject.innerHTML = html;
@@ -384,12 +390,21 @@ function getInventoryWeight(item)
 			return 0;
 
 		case "consumable":
+			if(item.isIdentifed())
+				return 1.5;
+
 			return 1;
 
 		case "wand":
+			if(item.isIdentifed())
+				return 2.5;
+
 			return 2;
 
 		case "weapon":
+			if(item.baseWeapon)
+				return 3.5;
+
 			return 3;
 
 		default:
@@ -1626,7 +1641,7 @@ function drink(slot)
 		else
 		{
 			quickActionUsed = true;
-			bulletTime();
+			updateDisplay();
 		}
 	}
 }
@@ -1647,6 +1662,84 @@ function zap(slot)
 	addLog("Select a direction to zap using the attack keys. Press " + gameData.options.waitKey + " to cancel.");
 	yourTurn = false;
 	zapSelect = item;
+}
+
+function read(slot)
+{
+	if(!yourTurn)
+		return;
+
+	let book = inventory[slot];
+
+	if(book === undefined)
+		return;
+
+	if(book.class != "book")
+		return;
+
+	let success = false;
+
+	addLog("You read the " + book.getName() + " and it burns up as the spell is released...");
+
+	switch(book.readEffect)
+	{
+		case "identify":
+			let availableItems = Array();
+			let randomizedItems = Array();
+
+			for(let i = 0; i < inventory.length; i++)
+			{
+				let checkItem = inventory[i];
+
+				if(checkItem.class == "wand" || checkItem.class == "book" || checkItem.class == "consumable" || (checkItem.class == "weapon" && !checkItem.baseWeapon))
+					availableItems.push(checkItem);
+			}
+
+			let length = availableItems.length;
+			for(let i = 0; i < length; i++)
+			{
+				let spliceIndex = getRandom(0, availableItems.length - 1);
+
+				randomizedItems.push(availableItems.splice(spliceIndex, 1));
+			}
+
+			let total = Math.ceil(Math.log(randomizedItems.length));
+			for(let i = 0; i < total; i++)
+			{
+				randomizedItems.splice(getRandom(0, randomizedItems.length - 1)).identify(true);
+				success = true;
+			}
+			break;
+
+		case "recharge":
+			if(player.weapon.magicalEffect !== null)
+			{
+				player.weapon.magicalCharge = 40;
+				success = true;
+
+				addLog("Your " + player.weapon.getName() + " glows brightly! It's enchantment seems to have been recharged.");
+			}
+			else
+			{
+				addLog("Nothing happens.");
+			}
+			break;
+
+		case "cleanse":
+			
+	}
+
+	if(success && !book.isIdentifed())
+	{
+		book.identify();
+		addLog("That was a " + book.getName() + "!", "color: lightblue;");
+	}
+	else if(!success && !book.isIdentifed())
+	{
+		addLog("You can't tell what effect that might have had.");
+	}
+	
+	book.remove();
 }
 
 function drop(slot)
