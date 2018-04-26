@@ -358,12 +358,12 @@ function updateDisplay()
 		}
 		else if(player.weapon.isIdentifed())
 		{
-			html += '<img class="statusIcon" src="./placeholder_status.png" title="Damage Reduction - Something is reducing the effectiveness of your melee attacks." /> \n';
+			html += '<img class="statusIcon" src="./DamageReduction.png" title="Damage Reduction - Something is reducing the effectiveness of your melee attacks." /> \n';
 		}
 	}
-	else if(player.weapon.magicalEffect == "dullness")
+	else if(player.weapon.magicalEffect == "dullness" && player.weapon.isIdentifed())
 	{
-		html += '<img class="statusIcon" src="./placeholder_status.png" title="Damage Reduction - Something is reducing the effectiveness of your melee attacks." /> \n';
+		html += '<img class="statusIcon" src="./DamageReduction.png" title="Damage Reduction - Something is reducing the effectiveness of your melee attacks." /> \n';
 	}
 
 	statusObject.innerHTML = html;
@@ -395,17 +395,23 @@ function getInventoryWeight(item)
 
 			return 1;
 
-		case "wand":
+		case "book":
 			if(item.isIdentifed())
 				return 2.5;
 
 			return 2;
 
-		case "weapon":
-			if(item.baseWeapon)
+		case "wand":
+			if(item.isIdentifed())
 				return 3.5;
 
 			return 3;
+
+		case "weapon":
+			if(item.baseWeapon)
+				return 4.5;
+
+			return 4;
 
 		default:
 			return -1;
@@ -1626,7 +1632,7 @@ function drink(slot)
 			if(drink.realName != drink.getName() && identify)
 			{
 				drink.identify();
-				addLog("That must have been " + aOrAn(drink.realName) + " " + drink.realName + "!", "color: #22F;");
+				addLog("That must have been " + aOrAn(drink.realName) + " " + drink.realName + "!", "color: #lightblue;");
 			}
 			else if(drink.realName != drink.getName() && !identify)
 				addLog("You can't discern what that potion did.");
@@ -1691,7 +1697,7 @@ function read(slot)
 			{
 				let checkItem = inventory[i];
 
-				if(checkItem.class == "wand" || checkItem.class == "book" || checkItem.class == "consumable" || (checkItem.class == "weapon" && !checkItem.baseWeapon))
+				if((checkItem.class == "wand" || checkItem.class == "book" || checkItem.class == "consumable" || (checkItem.class == "weapon" && !checkItem.baseWeapon)) && checkItem.realName != book.realName)
 					availableItems.push(checkItem);
 			}
 
@@ -1703,10 +1709,11 @@ function read(slot)
 				randomizedItems.push(availableItems.splice(spliceIndex, 1));
 			}
 
-			let total = Math.ceil(Math.log(randomizedItems.length));
+			let total = Math.ceil(Math.log(randomizedItems.length) + 0.25);
+
 			for(let i = 0; i < total; i++)
 			{
-				randomizedItems.splice(getRandom(0, randomizedItems.length - 1)).identify(true);
+				randomizedItems[i][0].identify(true);
 				success = true;
 			}
 			break;
@@ -1726,13 +1733,49 @@ function read(slot)
 			break;
 
 		case "cleanse":
+			// Stun-breaking functionality isn't really reachable at the moment since stuns prevent you from interacting with your inventory. Todo list.
+			if(player.stun > 0)
+			{
+				addLog("The world suddenly comes back into focus. You're no longer stunned!");
+				success = true;
+				player.stun = 0;
+			}
+
+			if(player.stamina <= 0)
+			{
+				addLog("You like you've suddenly been slapped awake. You're no longer immobilized by exhaustion!");
+				success = true;
+				player.stamina = 5;
+			}
+
+			let location = player.location;
+			for(let x = location.x - 2; x <= location.x + 2; x++)
+			{
+				for(let y = location.y - 2; y <= location.y + 2; y++)
+				{
+					let tile = getWorld({x: x, y: y});
+
+					if(tile.hazard === null)
+						continue;
+
+					tile.hazard.remove();
+					success = true;
+				}
+			}
+
+			if(success)
+				addLog("Cleansing blue light flows out in the areas around you, purifying the immediate area.");
+			else
+				addLog("Nothing happens.");
+
+			break;
 			
 	}
 
 	if(success && !book.isIdentifed())
 	{
 		book.identify();
-		addLog("That was a " + book.getName() + "!", "color: lightblue;");
+		addLog("That was " + aOrAn(book.realName) + " " + book.realName + "!", "color: lightblue;");
 	}
 	else if(!success && !book.isIdentifed())
 	{
@@ -1740,6 +1783,8 @@ function read(slot)
 	}
 	
 	book.remove();
+	inventoryUpdate = true;
+	bulletTime();
 }
 
 function drop(slot)
@@ -1826,7 +1871,7 @@ function drop(slot)
 
 // Drop lists
 var junkDrops = Array("corpseHero", "corpseCleric");
-var commonDrops = Array("health_potion", "stamina_potion", "energy_potion", "refresh_potion", "posion_potion", "fatigue_potion", "disintegrate_potion", "placebo_potion", "identify_potion", "defence_potion", "frail_potion", "agility_potion", "slug_potion", "exp_potion", "forget_potion", "antipoison_potion", "disc", "coin", "key", "bat", "knuckles", "dagger");
+var commonDrops = Array("health_potion", "stamina_potion", "energy_potion", "refresh_potion", "posion_potion", "fatigue_potion", "disintegrate_potion", "placebo_potion", "defence_potion", "frail_potion", "agility_potion", "slug_potion", "exp_potion", "forget_potion", "antipoison_potion", "scroll_identify", "scroll_recharge", "scroll_cleanse", "disc", "coin", "key", "bat", "knuckles", "dagger");
 var uncommonDrops = Array("longsword", "rapier", "mace", "sledgehammer", "greatsword", "flail", "wand_giestflame", "wand_snowball");
 var rareDrops = Array("wand_fireball", "wand_frostbolt", "wand_missle", "wand_concussion", "super_health_potion", "super_stamina_potion", "super_antipoison_potion", "zweihander", "odachi", "nunchucks", "scimitar");
 var ultraRareDrops = Array("wand_firestorm", "levelup_potion", "muramasa", "kusanagi", "joyeuse", "nyantana");

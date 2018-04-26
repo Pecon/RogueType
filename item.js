@@ -913,10 +913,10 @@ class item
 
 				let effect = getRandom(0, possibleCurses.length - 1);
 
-				if(possibleCurses[effect] == "dullness" && (type == "bat" || type == "knuckles"))
-					this.magicalEffect = "weight";
-				else
-					this.magicalEffect = possibleCurses[effect];
+				// if(possibleCurses[effect] == "dullness" && (type == "bat" || type == "knuckles"))
+				// 	this.magicalEffect = "weight";
+				// else
+				this.magicalEffect = possibleCurses[effect];
 
 				this.magicalCharge = getRandom(10, 40);
 				this.realName = "Cursed " + this.name + ' ' + curseSuffixes[effect];
@@ -1007,7 +1007,7 @@ class item
 			return;
 
 		if(announce != undefined)
-			addLog("You identified your " + this.name + " !", "color: blue;");
+			addLog("You identified your " + this.realName + "!", "color: blue;");
 
 		inventoryUpdate = true;
 		knownItems.push(this.realName);

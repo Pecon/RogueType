@@ -507,13 +507,15 @@ class unit
 				}
 				
 				this.moveTowards(this.target);
+				this.aggro--;
 			}
 			else if(playerDist <= this.perception + 2 && !this.passive && tile.hazard === null)
 			{
 				this.target = player.location;
 				this.aggro = 3;
 
-				this.moveTowards(this.target);	
+				this.moveTowards(this.target);
+				this.aggro--;	
 			}
 			else
 			{
@@ -1031,7 +1033,7 @@ class unit
 		if(attacker != undefined)
 		{
 			this.target = attacker.location;
-			this.aggro = 6;
+			this.aggro = 10;
 		}
 
 		this.health -= amount;

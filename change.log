@@ -84,3 +84,10 @@ v2.1.0
 - Increased the size of the boss room in The Dungeon on easy and normal to make things just slightly less claustrophobic.
 - The Displacer Beast shouldn't get stuck behind hazards anymore.
 - Restored feature where potions only take half a turn to use, making them more viable to use during combat.
+
+v2.1.1
+- Further improvements to inventory sorting.
+- Added a status icon for damage reduction. (credit Zeustal for graphics)
+- Added scrolls which work a lot like potions but are a seperate category of items and take a full turn to use (unlike potions which use your quick action which won't end your turn). Scrolls have the same rarity level as normal potions (But since there are more potion varieties you'll still encounter potions more often). Adds Scroll of Identify, Scroll of Recharge, and Scroll of Cleansing; with more to come soon.
+- Scroll of Identify has replaced Potion of Identification. The code for the identify effect has been updated to choose identifiable items at random from the inventory (as was always intended but I was lazy and never got around to fixing it until now), and now will consistently identify a number of items somewhat proportionate to the number of items available ceil(log(eligibleItemsTotal) + 0.25).
+- Fixed a bug where monsters would stand in place forever after losing their target.
