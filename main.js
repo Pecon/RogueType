@@ -293,7 +293,7 @@ function updateDisplay()
 
 			html = html + "<br />\n";
 
-			if(item.class == "weapon" && name != "fists" && player.weapon != item)
+			if(item.class == "weapon" && player.weapon != item)
 				html += ' <button onclick="equip(' + stackInventory[i].referenceIndexes[0] + ')" class="' + className +'" ' + allButtonsProperties + '>Equip</button>';
 			else if(item.class == "consumable")
 				html += ' <button onclick="drink(' + stackInventory[i].referenceIndexes[0] + ')" class="' + className +'" ' + allButtonsProperties + '>Drink</button>';
@@ -309,6 +309,8 @@ function updateDisplay()
 
 			if(usable)
 				html += ' <img class="inventoryTick" src="./DownTick2.png" />';
+			else if(item.class == "weapon" && player.weapon == item)
+				html += ' <img class="inventoryTick" src="./equippedTick.png" />';
 
 			element.innerHTML = html;
 			element.title = inventory[i].getDescription();
@@ -1770,6 +1772,22 @@ function read(slot)
 
 			break;
 			
+
+		case "disintegrate":
+			if(player.weapon.baseWeapon == false && player.weapon.class == "weapon")
+			{
+				player.weapon.remove();
+
+				addLog("Your " + player.weapon.getName() + " is engulfed in magical flames! Within moments, it's magically reduced to dust.");
+				player.weapon = player.baseWeapon;
+				success = true;
+			}
+			else
+			{
+				addLog("Nothing happens.");
+			}
+
+			break;
 	}
 
 	if(success && !book.isIdentifed())
@@ -1871,7 +1889,7 @@ function drop(slot)
 
 // Drop lists
 var junkDrops = Array("corpseHero", "corpseCleric");
-var commonDrops = Array("health_potion", "stamina_potion", "energy_potion", "refresh_potion", "posion_potion", "fatigue_potion", "disintegrate_potion", "placebo_potion", "defence_potion", "frail_potion", "agility_potion", "slug_potion", "exp_potion", "forget_potion", "antipoison_potion", "scroll_identify", "scroll_recharge", "scroll_cleanse", "disc", "coin", "key", "bat", "knuckles", "dagger");
+var commonDrops = Array("health_potion", "stamina_potion", "energy_potion", "refresh_potion", "posion_potion", "fatigue_potion", "placebo_potion", "defence_potion", "frail_potion", "agility_potion", "slug_potion", "exp_potion", "forget_potion", "antipoison_potion", "scroll_identify", "scroll_recharge", "scroll_cleanse", "scroll_disintegrate", "disc", "coin", "key", "bat", "dagger");
 var uncommonDrops = Array("longsword", "rapier", "mace", "sledgehammer", "greatsword", "flail", "wand_giestflame", "wand_snowball");
 var rareDrops = Array("wand_fireball", "wand_frostbolt", "wand_missle", "wand_concussion", "super_health_potion", "super_stamina_potion", "super_antipoison_potion", "zweihander", "odachi", "nunchucks", "scimitar");
 var ultraRareDrops = Array("wand_firestorm", "levelup_potion", "muramasa", "kusanagi", "joyeuse", "nyantana");

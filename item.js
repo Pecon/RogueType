@@ -158,7 +158,7 @@ class item
 				this.class = "weapon";
 				this.name = "fist";
 				this.character = "f";
-				this.description = "hands";
+				this.description = "Your bare hands!";
 				this.weight = 1;
 				this.blunt = 1;
 				this.blade = 0;
@@ -620,6 +620,16 @@ class item
 				this.readEffect = "cleanse";
 				break;
 
+			case "scroll_disintegrate":
+				this.class = "book";
+				this.name = "Unidentified Scroll";
+				this.realName = "Scroll of Disintegrate Weapon";
+				this.character = "s";
+				this.description = "A magical scroll written in an ancient language.";
+				this.realDescription = "This scroll contains a spell that will disintegrate your equipped weapon. This might be helpful for getting rid of a cursed weapon...";
+				this.readEffect = "disintegrate";
+				break;
+
 			case "health_potion":
 				this.class = "consumable";
 				this.name = "Unidentified Potion";
@@ -709,17 +719,17 @@ class item
 				this.staminaEffect = -40;
 				break;
 
-			case "disintegrate_potion":
-				this.class = "consumable";
-				this.name = "Unidentified Potion";
-				this.realName = "Disintegrating Potion";
-				this.character = 'p';
-				this.description = "A small flask filled with an unknown potion.";
-				this.realDescription = "Disintegrates whatever weapon you are holding, could be helpful to get rid of something cursed...";
-				this.healthEffect = 0;
-				this.staminaEffect = 0;
-				this.specialEffect = "disintegrate";
-				break;
+			// case "disintegrate_potion":
+			// 	this.class = "consumable";
+			// 	this.name = "Unidentified Potion";
+			// 	this.realName = "Disintegrating Potion";
+			// 	this.character = 'p';
+			// 	this.description = "A small flask filled with an unknown potion.";
+			// 	this.realDescription = "Disintegrates whatever weapon you are holding, could be helpful to get rid of something cursed...";
+			// 	this.healthEffect = 0;
+			// 	this.staminaEffect = 0;
+			// 	this.specialEffect = "disintegrate";
+			// 	break;
 
 			case "placebo_potion":
 				this.class = "consumable";

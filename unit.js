@@ -210,7 +210,7 @@ class unit
 			case "cobra":
 				name = "Massive Cobra";
 				description = "The King of King Cobras. No doubt highly poisonous.";
-				character = "Z";
+				character = "Ꭶ";
 				this.baseWeapon = new item("cobra_fangs");
 				this.itemDrop = "snake_skin";
 
@@ -268,7 +268,7 @@ class unit
 				this.class = "boss";
 				name = "Displacer Beast";
 				description = "A horrifying monster from the abyss, can open small portals to the abyss where certain destruction awaits!";
-				character = "B";
+				character = "Ᏼ";
 				this.baseWeapon =  new item("beast_tail");
 
 				maxHealth = 175;
@@ -549,7 +549,7 @@ class unit
 
 						if(move === undefined)
 							moves.splice(index, 1);
-						else if(move.base.moveTo(this) && move.unit === null && move.hazard === null)
+						else if(move.base.moveTo(this, true) && move.unit === null && move.hazard === null)
 						{
 							this.moveTo(move.location);
 							return;
@@ -569,49 +569,59 @@ class unit
 
 	moveTowards(location)
 	{
-		let distanceX = this.location.x - location.x;
-		let distanceY = this.location.y - location.y;
-		let directionX, directionY, move = null;
+		let possibleMoves = Array();
 
-		if(distanceX > 0)
-			directionX = getWorld(westOf(this.location));
-		else if(distanceX < 0)
-			directionX = getWorld(eastOf(this.location));
-		else
-			directionX = getWorld(this.location);
+		possibleMoves.push(getWorld(westOf(this.location)));
+		possibleMoves.push(getWorld(eastOf(this.location)));
+		possibleMoves.push(getWorld(northOf(this.location)));
+		possibleMoves.push(getWorld(southOf(this.location)));
 
-		if(distanceY > 0)
-			directionY = getWorld(northOf(this.location));
-		else if(distanceY < 0)
-			directionY = getWorld(southOf(this.location));
-		else
-			directionY = getWorld(this.location);
+		let goodMoves = Array();
 
-		if(Math.abs(distanceX) >= Math.abs(distanceY))
+		for(let i = 0; i < possibleMoves.length; i++)
 		{
-			// y-distance is shorter, move along x-axis towards destination
-			if((directionX.unit !== null && (directionX.hazard === null || this.class == "boss")) || directionX.base.moveTo(this))
-				move = directionX;
+			if(!possibleMoves[i].base.moveTo(this, true))
+				continue; // Tile is inaccessible
+
+			if(possibleMoves[i].hazard !== null && this.class != "boss")
+				continue; // Tile has a hazard
+
+			goodMoves.push(possibleMoves[i]);
 		}
 
-		if(Math.abs(distanceY) >= Math.abs(distanceX) || move === null)
+		let bestMove = null;
+		let bestDistance = Number.MAX_SAFE_INTEGER;
+
+		for(let i = 0; i < goodMoves.length; i++)
 		{
-			// Move along y-axis
-			if((directionY.unit !== null && (directionY.hazard === null || this.class == "boss")) || directionY.base.moveTo(this))
-				move = directionY;
+			let checkDistance = vectorDist(goodMoves[i].location, location);
+
+			if(bestMove == null)
+			{
+				bestMove = goodMoves[i];
+				bestDistance = checkDistance;
+				continue;
+			}
+
+			if(checkDistance < bestDistance)
+			{
+				bestMove = goodMoves[i];
+				bestDistance = checkDistance;
+			}
+			else if(checkDistance == bestDistance)
+			{
+				if(Math.random() > 0.5)
+				{
+					bestMove = goodMoves[i];
+				}
+			}
 		}
 
-		if(Math.abs(distanceY) >= Math.abs(distanceX) && move === null)
-		{
-			// Edge case
-			if((directionX.unit !== null && (directionX.hazard === null || this.class == "boss")) || directionX.base.moveTo(this))
-				move = directionX;
-		}
+		if(bestDistance >= vectorDist(this.location, location) + 1)
+			bestMove = null; // Don't backtrack
 
-		if(move !== null && (move.hazard === null || this.class == "boss"))
-		{
-			this.moveTo(move.location);
-		}
+		if(bestMove != null)
+			this.moveTo(bestMove.location);
 	}
 
 	moveTo(location)

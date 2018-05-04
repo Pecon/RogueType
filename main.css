@@ -69,7 +69,8 @@ h2
 
 .start
 {
-	animation: blinker 2s ease infinite;
+	animation: blinker 4s ease-in infinite;
+	opacity: 0;
 	display: none;
 }
 
@@ -103,7 +104,22 @@ button
 
 @keyframes blinker
 {
-	50%
+	0%
+	{
+		opacity: 0;
+	}
+
+	25%
+	{
+		opacity: 100;
+	}
+
+	80%
+	{
+		opacity: 0;
+	}
+
+	100%
 	{
 		opacity: 0;
 	}

@@ -96,7 +96,7 @@ class tileBase
 			case "exitPortal":
 				description = "A glowing green portal... It looks like home.";
 				name = "Exit Portal";
-				character = "○";
+				character = "օ";
 				permitsVision = true;
 				permitsTravel = true;
 				break;
@@ -104,7 +104,7 @@ class tileBase
 			case "altar":
 				description = "A marble altar that glows with divine energy.";
 				name = "Marble Altar";
-				character = "┯";
+				character = "ᅮ";
 				permitsVision = true;
 				permitsTravel = true;
 				break;	
@@ -151,8 +151,11 @@ class tileBase
 		return this.character;
 	}
 
-	moveTo(unit)
+	moveTo(unit, checkOnly)
 	{
+		if(checkOnly === undefined)
+			checkOnly = false;
+
 		let message = null;
 		let success = true;
 
@@ -165,19 +168,23 @@ class tileBase
 				if(unit.name == "Displacer Beast")
 				{
 					success = true;
-					addLog("The " + unit.name + " opens a black portal to the void!", "color: red;");
 
-					if(tile.unit.class == "player")
-						addLog("You are sucked into the portal and destroyed instantly.", "color: red;");
-					else
-						addLog("The " + tile.unit.name + " is sucked into the portal and destroyed instantly!", "color: red;");
+					if(!checkOnly)
+					{
+						addLog("The " + unit.name + " opens a black portal to the void!", "color: red;");
+
+						if(tile.unit.class == "player")
+							addLog("You are sucked into the portal and destroyed instantly.", "color: red;");
+						else
+							addLog("The " + tile.unit.name + " is sucked into the portal and destroyed instantly!", "color: red;");
 
 
-					tile.unit.health = 0;
-					tile.unit.itemDrop = undefined;
-					tile.unit.die();
+						tile.unit.health = 0;
+						tile.unit.itemDrop = undefined;
+						tile.unit.die();
 
-					unit.stamina -= 10;
+						unit.stamina -= 10;
+					}
 				}
 			}
 			else if(tile.unit.canDisplace && !unit.canDisplace)
@@ -242,7 +249,7 @@ class tileBase
 					break;
 
 				case "bossDoor":
-					if(unit.class != "player")
+					if(unit.class != "player" || checkOnly)
 					{
 						success = false;
 					}
@@ -274,7 +281,7 @@ class tileBase
 					break;
 
 				case "exitPortal":
-					if(unit.class != "player")
+					if(unit.class != "player" || checkOnly)
 					{
 						success = false;
 					}
@@ -310,7 +317,7 @@ class tileBase
 		}
 		
 
-		if(message !== null && unit.class == "player")
+		if(message !== null && unit.class == "player" && !checkOnly)
 			addLog(message);
 
 		return success;

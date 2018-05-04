@@ -30,7 +30,7 @@ class projectile
 		{
 			case "fireball":
 				this.name = "Fire Ball";
-				this.character = "*";
+				this.character = "✵";
 				this.directDamage = 2;
 				this.element = "fire";
 				break;
@@ -44,21 +44,21 @@ class projectile
 
 			case "firestorm":
 				this.name = "Fire Storm";
-				this.character = "*";
+				this.character = "✵";
 				this.directDamage = 20;
 				this.element = "fire";
 				break;
 
 			case "giestflame":
 				this.name = "Giestflame";
-				this.character = "*";
+				this.character = "✵";
 				this.directDamage = 3.5;
 				this.element = "fire";
 				break;
 
 			case "snowball":
 				this.name = "Snowball";
-				this.character = "+";
+				this.character = "❅";
 				this.directDamage = 2.5;
 				this.element = "frost";
 				break;
@@ -112,6 +112,8 @@ class projectile
 
 	getCharacter()
 	{
+		let arrows = Array("￩", "￪", "￫", "￬");
+
 		return this.character;
 	}
 

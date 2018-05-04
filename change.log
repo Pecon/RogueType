@@ -91,3 +91,10 @@ v2.1.1
 - Added scrolls which work a lot like potions but are a seperate category of items and take a full turn to use (unlike potions which use your quick action which won't end your turn). Scrolls have the same rarity level as normal potions (But since there are more potion varieties you'll still encounter potions more often). Adds Scroll of Identify, Scroll of Recharge, and Scroll of Cleansing; with more to come soon.
 - Scroll of Identify has replaced Potion of Identification. The code for the identify effect has been updated to choose identifiable items at random from the inventory (as was always intended but I was lazy and never got around to fixing it until now), and now will consistently identify a number of items somewhat proportionate to the number of items available ceil(log(eligibleItemsTotal) + 0.25).
 - Fixed a bug where monsters would stand in place forever after losing their target.
+
+v2.1.2
+- Removed brass knuckles because there were too many low-level weapon drops.
+- Scroll of Disintegrate Weapon has replaced Potion of Disintegration. It just makes more sense this way.
+- Improved AI movement code. Still no actual pathfinding, but monsters should get stuck behind things less easily now. This also makes their movement a bit less predictable. (Known bug: In some cases when a monster can't get to you they may seem to 'pace' back and forth as opposed to standing still like they used to. This can't really be fixed until I implement actual pathfinding.)
+- The Massive Cobra monster now uses the "Ꭶ" character instead of "Z". (It looks better in-game I promise)
+- Lots of minor tweaks and bug fixes.
