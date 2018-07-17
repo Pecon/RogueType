@@ -98,3 +98,7 @@ v2.1.2
 - Improved AI movement code. Still no actual pathfinding, but monsters should get stuck behind things less easily now. This also makes their movement a bit less predictable. (Known bug: In some cases when a monster can't get to you they may seem to 'pace' back and forth as opposed to standing still like they used to. This can't really be fixed until I implement actual pathfinding.)
 - The Massive Cobra monster now uses the "Ꭶ" character instead of "Z". (It looks better in-game I promise)
 - Lots of minor tweaks and bug fixes.
+
+v2.1.3
+- Did some optimizations to the message log, it turned out that making more than one or two messages at once caused far more lag than it should have. Fixed for the most part now.
+- Added potion of invisibility (might rename to potion of camoflauge or something, it basically just greatly reduces the effectivness of enemy perception stats, it's not useful for disengaging when already in combat)

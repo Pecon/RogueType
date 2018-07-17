@@ -258,7 +258,7 @@ class projectile
 			damage = 0;
 
 			if(this.sourceUnit.class == "player")
-				addLog("The " + unit.getName() + " appears immune to be immune to that kind of element!");
+				addLog("The " + unit.getName() + " appears to be immune to that element!");
 		}
 
 		unit.damage(damage, this.sourceUnit, this.element);

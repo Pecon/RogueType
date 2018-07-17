@@ -827,6 +827,18 @@ class item
 				this.specialEffect = "forget";
 				break;
 
+			case "invisibility_potion":
+				this.class = "consumable";
+				this.name = "Unidentified Potion";
+				this.realName = "Potion of Invisibility";
+				this.character = 'p';
+				this.description = "A small flask filled with an unknown potion.";
+				this.realDescription = "A powerful invisibility potion that will make very difficult to detect.";
+				this.healthEffect = 0;
+				this.staminaEffect = 0;
+				this.specialEffect = "invisibility";
+				break;
+
 			case "levelup_potion":
 				this.class = "consumable";
 				this.name = "Level Up Potion";

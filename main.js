@@ -422,6 +422,22 @@ function getInventoryWeight(item)
 
 function addLog(text, style)
 {
+	if(text === false)
+	{
+		if(messageQueue.length > 0)
+		{
+			// Write all buffered messages at once.
+			let html = logObject.innerHTML.trim();
+
+			logObject.innerHTML = messageQueue + html;
+			logObject.scrollTop = 0;
+		}
+		
+		messageQueue = "";
+		queueMessages = false;
+		return;
+	}
+
 	let space = 0;
 	let lastBreak = 0;
 	let length = 0;
@@ -468,14 +484,20 @@ function addLog(text, style)
 	{
 		text = '<div class="gameLogTextEntrance">' + text.trim() + '</div>';
 	}
-	
+
 	text = text.trim();
-	let html = logObject.innerHTML.trim();
-
-	logObject.innerHTML = text + html;
-	logObject.scrollTop = 0;
-	// logObject.scrollTop = logObject.scrollHeight;
-
+	
+	if(!queueMessages)
+	{
+		let html = logObject.innerHTML.trim();
+		logObject.innerHTML = text + html;
+		logObject.scrollTop = 0;
+	}
+	else
+	{
+		messageQueue = text + messageQueue;
+	}
+	
 	return text;
 }
 
@@ -1286,6 +1308,7 @@ function startTransition(iteration)
 function enemyTurn()
 {
 	turnTime = new Date().getTime();
+	queueMessages = true;
 
 	if(gameStage == 4)
 	{
@@ -1339,7 +1362,8 @@ function enemyTurn()
 		yourTurn = false;
 	}
 
-	//console.log("Turn calculation time: " + ((new Date().getTime() - turnTime) / 1000) + "ms");
+	addLog(false);
+	// console.log("Turn calculation time: " + ((new Date().getTime() - turnTime) / 1000) + "ms");
 }
 
 function bulletTime(iteration)
@@ -1586,6 +1610,17 @@ function drink(slot)
 						addLog("Nothing happens.");
 
 					break;
+
+				case "invisibility":
+
+					if(player.invisibility <= 0)
+						addLog("You disappear!");
+
+					if(player.invisibility < 40)
+						player.invisibility = 40;
+
+					break;
+
 
 				case "levelup":
 					player.levelup();
@@ -1889,7 +1924,7 @@ function drop(slot)
 
 // Drop lists
 var junkDrops = Array("corpseHero", "corpseCleric");
-var commonDrops = Array("health_potion", "stamina_potion", "energy_potion", "refresh_potion", "posion_potion", "fatigue_potion", "placebo_potion", "defence_potion", "frail_potion", "agility_potion", "slug_potion", "exp_potion", "forget_potion", "antipoison_potion", "scroll_identify", "scroll_recharge", "scroll_cleanse", "scroll_disintegrate", "disc", "coin", "key", "bat", "dagger");
+var commonDrops = Array("health_potion", "stamina_potion", "energy_potion", "refresh_potion", "posion_potion", "fatigue_potion", "placebo_potion", "defence_potion", "frail_potion", "agility_potion", "slug_potion", "exp_potion", "forget_potion", "invisibility_potion", "antipoison_potion", "scroll_identify", "scroll_recharge", "scroll_cleanse", "scroll_disintegrate", "disc", "coin", "key", "bat", "dagger");
 var uncommonDrops = Array("longsword", "rapier", "mace", "sledgehammer", "greatsword", "flail", "wand_giestflame", "wand_snowball");
 var rareDrops = Array("wand_fireball", "wand_frostbolt", "wand_missle", "wand_concussion", "super_health_potion", "super_stamina_potion", "super_antipoison_potion", "zweihander", "odachi", "nunchucks", "scimitar");
 var ultraRareDrops = Array("wand_firestorm", "levelup_potion", "muramasa", "kusanagi", "joyeuse", "nyantana");
@@ -2064,6 +2099,9 @@ var world;
 var titleMusic, introMusic, gameMusic, bossIntroMusic, bossGameMusic, gameOverMusic, gameSoundEffect;
 var gameStage = 0, turnCount = 0, score = 0, kills = 0;
 var turnTime = new Date().getTime();
+var queueMessages = false;
+var messageQueue = "";
+var gameLogArchive = "";
 
 // Default game configuration data
 var gameData = 

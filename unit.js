@@ -15,6 +15,7 @@ class unit
 		this.exp = 0;
 		this.poison = 0;
 		this.poisonSchedule = 0;
+		this.invisibility = 0;
 		this.moveDelay = 0;
 		this.moveDelaySchedule = 0;
 		this.aggro = 0;
@@ -359,6 +360,14 @@ class unit
 			}
 		}
 
+		if(this.invisibility > 0)
+		{
+			this.invisibility--;
+
+			if(this.invisibility <= 0 && this.class == "player")
+				addLog("Your invisibility wears off.");
+		}
+
 		if(this.health <= 0)
 		{
 			this.die();
@@ -397,7 +406,7 @@ class unit
 				return;
 
 			let closestItem = null;
-			let closestItemDist = 100;
+			let closestItemDist = Number.MAX_SAFE_INTEGER;
 
 			for(let i = 0; i < groundItems.length; i++)
 			{
@@ -415,7 +424,7 @@ class unit
 
 			if(this.health / this.maxHealth <= this.angerThreshold)
 			{
-				addLog("The " + this.name + " seeths with anger! It smashes it's tail against the ground and the entire cavern rumbles...", "color: red;");
+				addLog("The " + this.name + " seeths with anger! It smashes it's tail against the ground and the entire dungeon rumbles...", "color: red;");
 				gameSoundEffect.src = "./crumble.mp3";
 				gameSoundEffect.play();
 				windowObject.classList.add("screenShake");
@@ -481,14 +490,18 @@ class unit
 		else // Generic AI code
 		{		
 			let playerDist = vectorDist(this.location, player.location);
+			let detectDist = playerDist;
 			let tile = getWorld(this.location);
+
+			if(player.invisibility > 0)
+				detectDist = Math.floor(playerDist * 4);
 
 			if(playerDist > 100 && tile.hazard === null)
 			{
 				// Don't bother doing ai stuff if they're so far away
 				return;
 			}
-			else if(playerDist == 1 && !this.passive && tile.hazard === null)
+			else if(playerDist <= 1 && !this.passive && tile.hazard === null)
 			{
 				// Attack!
 				if(this.stamina >= 0)
@@ -498,7 +511,7 @@ class unit
 			}
 			else if(this.aggro > 0 && tile.hazard === null)
 			{
-				if(playerDist <= this.perception + 2 && !this.passive)
+				if(detectDist <= this.perception + 2 && !this.passive)
 				{
 					if(this.aggro < 3)
 						this.aggro = 3;
@@ -509,7 +522,7 @@ class unit
 				this.moveTowards(this.target);
 				this.aggro--;
 			}
-			else if(playerDist <= this.perception + 2 && !this.passive && tile.hazard === null)
+			else if(detectDist <= this.perception + 2 && !this.passive && tile.hazard === null)
 			{
 				this.target = player.location;
 				this.aggro = 3;
@@ -521,7 +534,7 @@ class unit
 			{
 				if(Math.random() > 0.8 && tile.hazard === null)
 				{
-					//Wait
+					// Wait
 				}
 				else
 				{
