@@ -140,11 +140,14 @@ function updateDisplay()
 
 				if(tile.unit !== null)
 				{
-					character = tile.unit.getCharacter();
-					title = tile.unit.getName() + "\n" + tile.unit.getDescription() + "\n";
+					if(tile.unit.invisibility <= 0)
+					{
+						character = tile.unit.getCharacter();
+						title = tile.unit.getName() + "\n" + tile.unit.getDescription() + "\n";
 
-					if(tile.unit.class == "boss")
-						displayTile.classList.add("bossMonster");
+						if(tile.unit.class == "boss")
+							displayTile.classList.add("bossMonster");
+					}
 				}
 
 				if(tile.hazard !== null)
@@ -172,9 +175,14 @@ function updateDisplay()
 						character = tile.items[0].getCharacter();
 						title = tile.items[0].getName() + "\n" + tile.items[0].getDescription() + "\n";
 					}
-					else
+					else if(tile.unit.invisibility <= 0)
 					{
 						title = title + "\n + " + tile.items[0].getName() + " - " + tile.items[0].getDescription();
+					}
+					else
+					{
+						character = tile.items[0].getCharacter();
+						title = tile.items[0].getName() + "\n" + tile.items[0].getDescription() + "\n";
 					}
 
 					if(tile.items[0].rareLoot)

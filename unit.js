@@ -320,11 +320,28 @@ class unit
 
 	getName()
 	{
+		if(this.invisibility > 0)
+			return "Invisible Object";
+
 		return this.name;
 	}
 
 	getDescription()
 	{
+		if(this.invisibility > 0)
+		{	
+			let description = "Something is here, but you can't tell what it is due to its invisibility effect.";
+
+			if(this.level > player.level)
+				description += " It seems much stronger than you.";
+			else if(this.level == player.level)
+				description += " It seems about as strong as you.";
+			else
+				description += " You are pretty confident that you are stronger than it.";
+
+			return description;
+		}
+
 		return this.description;
 	}
 
@@ -375,12 +392,12 @@ class unit
 		}
 
 		if(this.stamina < 0 && this.stamina + 5 >= 0 && this.class != "player")
-			addLog("The " + this.name + " looks like it's about to recover.", (this.class == "boss" ? "color: orange;" : "color: MediumTurquoise;"));
+			addLog("The " + this.getName() + " looks like it's about to recover.", (this.class == "boss" ? "color: orange;" : "color: MediumTurquoise;"));
 
 		if(this.stun > 0)
 		{
 			if(this.class != "player")
-				addLog("The " + this.name + " is stunned.", "color: MediumTurquoise;");
+				addLog("The " + this.getName() + " is stunned.", "color: MediumTurquoise;");
 
 			if(this.stamina >= 10)
 			{
@@ -424,7 +441,7 @@ class unit
 
 			if(this.health / this.maxHealth <= this.angerThreshold)
 			{
-				addLog("The " + this.name + " seeths with anger! It smashes it's tail against the ground and the entire dungeon rumbles...", "color: red;");
+				addLog("The " + this.getName() + " seeths with anger! It smashes it's tail against the ground and the entire dungeon rumbles...", "color: red;");
 				gameSoundEffect.src = "./crumble.mp3";
 				gameSoundEffect.play();
 				windowObject.classList.add("screenShake");
@@ -436,7 +453,7 @@ class unit
 						let tile = getWorld({x: x, y: y});
 						let roll = Math.random();
 
-						if(roll > 0.85 && tile.base.name == "Floor" && tile.hazard === null)
+						if(roll > 0.85 && tile.base.getName() == "Floor" && tile.hazard === null)
 						{
 							tile.hazard = new hazard("rocks", {x: x, y: y});
 
@@ -461,7 +478,7 @@ class unit
 					let tile = getWorld(this.location);
 					let count = tile.items.length;
 
-					addLog("The " + this.name + " opens a black portal to the void!", "color: red;");
+					addLog("The " + this.getName() + " opens a black portal to the void!", "color: red;");
 					
 					for(let i = count - 1; i >= 0; i--)
 					{
@@ -474,7 +491,7 @@ class unit
 
 					if(this.stamina < -5)
 					{
-						addLog("The " + this.name + " looks exhausted!", "color: MediumTurquoise;");
+						addLog("The " + this.getName() + " looks exhausted!", "color: MediumTurquoise;");
 					}
 
 					if(this.stamina < -15)
@@ -683,7 +700,7 @@ class unit
 		if(displaceUnit !== null)
 		{
 			if(vectorDist(location, player.location) < 30 && this.class != "player")
-				addLog("The " + this.name + " displaces the " + displaceUnit.name + ".", "color: MediumTurquoise;");
+				addLog("The " + this.getName() + " displaces the " + displaceUnit.getName() + ".", "color: MediumTurquoise;");
 			leaveTile.base.moveTo(displaceUnit);
 			leaveTile.unit = displaceUnit;
 			displaceUnit.location = leaveTile.location;
@@ -727,7 +744,7 @@ class unit
 		if(attacker.stamina < 0)
 			return false;
 
-		if(this.name == "Cat" && attacker.class == "player" && attacker.weapon == attacker.baseWeapon)
+		if(this.getName() == "Cat" && attacker.class == "player" && attacker.weapon == attacker.baseWeapon)
 		{
 			addLog("You pet the cat. It purrs loudly and then promptly ignores you.", "color: green;");
 			return false;
@@ -742,16 +759,16 @@ class unit
 			damage *= 2;
 
 			if(this.class == "player")
-				addLog("The " + attacker.name + "'s " + attacker.weapon.getName() + " crackles with electricity, a critical attack coming right at you!", "color: yellow;");
+				addLog("The " + attacker.getName() + "'s " + attacker.weapon.getName() + " crackles with electricity, a critical attack coming right at you!", "color: yellow;");
 			else if(attacker.class == "player")
 				addLog("Your " + attacker.weapon.getName() + " crackles with electricity, a critical attack!", "color: yellow;");
 		}
 		else
 		{
 			if(this.class == "player")
-				addLog("The " + attacker.name + " " + attacker.weapon.attackDescriptor + attacker.weapon.attackDescriptorPluralString + " toward you with its " + attacker.weapon.getName() + ".");
+				addLog("The " + attacker.getName() + " " + attacker.weapon.attackDescriptor + attacker.weapon.attackDescriptorPluralString + " toward you with its " + attacker.weapon.getName() + ".");
 			else if(attacker.class == "player")
-				addLog("You " + attacker.weapon.attackDescriptor + " your " + attacker.weapon.getName() + " towards the " + this.name + ".");
+				addLog("You " + attacker.weapon.attackDescriptor + " your " + attacker.weapon.getName() + " towards the " + this.getName() + ".");
 		}
 		
 
@@ -778,9 +795,9 @@ class unit
 		{
 			damage = 0;
 			if(this.class == "player")
-				addLog("You nimbly dodge the " + attacker.name + "'s attack.");
+				addLog("You nimbly dodge the " + attacker.getName() + "'s attack.");
 			else if(attacker.class == "player")
-				addLog("The " + this.name + " " + (this.agility > 2 ? "nimbly" : "barely") + " dodges your attack.");
+				addLog("The " + this.getName() + " " + (this.agility > 2 ? "nimbly" : "barely") + " dodges your attack.");
 		}
 
 
@@ -796,9 +813,9 @@ class unit
 					if(attacker.weapon.concussiveCharge >= 5)
 					{
 						if(attacker.class == "player")
-							addLog("As soon as your attack connects, your weapon unleashes all it's magical charge! Like lightning, the energy surges into the " + this.name + " with a brilliant flash and thunderous bang!", "color: yellow;");
+							addLog("As soon as your attack connects, your weapon unleashes all it's magical charge! Like lightning, the energy surges into the " + this.getName() + " with a brilliant flash and thunderous bang!", "color: yellow;");
 						else
-							addLog("With a brilliant flash, you're concussed by the " + attacker.name + "'s " + attacker.weapon.getName() + 
+							addLog("With a brilliant flash, you're concussed by the " + attacker.getName() + "'s " + attacker.weapon.getName() + 
 								"!", "color: orange;");
 						this.stun = 2;
 						attacker.weapon.concussiveCharge = 0;
@@ -832,9 +849,9 @@ class unit
 						else
 						{
 							if(attacker.class == "player")
-								addLog("As soon as your attack connects, your weapon unleashes all it's magical charge! Like lightning, the energy surges into the " + this.name + " with a brilliant flash and thunderous bang! The " + this.name + " is stunned!", "color: yellow;");
+								addLog("As soon as your attack connects, your weapon unleashes all it's magical charge! Like lightning, the energy surges into the " + this.getName() + " with a brilliant flash and thunderous bang! The " + this.getName() + " is stunned!", "color: yellow;");
 							else
-								addLog("With a brilliant flash, you're concussed by the " + attacker.name + "'s " + attacker.weapon.getName() + 
+								addLog("With a brilliant flash, you're concussed by the " + attacker.getName() + "'s " + attacker.weapon.getName() + 
 								"!", "color: orange;");
 							this.stun = 2;
 						}
@@ -854,7 +871,7 @@ class unit
 
 				case "lifesteal":
 					if(attacker.class == "player")
-						addLog("You feel your weapon transfer a small amount of life force from the " + this.name + " to you.", "color: #22F;");
+						addLog("You feel your weapon transfer a small amount of life force from the " + this.getName() + " to you.", "color: #22F;");
 					this.health--;
 					attacker.health++;
 					break;
@@ -902,7 +919,7 @@ class unit
 					if(Math.random() > 0.8)
 					{
 						if(attacker.class == "player")
-							addLog("Despite your attack being perfectly aimed, your weapon suddenly jerks mid-flight and allows the " + this.name + " to evade it easily.", "color: orange;");
+							addLog("Despite your attack being perfectly aimed, your weapon suddenly jerks mid-flight and allows the " + this.getName() + " to evade it easily.", "color: orange;");
 						evaded = true;
 						damage = 0;
 						attacker.weapon.magicalCharge -= 5;
@@ -988,25 +1005,25 @@ class unit
 			if(damage > 0)
 			{
 				if(this.class == "player")
-					addLog("You manage to partially block the " + attacker.name + "'s attack.");
+					addLog("You manage to partially block the " + attacker.getName() + "'s attack.");
 				else if(attacker == player)
-					addLog("The " + this.name + " resists some of your attack.");
+					addLog("The " + this.getName() + " resists some of your attack.");
 			}
 			else
 			{
 				if(this.class == "player")
-					addLog("You completely block the " + attacker.name + "'s attack!");
+					addLog("You completely block the " + attacker.getName() + "'s attack!");
 				else if(attacker.class == "player")
-					addLog("The " + this.name + " resists your attack completely!");
+					addLog("The " + this.getName() + " resists your attack completely!");
 			}
 		}
 
 		else if(!evaded)
 		{
 			if(this.class == "player")
-				addLog("You take the " + attacker.name + "'s attack!");
+				addLog("You take the " + attacker.getName() + "'s attack!");
 			else if(attacker.class == "player")
-				addLog("The " + this.name + " takes your attack!");
+				addLog("The " + this.getName() + " takes your attack!");
 
 			let stunRoll = getRandom();
 			let stunMargin = 0.0125 * (attacker.weapon.weight + attacker.weapon.blunt + attacker.strength);
@@ -1020,7 +1037,7 @@ class unit
 					if(this.class == "player")
 						addLog("It's a concussive blow! Luckily you were stable enough to not be stunned, but you feel drained.", "color: orange;");
 					else if(attacker.class == "player")
-						addLog("You land a concussive blow, but the " + this.name + " manages to recover without being stunned!");
+						addLog("You land a concussive blow, but the " + this.getName() + " manages to recover without being stunned!");
 				}
 				else
 				{
@@ -1029,12 +1046,12 @@ class unit
 					if(this.class == "player")
 						addLog("Your vision swims from the attack, you've been stunned!", "color: orange;");
 					else if(attacker.class == "player")
-						addLog("You land a concussive blow, the " + this.name + " is stunned!");
+						addLog("You land a concussive blow, the " + this.getName() + " is stunned!");
 				}
 			}
 
 			if(attacker.class == "monster" && attacker.stamina <= -5)
-				addLog("The " + attacker.name + " appears to have exhausted itself!", "color: MediumTurquoise;");
+				addLog("The " + attacker.getName() + " appears to have exhausted itself!", "color: MediumTurquoise;");
 
 		}
 
@@ -1068,7 +1085,7 @@ class unit
 	die(killer, damageType)
 	{
 		if(this.class != "player")
-			addLog("The " + this.name + " is dead.");
+			addLog("The " + this.getName() + " is dead.");
 
 		let roll = Math.random();
 		roll += (0.05 * this.level);

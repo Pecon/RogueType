@@ -830,7 +830,7 @@ class item
 			case "invisibility_potion":
 				this.class = "consumable";
 				this.name = "Unidentified Potion";
-				this.realName = "Potion of Invisibility";
+				this.realName = "Potion of Camouflage";
 				this.character = 'p';
 				this.description = "A small flask filled with an unknown potion.";
 				this.realDescription = "A powerful invisibility potion that will make very difficult to detect.";
@@ -923,11 +923,11 @@ class item
 				let effect = getRandom(0, possibleEnchantments.length - 1);
 				this.magicalEffect = possibleEnchantments[effect];
 
-				this.magicalCharge = getRandom(10, 40);
+				this.magicalCharge = getRandom(10, 30);
 				this.realName = this.name + ' ' + enchantmentSuffixes[effect];
 				this.realDescription = this.description + " " + enchantmentDescriptions[effect];
 			}
-			else if(roll > 0.1 && !this.baseWeapon)
+			else if(roll > 0.02 && !this.baseWeapon)
 			{
 				// Cursed weapon
 				this.cursed = true;
@@ -940,7 +940,7 @@ class item
 				// else
 				this.magicalEffect = possibleCurses[effect];
 
-				this.magicalCharge = getRandom(10, 40);
+				this.magicalCharge = getRandom(8, 20);
 				this.realName = "Cursed " + this.name + ' ' + curseSuffixes[effect];
 				this.realDescription = this.description + " " + curseDescriptions[effect];
 			}
