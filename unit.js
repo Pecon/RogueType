@@ -121,6 +121,24 @@ class unit
 				this.frostResist = 0.0;
 				break;
 
+			case "cutpurse":
+				name = "Crazed Cutpurse";
+				description = "A mind-torn human who, by the looks of it, was likely a theif originally.";
+				character = "@";
+				this.baseWeapon = new item("fists");
+				this.weapon = new item("dagger");
+				this.itemDrop = "coin";
+
+				maxHealth = 8;
+				maxStamina = 7;
+				perception = 2;
+				strength = 1;
+				defence = 0;
+				agility = 3;
+				level = 3;
+				this.frostResist = 0.5;
+				break;
+
 			case "goblin":
 				name = "Goblin";
 				description = "An ugly green goblin.";
@@ -180,7 +198,7 @@ class unit
 				this.weapon = new item("longsword");
 				this.itemDrop = "shade_essence";
 
-				maxHealth = 22;
+				maxHealth = 26;
 				maxStamina = 20;
 				perception = 2;
 				strength = 3;
@@ -198,7 +216,7 @@ class unit
 				this.baseWeapon = new item("imp_claws");
 				this.itemDrop = "imp_ashes";
 
-				maxHealth = 18;
+				maxHealth = 21;
 				maxStamina = 15;
 				perception = 3;
 				strength = 3;

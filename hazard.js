@@ -43,6 +43,7 @@ class hazard
 				description = "The air here is below freezing.";
 				character = "░";
 				color = "cyan";
+				this.useHazardFlash = false;
 				lifetime = 15;
 				break;
 

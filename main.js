@@ -157,7 +157,7 @@ function updateDisplay()
 
 					if(tile.hazard.useHazardFlash)
 						displayTile.classList.add("hazardBackground");
-					style = style + "color: " + tile.hazard.color + ";";
+					style = "color: " + tile.hazard.color + ";";
 
 					if(tile.unit !== null)
 						title = title + "\n + " + tile.unit.getName();
@@ -832,7 +832,9 @@ function loadMap(mapText, mapInfo, customMap)
 				monster;
 				if(roll > 0.99)
 					monster = new unit("cat", {x, y});
-				else if(roll > 0.85)
+				else if(roll > 0.9)
+					monster = new unit("cutpurse", {x, y});
+				else if(roll > 0.8)
 					monster = new unit("skeleton", {x, y});
 				else if(roll > 0.7)
 					monster = new unit("kobold", {x, y});
@@ -919,9 +921,15 @@ function loadMap(mapText, mapInfo, customMap)
 		e = e || window.event;
 		focusGrabberObject.focus();
 
-		// Don't accept 'repeating' input from holding the key down
+		// Throttle 'repeating' input from holding the key down
 		if(e.repeat)
-			return;
+		{
+			let now = new Date().getTime();
+			if(now - lastInputTime < 250)
+				return;
+			else
+				lastInputTime = now;
+		}
 
 		let key = e.key.toLowerCase();
 		//console.log(key);
@@ -1934,7 +1942,7 @@ function drop(slot)
 var junkDrops = Array("corpseHero", "corpseCleric");
 var commonDrops = Array("health_potion", "stamina_potion", "energy_potion", "refresh_potion", "posion_potion", "fatigue_potion", "placebo_potion", "defence_potion", "frail_potion", "agility_potion", "slug_potion", "exp_potion", "forget_potion", "invisibility_potion", "antipoison_potion", "scroll_identify", "scroll_recharge", "scroll_cleanse", "scroll_disintegrate", "disc", "coin", "key", "bat", "dagger");
 var uncommonDrops = Array("longsword", "rapier", "mace", "sledgehammer", "greatsword", "flail", "wand_giestflame", "wand_snowball");
-var rareDrops = Array("wand_fireball", "wand_frostbolt", "wand_missle", "wand_concussion", "super_health_potion", "super_stamina_potion", "super_antipoison_potion", "zweihander", "odachi", "nunchucks", "scimitar");
+var rareDrops = Array("wand_fireball", "wand_frostbolt", "wand_missle", "wand_concussion", "wand_reverse_entropy", "super_health_potion", "super_stamina_potion", "super_antipoison_potion", "zweihander", "odachi", "nunchucks", "scimitar");
 var ultraRareDrops = Array("wand_firestorm", "levelup_potion", "muramasa", "kusanagi", "joyeuse", "nyantana");
 
 function getJunkDrop(levelModifier)
@@ -2084,7 +2092,7 @@ function aOrAn(noun)
 
 function getRandom(min, max)
 {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 
@@ -2110,6 +2118,7 @@ var turnTime = new Date().getTime();
 var queueMessages = false;
 var messageQueue = "";
 var gameLogArchive = "";
+var lastInputTime = 0;
 
 // Default game configuration data
 var gameData = 

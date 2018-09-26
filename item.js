@@ -579,6 +579,17 @@ class item
 				this.magicalCost = 3;
 				break;
 
+			case "wand_reverse_entropy":
+				this.class = "wand";
+				this.name = "Unidentified Wand";
+				this.realName = "Wand of Reverse Entropy";
+				this.character = 'w';
+				this.description = "A crooked wooden rod, gleaming with magical power.";
+				this.realDescription = "Whoever designed this wand was a sadist. This wand will transfer nearly all heat out of the area it hits, bringing it to you. The ultimate result of this is that you freeze whatever you hit, but you catch on fire.";
+				this.projectile = "reverse_entropy";
+				this.magicalCost = 1;
+				break;
+
 			case "wand_concussion":
 				this.class = "wand";
 				this.name = "Unidentified Wand";

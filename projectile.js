@@ -71,6 +71,13 @@ class projectile
 				this.element = "arcane";
 				break;
 
+			case "reverse_entropy":
+				this.name = "Entropy Reversal";
+				this.character = "-";
+				this.directDamage = 10;
+				this.element = "frost";
+				break;
+
 			case "concussive_missle":
 				this.name = "Concussion Missle";
 				this.character = "-";
@@ -233,6 +240,15 @@ class projectile
 
 				break;
 
+			case "reverse_entropy":
+				if(unit.class == "player")
+					addLog("The air around you freezes abruptly!");
+				else
+					addLog("The air around the " + unit.getName() + " instantly freezes!");
+
+				unit.stamina -= (10 * unit.frostResist);
+				break;
+
 			case "concussive_missle":
 				unit.stun += Math.floor(getRandom(1, 3) * unit.earthResist);
 
@@ -303,6 +319,10 @@ class projectile
 					addLog("The magic missle explodes as it hits the " + tileBase.getName().toLowerCase() + "!");
 				break;
 
+			case "reverse_entropy":
+				addLog("The entropy reversal freezes everything around it as it collides with the " + tileBase.getName().toLowerCase() + "!");
+				break;
+
 			case "concussive_missle":
 				addLog("The concussive missle makes a loud bang as it hits the " + tileBase.getName().toLowerCase() + "!");
 				break;
@@ -370,6 +390,23 @@ class projectile
 
 						tile.hazard = new hazard("bigfire", tile.location);
 					}
+				}
+				break;
+
+			case "reverse_entropy":
+				if(this.tile.hazard === null)
+				{
+					this.tile.hazard = new hazard("chilly", this.tile.location);
+					console.log(this.tile.hazard);
+				}
+
+				let sourceTile = getWorld(this.sourceUnit.location);
+				if(sourceTile.hazard === null)
+				{
+					this.tile.hazard = new hazard("bigfire", sourceTile.location);
+
+					if(this.sourceUnit.class == "player")
+						addLog("...And then the air around you immediately ignites from the displaced heat.");
 				}
 				break;
 		}
