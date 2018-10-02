@@ -246,7 +246,7 @@ class unit
 			case "cat":
 				name = "Cat";
 				description = "Hairy baby.";
-				character = "C";
+				character = "Ñ";
 				this.baseWeapon = null;
 				this.canDisplace = true;
 

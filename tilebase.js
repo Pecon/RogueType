@@ -107,12 +107,53 @@ class tileBase
 				character = "ᅮ";
 				permitsVision = true;
 				permitsTravel = true;
-				break;	
+				break;
+
+			// Aesthetic tiles
+			case "tree":
+				description = "A very large tree stands here.";
+				name = "Tree";
+				character = "▲";
+				permitsTravel = false;
+				permitsVision = false;
+				break;
+
+			case "bush":
+				description = "Some bushes are in the way here, but you should be able to push through them.";
+				name = "Brush";
+				character = "▵";
+				permitsTravel = true;
+				permitsVision = false;
+				break;
+
+			case "rock":
+				description = "A huge boulder sits here.";
+				name = "Boulder";
+				character = "▢";
+				permitsTravel = false;
+				permitsVision = false;
+				break;
+
+			case "water":
+				description = "This water is too deep to cross safely.";
+				name = "Water";
+				character = "≈";
+				permitsTravel = false;
+				permitsVision = true;
+				break;
+
+			case "path":
+				description = "A paved road makes travel here easy.";
+				name = "Road";
+				character = " ";
+				permitsTravel = true;
+				permitsVision = true;
+				break;
 
 			default:
 				description = "A nondescript tile. Something probably went wrong with the world generator.";
 				name = "Glitch";
-				character = '*';
+				character = '?';
 				permitsTravel = false;
 				permitsVision = true;
 

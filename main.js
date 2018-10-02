@@ -162,11 +162,6 @@ function updateDisplay()
 					if(tile.unit !== null)
 						title = title + "\n + " + tile.unit.getName();
 				}
-
-				else if(tile.projectile !== null)
-				{
-					character = tile.projectile.getCharacter();
-				}
 				
 				if(tile.items.length > 0)
 				{
@@ -176,6 +171,10 @@ function updateDisplay()
 						title = tile.items[0].getName() + "\n" + tile.items[0].getDescription() + "\n";
 					}
 					else if(tile.unit.invisibility <= 0)
+					{
+						title = title + "\n + " + tile.items[0].getName() + " - " + tile.items[0].getDescription();
+					}
+					else if(tile.hazard !== null)
 					{
 						title = title + "\n + " + tile.items[0].getName() + " - " + tile.items[0].getDescription();
 					}
@@ -206,6 +205,12 @@ function updateDisplay()
 					{
 						title = title + "\n" + tile.base.getDescription();
 					}
+				}
+
+				// Projectile should always be displayed on top
+				if(tile.projectile !== null)
+				{
+					character = tile.projectile.getCharacter();
 				}
 
 				// title = title + "\rx: " + tile.location.x + " y: " + tile.location.y;
@@ -893,6 +898,24 @@ function loadMap(mapText, mapInfo, customMap)
 				world[x][y].base = new tileBase("floor", {x, y});
 				world[x][y].items[0] = new item(getJunkDrop(0), {x, y});
 				break;
+
+			// Aesthetic tiles
+			case "t":
+				world[x][y].base = new tileBase("tree", {x, y});
+				break;
+			case "b":
+				world[x][y].base = new tileBase("bush", {x, y});
+				break;
+			case "r":
+				world[x][y].base = new tileBase("rock", {x, y});
+				break;
+			case "~":
+				world[x][y].base = new tileBase("water", {x, y});
+				break;
+			case "p":
+				world[x][y].base = new tileBase("path", {x, y});
+				break;
+
 			default:
 				world[x][y].base = new tileBase("wall", {x, y});
 				errors++;
@@ -921,11 +944,11 @@ function loadMap(mapText, mapInfo, customMap)
 		e = e || window.event;
 		focusGrabberObject.focus();
 
-		// Throttle 'repeating' input from holding the key down
+		// Throttle 'repeating' input from holding the key down- save innocent lives
 		if(e.repeat)
 		{
 			let now = new Date().getTime();
-			if(now - lastInputTime < 250)
+			if(now - lastInputTime < 200)
 				return;
 			else
 				lastInputTime = now;
@@ -1096,170 +1119,7 @@ function loadMap(mapText, mapInfo, customMap)
 
 		//console.log("\"" + key + "\"");
 
-		if(player.compulsiveAction !== null)
-		{
-			if(key != "wait")
-			{
-				addLog("You don't have control this turn. Press " + gameData.options.waitKey + " to continue.");
-				return;
-			}
-
-			key = player.compulsiveAction;
-			player.compulsiveAction = null;
-		}
-
-		if(zapSelect !== null)
-		{
-			switch(key)
-			{
-				case "attackUp":
-					zapSelect.zapWand(player, {x: 0, y: -1});
-					break;
-
-				case "attackDown":
-					zapSelect.zapWand(player, {x: 0, y: 1});
-					break;
-
-				case "attackRight":
-					zapSelect.zapWand(player, {x: 1, y: 0});
-					break;
-
-				case "attackLeft":
-					zapSelect.zapWand(player, {x: -1, y: 0});
-					break;
-
-				case "wait":
-					zapSelect = null;
-					yourTurn = true;
-					addLog("Zap cancelled.");
-					return;
-
-				default:
-					addLog("Use the attack keys to select a direction to zap. Press " + gameData.options.waitKey + " to cancel.");
-					return;
-			}
-
-			zapSelect = null;
-			bulletTime();
-			return;
-		}
-
-		if(yourTurn)
-		{
-			let tile, invalid = false;
-
-			switch(key)
-			{
-				case "attackUp":
-					if(player.stamina < 0)
-					{
-						addLog("You are too fatigued to attack...");
-						return;
-					}
-
-					tile = getWorld(northOf(player.location));
-
-					if(tile.unit === null)
-					{
-						player.stamina -= (player.weapon.weight * 2.5) + 5;
-						tile.base.attack(player);
-					}
-					else
-						tile.unit.attack(player);
-					break;
-
-				case "attackDown":
-					if(player.stamina < 0)
-					{
-						addLog("You are too fatigued to attack...");
-						return;
-					}
-
-					tile = getWorld(southOf(player.location));
-
-					if(tile.unit === null)
-					{
-						player.stamina -= (player.weapon.weight * 2.5) + 5;
-						tile.base.attack(player);
-					}
-					else
-						tile.unit.attack(player);
-					break;
-
-				case "attackRight":
-					if(player.stamina < 0)
-					{
-						addLog("You are too fatigued to attack...");
-						return;
-					}
-
-					tile = getWorld(eastOf(player.location));
-
-					if(tile.unit === null)
-					{
-						player.stamina -= (player.weapon.weight * 2.5) + 5;
-						tile.base.attack(player);
-					}
-					else
-						tile.unit.attack(player);
-					break;
-
-				case "attackLeft":
-					if(player.stamina < 0)
-					{
-						addLog("You are too fatigued to attack...");
-						return;
-					}
-
-					tile = getWorld(westOf(player.location));
-
-					if(tile.unit === null)
-					{
-						player.stamina -= (player.weapon.weight * 2.5) + 5;
-						tile.base.attack(player);
-					}
-					else
-						tile.unit.attack(player);
-					break;
-
-				case "wait":
-					addLog("You wait in place.");
-					break;
-
-				case "moveUp":
-					player.moveTo(northOf(player.location));
-					break;
-				case "moveDown":
-					player.moveTo(southOf(player.location));
-					break;
-				case "moveRight":
-					player.moveTo(eastOf(player.location));
-					break;
-				case "moveLeft":
-					player.moveTo(westOf(player.location));
-					break;
-
-				default:
-					invalid = true;
-					break;
-			}
-
-			if(!invalid)
-			{
-				yourTurn = false;
-				quickActionUsed = true;
-				bulletTime();
-			}
-		}
-		else if(player.stun > 0)
-		{
-			if(key == "wait")
-			{
-				addLog("You wait in place.");
-				bulletTime();
-			}
-			
-		}
+		processPlayerInput(key);
 	};
 
 	if(customMap)
@@ -1291,6 +1151,174 @@ function loadMap(mapText, mapInfo, customMap)
 
 	welcomeObject.focus();
 	welcomeObject.blur();
+}
+
+function processPlayerInput(action)
+{
+	if(player.compulsiveAction !== null)
+	{
+		if(action != "wait")
+		{
+			addLog("You don't have control this turn. Press " + gameData.options.waitKey + " to continue.");
+			return;
+		}
+
+		action = player.compulsiveAction;
+		player.compulsiveAction = null;
+	}
+
+	if(zapSelect !== null)
+	{
+		switch(action)
+		{
+			case "attackUp":
+				zapSelect.zapWand(player, {x: 0, y: -1});
+				break;
+
+			case "attackDown":
+				zapSelect.zapWand(player, {x: 0, y: 1});
+				break;
+
+			case "attackRight":
+				zapSelect.zapWand(player, {x: 1, y: 0});
+				break;
+
+			case "attackLeft":
+				zapSelect.zapWand(player, {x: -1, y: 0});
+				break;
+
+			case "wait":
+				zapSelect = null;
+				yourTurn = true;
+				addLog("Zap cancelled.");
+				return;
+
+			default:
+				addLog("Use the attack keys to select a direction to zap. Press " + gameData.options.waitKey + " to cancel.");
+				return;
+		}
+
+		zapSelect = null;
+		bulletTime();
+		return;
+	}
+
+	if(yourTurn)
+	{
+		let tile, invalid = false;
+
+		switch(action)
+		{
+			case "attackUp":
+				if(player.stamina < 0)
+				{
+					addLog("You are too fatigued to attack...");
+					return;
+				}
+
+				tile = getWorld(northOf(player.location));
+
+				if(tile.unit === null)
+				{
+					player.stamina -= (player.weapon.weight * 2.5) + 5;
+					tile.base.attack(player);
+				}
+				else
+					tile.unit.attack(player);
+				break;
+
+			case "attackDown":
+				if(player.stamina < 0)
+				{
+					addLog("You are too fatigued to attack...");
+					return;
+				}
+
+				tile = getWorld(southOf(player.location));
+
+				if(tile.unit === null)
+				{
+					player.stamina -= (player.weapon.weight * 2.5) + 5;
+					tile.base.attack(player);
+				}
+				else
+					tile.unit.attack(player);
+				break;
+
+			case "attackRight":
+				if(player.stamina < 0)
+				{
+					addLog("You are too fatigued to attack...");
+					return;
+				}
+
+				tile = getWorld(eastOf(player.location));
+
+				if(tile.unit === null)
+				{
+					player.stamina -= (player.weapon.weight * 2.5) + 5;
+					tile.base.attack(player);
+				}
+				else
+					tile.unit.attack(player);
+				break;
+
+			case "attackLeft":
+				if(player.stamina < 0)
+				{
+					addLog("You are too fatigued to attack...");
+					return;
+				}
+
+				tile = getWorld(westOf(player.location));
+
+				if(tile.unit === null)
+				{
+					player.stamina -= (player.weapon.weight * 2.5) + 5;
+					tile.base.attack(player);
+				}
+				else
+					tile.unit.attack(player);
+				break;
+
+			case "wait":
+				addLog("You wait in place.");
+				break;
+
+			case "moveUp":
+				player.moveTo(northOf(player.location));
+				break;
+			case "moveDown":
+				player.moveTo(southOf(player.location));
+				break;
+			case "moveRight":
+				player.moveTo(eastOf(player.location));
+				break;
+			case "moveLeft":
+				player.moveTo(westOf(player.location));
+				break;
+
+			default:
+				invalid = true;
+				break;
+		}
+
+		if(!invalid)
+		{
+			yourTurn = false;
+			quickActionUsed = true;
+			bulletTime();
+		}
+	}
+	else if(player.stun > 0)
+	{
+		if(action == "wait")
+		{
+			addLog("You wait in place.");
+			bulletTime();
+		}
+		
+	}
 }
 
 function startTransition(iteration)

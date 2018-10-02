@@ -397,13 +397,12 @@ class projectile
 				if(this.tile.hazard === null)
 				{
 					this.tile.hazard = new hazard("chilly", this.tile.location);
-					console.log(this.tile.hazard);
 				}
 
 				let sourceTile = getWorld(this.sourceUnit.location);
 				if(sourceTile.hazard === null)
 				{
-					this.tile.hazard = new hazard("bigfire", sourceTile.location);
+					sourceTile.hazard = new hazard("bigfire", sourceTile.location);
 
 					if(this.sourceUnit.class == "player")
 						addLog("...And then the air around you immediately ignites from the displaced heat.");
