@@ -725,7 +725,7 @@ class item
 				this.realName = "Potion of Weakness";
 				this.character = 'p';
 				this.description = "A small flask filled with an unknown potion.";
-				this.realDescription = "Energy draining potion.";
+				this.realDescription = "A stamina draining potion.";
 				this.healthEffect = 0;
 				this.staminaEffect = -40;
 				break;
@@ -844,7 +844,7 @@ class item
 				this.realName = "Potion of Camouflage";
 				this.character = 'p';
 				this.description = "A small flask filled with an unknown potion.";
-				this.realDescription = "A powerful invisibility potion that will make very difficult to detect.";
+				this.realDescription = "A powerful invisibility potion that will make you very difficult to detect.";
 				this.healthEffect = 0;
 				this.staminaEffect = 0;
 				this.specialEffect = "invisibility";

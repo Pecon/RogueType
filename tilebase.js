@@ -15,6 +15,14 @@ class tileBase
 
 		switch(this.type)
 		{
+			case "darkness": // This tile should never be actually used in the world set, it's just for display purposes.
+				description = "Nobody knows what lies in the darkness.";
+				name = "Darkness";
+				character = ' ';
+				permitsTravel = true;
+				permitsVision = true;
+				break;
+
 			case "wall":
 				description = "A rigid stone wall that looks throughly impenetrable.";
 				name = "Wall";
@@ -190,6 +198,16 @@ class tileBase
 		}
 
 		return this.character;
+	}
+
+	canSeeThrough()
+	{
+		if(this.type == "door" || this.type == "strongDoor")
+		{
+			return !this.locked;
+		}
+		else
+			return this.permitsVision;
 	}
 
 	moveTo(unit, checkOnly)

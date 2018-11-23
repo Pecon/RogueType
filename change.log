@@ -112,3 +112,7 @@ v2.1.4
 - Fixed display priority on hazards and projectiles.
 - Added tree, bush, rock, water, and path tile types for additional map flavor potential.
 - Cats now Ñ
+
+v2.2.0
+- Brand new vision system. You no longer can see things behind walls and such, but you can still see the map layout for areas you have travelled through.
+- Fixed some language errors. 

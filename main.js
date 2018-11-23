@@ -109,14 +109,139 @@ function attempt_init()
 	});
 }
 
+function visionRecurse(visionMap, visionMapOrigin, screenHeight, screenWidth, location, directions, recursesLeft)
+{
+	if(recursesLeft <= 0)
+		return;
+
+	let newDirections = Array();
+
+	for(let i = 0; i < directions.length; i++)
+	{
+		let tileLocation = null;
+		switch(directions[i])
+		{
+			case 0:
+				tileLocation = {x: location.x + 1, y: location.y};
+				break;
+			case 1:
+				tileLocation = {x: location.x, y: location.y + 1};
+				break;
+			case 2:
+				tileLocation = {x: location.x - 1, y: location.y};
+				break;
+			case 3:
+				tileLocation = {x: location.x, y: location.y - 1};
+		}
+
+		let mapLocation = {x: tileLocation.x - visionMapOrigin.x, y: tileLocation.y - visionMapOrigin.y};
+
+		if((mapLocation.x < 0 || mapLocation.x >= screenWidth - 1) || (mapLocation.y < 0 || mapLocation.y >= screenHeight - 1))
+		{
+			// Would go off screen
+			// console.log("Offscreen " + mapLocation.x + " " + mapLocation.y);
+			continue;
+		}
+		else if(visionMap[mapLocation.x][mapLocation.y].checked)
+		{
+			// Already visited
+			// console.log("visited " + mapLocation.x + " " + mapLocation.y)
+			continue;
+		}
+
+		let tile = getWorld(tileLocation);
+
+		visionMap[mapLocation.x][mapLocation.y].checked = true;
+		visionMap[mapLocation.x][mapLocation.y].visible = true;
+		tile.known = true;
+
+		if(tile.base.canSeeThrough())
+		{
+			if(mapLocation.y + 1 < screenHeight)
+			{
+				visionMap[mapLocation.x][mapLocation.y + 1].visible = true;
+				getWorld({x: tileLocation.x, y: tileLocation.y + 1}).known = true;
+			}
+			if(mapLocation.y - 1 > 0)
+			{
+				visionMap[mapLocation.x][mapLocation.y - 1].visible = true;
+				getWorld({x: tileLocation.x, y: tileLocation.y - 1}).known = true;
+			}
+			if(mapLocation.x + 1 < screenWidth)
+			{
+				visionMap[mapLocation.x + 1][mapLocation.y].visible = true;
+				getWorld({x: tileLocation.x + 1, y: tileLocation.y}).known = true;
+			}
+			if(mapLocation.x - 1 > 0)
+			{
+				visionMap[mapLocation.x - 1][mapLocation.y].visible = true;
+				getWorld({x: tileLocation.x - 1, y: tileLocation.y}).known = true;
+			}
+		}
+		else
+		{
+			// Reveal this tile but stop this direction of checking.
+			continue;
+		}
+
+		newDirections.push(directions[i]);
+	}
+
+	// Do recursors
+	for(let i = 0; i < newDirections.length; i++)
+	{
+		let tileLocation = null;
+		switch(newDirections[i])
+		{
+			case 0:
+				tileLocation = {x: location.x + 1, y: location.y};
+				break;
+			case 1:
+				tileLocation = {x: location.x, y: location.y + 1};
+				break;
+			case 2:
+				tileLocation = {x: location.x - 1, y: location.y};
+				break;
+			case 3:
+				tileLocation = {x: location.x, y: location.y - 1};
+		}
+
+		if(_visionModeFloodFill == false)
+			visionRecurse(visionMap, visionMapOrigin, screenHeight, screenWidth, tileLocation, newDirections, recursesLeft - 1);
+		else
+			visionRecurse(visionMap, visionMapOrigin, screenHeight, screenWidth, tileLocation, directions, recursesLeft - 1);
+	}
+}
+
 function updateDisplay()
 {
-	let origin = {x: player.location.x - 39, y: player.location.y - 12};
+	let screenHeight = 24;
+	let screenWidth = 80;
+	let origin = {x: player.location.x - (screenWidth / 2 - 1), y: player.location.y - (screenHeight / 2)};
 	containerObject.style = "display: none;";
 
-	for(let screenY = 0; screenY < 24; screenY++)
+	// Calculate darkness
+	let darknesses = [null, null, null, null];
+	darknesses[0] = Array.matrix(screenWidth, screenHeight, {visible: false, checked: null});
+	visionRecurse(darknesses[0], origin, screenHeight, screenWidth, player.location, [0, 1, 3], 100);
+	darknesses[1] = Array.matrix(screenWidth, screenHeight, {visible: false, checked: null});
+	visionRecurse(darknesses[1], origin, screenHeight, screenWidth, player.location, [1, 0, 2], 100);
+	darknesses[2] = Array.matrix(screenWidth, screenHeight, {visible: false, checked: null});
+	visionRecurse(darknesses[2], origin, screenHeight, screenWidth, player.location, [2, 1, 3], 100);
+	darknesses[3] = Array.matrix(screenWidth, screenHeight, {visible: false, checked: null});
+	visionRecurse(darknesses[3], origin, screenHeight, screenWidth, player.location, [3, 0, 2], 100);
+
+	// Merge the four vision checks
+	let darkness = Array.matrix(screenWidth, screenHeight, false);
+	for(let i = 0; i < darknesses.length; i++)
+		for(let x = 0; x < screenWidth; x++)
+			for(let y = 0; y < screenHeight; y++)
+				if(darknesses[i][x][y].visible)
+					darkness[x][y] = true;
+
+	for(let screenY = 0; screenY < screenHeight; screenY++)
 	{
-		for(let screenX = 0; screenX < 80; screenX++)
+		for(let screenX = 0; screenX < screenWidth; screenX++)
 		{
 			let x = origin.x + screenX;
 			let y = origin.y + screenY;
@@ -124,9 +249,25 @@ function updateDisplay()
 
 			if((x < 0 || x >= worldDimensionX) || (y < 0 || y >= worldDimensionY))
 			{
-				let base = new tileBase("wall", {x: x, y: y});
+				let base = new tileBase("darkness", {x: x, y: y});
+
 				displayTile.innerHTML = base.getCharacter();
 				displayTile.title = base.getName() + "\n" + base.getDescription();
+			}
+			else if(!darkness[screenX][screenY])
+			{
+				let tile = world[x][y];
+				let base = null;
+				if(tile.known)
+				{
+					base = tile.base;
+					displayTile.style = "color: #777;";
+				}
+				else
+					base = new tileBase("darkness", {x: x, y: y});
+
+				displayTile.innerHTML = base.getCharacter();
+				displayTile.title = base.getName() + "\n" + base.getDescription() + (tile.known ? "\n\nThis is an area you remember, you cannot currently see it." : "");
 			}
 			else
 			{
@@ -368,8 +509,8 @@ function updateDisplay()
 	{
 		if(player.weapon.lastKillTurn > turnCount - 8)
 		{
-			html += '<img class="statusIcon" src="./Bloodlust.png" title="Bloodlust - Your weapon deals 10% additional damage for each stack of bloodlust." />' + player.weapon.kills + '\n';
-			html += '<img class="statusIcon" src="./Greylust.png" title="Bloodlust cooldown - When this timer runs out you will lose all stacks of bloodlust. Gaining a stack of bloodlust resets this counter." />' + (turnCount - player.weapon.lastKillTurn - 8) * -1 + '\n';
+			html += '<img class="statusIcon" src="./Bloodlust.png" title="Bloodlust - Your weapon deals 10% additional damage for each stack of bloodlust." /> ' + player.weapon.kills + '\n';
+			html += '<img class="statusIcon" src="./Greylust.png" title="Bloodlust cooldown - When this timer runs out you will lose all stacks of bloodlust. Gaining a stack of bloodlust resets this counter." /> ' + (turnCount - player.weapon.lastKillTurn - 8) * -1 + '\n';
 		}
 		else if(player.weapon.isIdentifed())
 		{
@@ -774,7 +915,7 @@ function loadMap(mapText, mapInfo, customMap)
 	{
 		for(let y = 0; y < worldDimensionY; y++)
 		{
-			let tile = {"base": null, "items": Array(), "unit": null, "hazard": null, "projectile": null, "location": {"x": x, "y": y}};
+			let tile = {"known": false, "base": null, "items": Array(), "unit": null, "hazard": null, "projectile": null, "location": {"x": x, "y": y}};
 			tile.base = new tileBase("wall", {x, y});
 			world[x][y] = tile;
 		}
@@ -2086,13 +2227,21 @@ function vectorScale(location, scale)
 
 Array.matrix = function(numrows, numcols, initial) 
 {
+	let copyMode = false;
+
+	if(typeof initial === 'object' && initial !== null)
+		copyMode = true;
+
 	let array = [];
 	for (let i = 0; i < numrows; ++i)
 	{
 		let columns = [];
 		for (let j = 0; j < numcols; ++j)
 		{
-			columns[j] = initial;
+			if(copyMode)
+				columns[j] = Object.assign({}, initial);
+			else
+				columns[j] = initial;
 		}
 
 		array[i] = columns;
@@ -2147,6 +2296,7 @@ var queueMessages = false;
 var messageQueue = "";
 var gameLogArchive = "";
 var lastInputTime = 0;
+var _visionModeFloodFill = false;
 
 // Default game configuration data
 var gameData = 

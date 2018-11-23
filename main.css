@@ -205,7 +205,8 @@ button
 		overflow-y: scroll;
 		overflow-x: hidden;
 		overflow-wrap: normal;
-		
+
+		vertical-align: bottom;
 
 		margin-top: 15px;
 		margin-bottom: 10px;
@@ -287,6 +288,7 @@ button
 		overflow-x: hidden;
 		overflow-wrap: break-word;
 
+		vertical-align: bottom;
 
 		margin-top: 15px;
 		margin-bottom: 10px;
