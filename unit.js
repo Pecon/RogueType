@@ -48,7 +48,7 @@ class unit
 				this.baseWeapon = new item("fists");
 				this.itemDrop = undefined;
 
-				maxHealth = 25;
+				maxHealth = 30;
 				maxStamina = 20;
 				level = 10; 
 				break;
@@ -62,7 +62,7 @@ class unit
 
 				maxHealth = 6;
 				maxStamina = 15;
-				perception = 2;
+				perception = 3;
 				strength = 1;
 				defence = 1;
 				agility = 3;
@@ -79,7 +79,7 @@ class unit
 
 				maxHealth = 3;
 				maxStamina = 5;
-				perception = 3;
+				perception = 4;
 				strength = 0;
 				defence = 0;
 				agility = 5;
@@ -111,11 +111,11 @@ class unit
 				this.weapon = new item("ancient_sword");
 				this.itemDrop = "skeleton_bone";
 
-				maxHealth = 5;
-				maxStamina = 15;
-				perception = 0;
-				strength = 3;
-				defence = 2;
+				maxHealth = 4;
+				maxStamina = 10;
+				perception = 1;
+				strength = 2;
+				defence = 3;
 				agility = 0;
 				level = 2;
 				this.frostResist = 0.0;
@@ -134,7 +134,7 @@ class unit
 				perception = 2;
 				strength = 1;
 				defence = 0;
-				agility = 3;
+				agility = 2;
 				level = 3;
 				this.frostResist = 0.5;
 				break;
@@ -146,11 +146,11 @@ class unit
 				this.baseWeapon = new item("goblin_fists");
 				this.itemDrop = "goblin_toe";
 
-				maxHealth = 10;
-				maxStamina = 12;
-				perception = 1;
+				maxHealth = 8;
+				maxStamina = 8;
+				perception = 2;
 				strength = 2;
-				defence = 3;
+				defence = 4;
 				agility = 1;
 				level = 3;
 				break;
@@ -180,11 +180,11 @@ class unit
 				this.weapon = new item("club");
 				this.itemDrop = "troll_fat";
 
-				maxHealth = 32;
+				maxHealth = 25;
 				maxStamina = 25;
 				perception = 1;
 				strength = 5;
-				defence = 2;
+				defence = 6;
 				agility = 1;
 				level = 5;
 				this.earthResist = 0.2;
@@ -198,12 +198,12 @@ class unit
 				this.weapon = new item("longsword");
 				this.itemDrop = "shade_essence";
 
-				maxHealth = 26;
+				maxHealth = 22;
 				maxStamina = 20;
 				perception = 2;
 				strength = 3;
 				defence = 3;
-				agility = 2;
+				agility = 1;
 				level = 4;
 				this.frostResist = 0.0;
 				this.fireResist = 2.0;
@@ -216,12 +216,12 @@ class unit
 				this.baseWeapon = new item("imp_claws");
 				this.itemDrop = "imp_ashes";
 
-				maxHealth = 21;
+				maxHealth = 19;
 				maxStamina = 15;
 				perception = 3;
 				strength = 3;
 				defence = 1;
-				agility = 4;
+				agility = 3;
 				level = 4;
 				this.frostResist = 2.0;
 				break;
@@ -234,7 +234,7 @@ class unit
 				this.itemDrop = "snake_skin";
 
 				maxHealth = 24;
-				maxStamina = 10;
+				maxStamina = 12;
 				perception = 4;
 				strength = 2;
 				defence = 1;
@@ -945,32 +945,41 @@ class unit
 					break;
 
 				case "bloodlust":
+					let bloodlustCooldown = 8;
+
 					if(attacker.weapon.lastKillTurn === undefined)
 					{
-						attacker.weapon.lastKillTurn = -8;
+						attacker.weapon.lastKillTurn = bloodlustCooldown * -1;
 						attacker.weapon.kills = 0;
 					}
 
-					if(attacker.weapon.lastKillTurn > turnCount - 8)
+					if(attacker.weapon.lastKillTurn > turnCount - bloodlustCooldown)
 					{
 						// Made a kill in the last 5 turns, gets damage bonus
 						if(attacker.class == "player")
 							addLog("The " + attacker.weapon.getName() + " eagerly awaits your kill.", "color: #22F;");
-
-						damage *= (1.1 + (attacker.weapon.kills * 0.1));
 					}
 					else
 					{
-						// Penalty for not having a kill in the last five turns.
-						// if(attacker.class == "player")
-						// 	addLog("The " + attacker.weapon.getName() + " is silent.");
-						damage *= 0.8;
-						attacker.weapon.kills = 0;
+						// Penalty for not having a kill in the last eight turns.
+						if(attacker.weapon.kills > 0)
+						{
+							attacker.weapon.kills -= Math.ceil(attacker.weapon.kills / 2);
+
+							if(attacker.weapon.kills <= 0)
+								attacker.weapon.kills = 0;
+							else
+								attacker.weapon.lastKillTurn = turnCount;
+						}
+						else
+							attacker.weapon.kills = 0;
 					}
+
+					damage *= (0.8 + (attacker.weapon.kills * 0.3));
 
 					if(damage - blocked > this.health)
 					{
-						if(!(attacker.weapon.lastKillTurn > turnCount - 7))
+						if(!(attacker.weapon.lastKillTurn > turnCount - bloodlustCooldown))
 						{
 							if(attacker.class == "player")
 								addLog("As you strike the finishing blow, your " + attacker.weapon.getName() + " glows bright red! More...", "color: #A00;");
@@ -982,7 +991,7 @@ class unit
 
 							attacker.weapon.magicalCharge++;
 						}
-						attacker.weapon.lastKillTurn = turnCount;
+						attacker.weapon.lastKillTurn = turnCount + 1;
 						attacker.weapon.kills++;
 					}
 					break;
@@ -1176,10 +1185,10 @@ class unit
 			amount = 1;
 
 		this.maxHealth += (2.5 * amount);
-		this.health += this.maxHealth * 0.20;
+		this.health += this.maxHealth * 0.25;
 
 		this.maxStamina += (5 * amount);
-		this.stamina += this.maxStamina * 0.20;
+		this.stamina += this.maxStamina * 0.25;
 
 		this.defence += (0.75 * amount);
 		this.agility += (0.75 * amount);

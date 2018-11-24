@@ -106,7 +106,7 @@ v2.1.3
 - Made unenchanted weapons much more rare.
 
 v2.1.4
-- Key repeat is now enabled, with a cap of 5 inputs per second when key-repeating. This makes the input more consistent across devices, and helps people not accidentally kill themselves as easily.
+- Key repeat is now enabled, with a cap of 5 inputs per second when key-repeating. The input cap makes the input more consistent across devices, and helps people not accidentally kill themselves as easily.
 - Added Cutpurse enemy.
 - Added Wand of Reverse Entropy.
 - Fixed display priority on hazards and projectiles.
@@ -114,5 +114,7 @@ v2.1.4
 - Cats now Ñ
 
 v2.2.0
-- Brand new vision system. You no longer can see things behind walls and such, but you can still see the map layout for areas you have travelled through.
+- Brand new vision system. You no longer can see things behind walls and such, but you can still see the map layout for areas you have travelled through. (You should really try the z'ralnixeus map now, it's so much better with this)
 - Fixed some language errors. 
+- A number of balance changes since the game is now harder with the vision system implemented. Many monsters have been debuffed and the player starts with slightly more health now. Health and stamina restoration upon levelling up increased from 20% to 25%.
+- Buffed bloodlust enchantment. Each stack of bloodlust now increases weapon damage by 30% (up from 10%) and instead of losing all stacks of bloodlust after 8 turns of no kills, you only lose half of the stacks (rounded up) and the no kills countdown restarts.

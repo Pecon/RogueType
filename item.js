@@ -207,11 +207,11 @@ class item
 				this.class = "weapon";
 				this.name = "mandibles";
 				this.character = '?';
-				this.description = "pointy rat teeth";
+				this.description = "sharp spider teeth";
 				this.weight = 1;
 				this.blunt = 0;
 				this.blade = 1.5;
-				this.poison = 3;
+				this.poison = 2;
 				this.attackDescriptor = "spring";
 				this.baseWeapon = true;
 				break;
@@ -269,10 +269,10 @@ class item
 				this.name = "fang";
 				this.character = '?';
 				this.description = "long fearsome cobra fangs, glistening with venom";
-				this.weight = 0;
+				this.weight = 1;
 				this.blunt = 0;
 				this.blade = 2;
-				this.poison = 5;
+				this.poison = 4;
 				this.attackDescriptor = "spring";
 				this.baseWeapon = true;
 				break;

@@ -507,10 +507,20 @@ function updateDisplay()
 		html += '<img class="statusIcon" src="./ControlLoss.png" title="No Control - You\'re being forced to do a specific action this turn." /> \n';
 	if(player.weapon.magicalEffect == "bloodlust")
 	{
+		if(!(player.weapon.lastKillTurn > turnCount - 8) && player.weapon.kills > 0)
+		{
+			player.weapon.kills -= Math.ceil(player.weapon.kills / 2);
+
+			if(player.weapon.kills <= 0)
+				player.weapon.kills = 0;
+			else
+				player.weapon.lastKillTurn = turnCount;
+		}
+
 		if(player.weapon.lastKillTurn > turnCount - 8)
 		{
-			html += '<img class="statusIcon" src="./Bloodlust.png" title="Bloodlust - Your weapon deals 10% additional damage for each stack of bloodlust." /> ' + player.weapon.kills + '\n';
-			html += '<img class="statusIcon" src="./Greylust.png" title="Bloodlust cooldown - When this timer runs out you will lose all stacks of bloodlust. Gaining a stack of bloodlust resets this counter." /> ' + (turnCount - player.weapon.lastKillTurn - 8) * -1 + '\n';
+			html += '<img class="statusIcon" src="./Bloodlust.png" title="Bloodlust - Your weapon deals 30% additional damage for each stack of bloodlust." /> ' + player.weapon.kills + '\n';
+			html += '<img class="statusIcon" src="./Greylust.png" title="Bloodlust cooldown - When this timer runs out you will lose half of your bloodlust stacks and this timer resets. Gaining a stack of bloodlust also resets this timer." /> ' + (turnCount - player.weapon.lastKillTurn - 8) * -1 + '\n';
 		}
 		else if(player.weapon.isIdentifed())
 		{
@@ -522,7 +532,8 @@ function updateDisplay()
 		html += '<img class="statusIcon" src="./DamageReduction.png" title="Damage Reduction - Something is reducing the effectiveness of your melee attacks." /> \n';
 	}
 
-	statusObject.innerHTML = html;
+	if(statusObject.innerHTML != html)
+		statusObject.innerHTML = html;
 }
 
 function inventorySwap(a, b)
