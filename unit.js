@@ -175,7 +175,7 @@ class unit
 			case "troll":
 				name = "Troll";
 				description = "A massive club-wielding brute.";
-				character = "T";
+				character = "𝕿";
 				this.baseWeapon = new item("goblin_fists");
 				this.weapon = new item("club");
 				this.itemDrop = "troll_fat";
@@ -193,7 +193,7 @@ class unit
 			case "shade":
 				name = "Ancient Shade";
 				description = "A terrifying and powerful ancient spirit.";
-				character = "A";
+				character = "𝕬";
 				this.baseWeapon = new item("fists");
 				this.weapon = new item("longsword");
 				this.itemDrop = "shade_essence";
@@ -212,7 +212,7 @@ class unit
 			case "imp":
 				name = "Fire Imp";
 				description = "A small, combustive demon.";
-				character = "I";
+				character = "𝕴";
 				this.baseWeapon = new item("imp_claws");
 				this.itemDrop = "imp_ashes";
 
@@ -267,7 +267,7 @@ class unit
 				this.class = "boss";
 				name = "Three Headed Dragon";
 				description = "A terrifying three-headed dragon. Each head seems to have it's own ability, but luckily they seem to have issues cooperating.";
-				character = "D";
+				character = "𝔇";
 				this.baseWeapon = new item("dragon_tail");
 				this.moveDelay = 1;
 
@@ -287,7 +287,7 @@ class unit
 				this.class = "boss";
 				name = "Displacer Beast";
 				description = "A horrifying monster from the abyss, can open small portals to the abyss where certain destruction awaits!";
-				character = "Ᏼ";
+				character = "𝔅";
 				this.baseWeapon =  new item("beast_tail");
 
 				maxHealth = 175;

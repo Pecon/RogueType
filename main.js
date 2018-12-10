@@ -625,7 +625,7 @@ function addLog(text, style)
 			space = i + 1;
 		}
 
-		if(length > 86)
+		if(length > 85)
 		{
 			newString = newString + "\n" + text.substr(lastBreak, space - lastBreak);
 			i = space + 1;
@@ -1865,7 +1865,7 @@ function drink(slot)
 			if(drink.realName != drink.getName() && identify)
 			{
 				drink.identify();
-				addLog("That must have been " + aOrAn(drink.realName) + " " + drink.realName + "!", "color: #lightblue;");
+				addLog("That must have been " + aOrAn(drink.realName) + " " + drink.realName + "!", "color: lightblue;");
 			}
 			else if(drink.realName != drink.getName() && !identify)
 				addLog("You can't discern what that potion did.");

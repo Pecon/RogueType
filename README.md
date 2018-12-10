@@ -12,26 +12,36 @@ Want to create a map for RogueType? I'd recommend playing the game through to th
 
 ```
 x - A solid wall.
+- - A fake wall.
 . - Open floorspace.
 S - The starting point for the player, only one.
 + - A normal door
 = - A stronger door
 M - A common monster spawn
 ! - A high-level monster spawn
-? - A common item spawn (mainly potions for now)
-T - A rare item spawn (mainly weapons for now)
+? - A common item spawn (mostly potions and scrolls)
+T - A rare item spawn (mostly weapons and wands)
 , - A spear trap.
 F - Boss stage trigger door (only place one of these, ideally the boss room should face southwards from the door)
 B - The Boss.
 P - Exit portal that finishes the game after The Boss is killed.
+```
+
+There are also some 'aesthetic' tiles which don't serve much purpose aside from flavor.
+```
+t - A tree. (Can't move through, can't see through)
+b - A bush. (Can move through, can't see through)
+r - A boulder. (Can't move through, can't see through)
+~ - Water. (Can't move through, can see through)
+p - Path/Road. (Can move through, can see through)
 ```
 Note: Any characters in the map which are not recognized as valid types will display as errors in-game.
 
 ## Credits and license
 
 **Pecon** - Original creator, majority of code and design. ( https://github.com/Pecon )  
-**Jazz Cat** - Original soundtrack.  
-**Oren Watson** - Neoletters font face. ( http://www.orenwatson.be/fontdemo.htm )  
+**Jazz Cat** - Original soundtrack. ( https://www.patreon.com/JazzCatMusic )  
+**Oren Watson** - *Neoletters* font face. ( http://www.orenwatson.be/fontdemo.htm )  
 **baiomu** - Small code and feature contributions. ( https://github.com/ToasterBiome )  
 **Zeustal** - Writing inspirations, some pixel graphics, and default map contribution.  
 
