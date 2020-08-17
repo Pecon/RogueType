@@ -1957,7 +1957,7 @@ function read(slot)
 				player.weapon.magicalCharge = 40;
 				success = true;
 
-				addLog("Your " + player.weapon.getName() + " glows brightly! It's enchantment seems to have been recharged.");
+				addLog("Your " + player.weapon.getName() + " glows brightly! Its enchantment seems to have been recharged.");
 			}
 			else
 			{

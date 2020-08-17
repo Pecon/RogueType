@@ -278,6 +278,7 @@ class tileBase
 
 				case "floor":
 					message = null;
+					success = true;
 					break;
 
 				case "door":
@@ -368,6 +369,31 @@ class tileBase
 					success = true;
 					break;
 
+				case "tree":
+					message = "You run directly into the tree, and feel foolish for doing so.";
+					success = false;
+					break;
+
+				case "bush":
+					message = null;
+					success = true;
+					break;
+
+				case "rock":
+					message = "You run into the rock and are not amused at all.";
+					success = false;
+					break;
+
+				case "water":
+					message = "You don't know how to swim...";
+					success = false;
+					break;
+
+				case "path":
+					message = null;
+					success = true;
+					break;
+
 				default:
 					message = "You step into the glitch, and suddenly reappear where you were before." + this.typeName;
 					success = false;
@@ -443,7 +469,7 @@ class tileBase
 				}
 				else
 				{
-					message = "You " + unit.weapon.attackDescriptor + " your " + unit.weapon.getName() + " into the dingy wooden door. The door isn't locked, so it flails around on it's hinge for a few moments from the attack.";
+					message = "You " + unit.weapon.attackDescriptor + " your " + unit.weapon.getName() + " into the dingy wooden door. The door isn't locked, so it flails around on its hinge for a few moments from the attack.";
 					success = true;
 				}
 
@@ -484,15 +510,46 @@ class tileBase
 				message = "You futily swing your " + unit.weapon.getName() + " at the magically sealed door, but it might as well be made of solid adamantium for how much it gives.";
 				success = false;
 				break;
+
+			case "exitPortal":
+				message = "You swing your " + unit.weapon.getName() + " at the magical portal, but it just phases through it unchanged.";
+				success = false;
+				break;
 				
 			case "altar":
-				message = "You smash your " + unit.weapon.getName() + " at the magically altar, but its stone stays pristine.";
+				message = "You smash your " + unit.weapon.getName() + " on the magic altar, but its stone stays pristine.";
+				success = false;
+				break;
+
+			case "tree":
+				message = "You swing your " + unit.weapon.getName() + " into the tree, but the tree certainly isn't going anywhere soon.";
+				success = false;
+				break;
+
+			case "bush":
+				message = "You swing your " + unit.weapon.getName() + " at the bush, but it's much too thick to do anything about.";
+				success = false;
+				break;
+
+			case "rock":
+				message = "You swing your " + unit.weapon.getName() + " into the rock. There is no give at all, and you're slightly stunned by the incredible shock of it.";
+				success = false;
+				unit.stun += 1;
+				break;
+
+			case "water":
+				message = "You swing at the empty air above the water.";
+				success = false;
+				break;
+
+			case "path":
+				message = "You swing at the empty air.";
 				success = false;
 				break;
 
 			default:
 				message = "You attack the glitch, and suddenly appear again in the same position but with your weapon no longer raised.";
-				success = true;
+				success = false;
 				break;
 		}
 

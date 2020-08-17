@@ -175,7 +175,7 @@ class unit
 			case "troll":
 				name = "Troll";
 				description = "A massive club-wielding brute.";
-				character = "𝕿";
+				character = "T";
 				this.baseWeapon = new item("goblin_fists");
 				this.weapon = new item("club");
 				this.itemDrop = "troll_fat";
@@ -193,7 +193,7 @@ class unit
 			case "shade":
 				name = "Ancient Shade";
 				description = "A terrifying and powerful ancient spirit.";
-				character = "𝕬";
+				character = "A";
 				this.baseWeapon = new item("fists");
 				this.weapon = new item("longsword");
 				this.itemDrop = "shade_essence";
@@ -266,7 +266,7 @@ class unit
 			case "drake":
 				this.class = "boss";
 				name = "Three Headed Dragon";
-				description = "A terrifying three-headed dragon. Each head seems to have it's own ability, but luckily they seem to have issues cooperating.";
+				description = "A terrifying three-headed dragon. Each head seems to have its own ability, but luckily they seem to have issues cooperating.";
 				character = "𝔇";
 				this.baseWeapon = new item("dragon_tail");
 				this.moveDelay = 1;
@@ -459,7 +459,7 @@ class unit
 
 			if(this.health / this.maxHealth <= this.angerThreshold)
 			{
-				addLog("The " + this.getName() + " seeths with anger! It smashes it's tail against the ground and the entire dungeon rumbles...", "color: red;");
+				addLog("The " + this.getName() + " seeths with anger! It smashes its tail against the ground and the entire dungeon rumbles...", "color: red;");
 				gameSoundEffect.src = "./crumble.mp3";
 				gameSoundEffect.play();
 				windowObject.classList.add("screenShake");
@@ -831,7 +831,7 @@ class unit
 					if(attacker.weapon.concussiveCharge >= 5)
 					{
 						if(attacker.class == "player")
-							addLog("As soon as your attack connects, your weapon unleashes all it's magical charge! Like lightning, the energy surges into the " + this.getName() + " with a brilliant flash and thunderous bang!", "color: yellow;");
+							addLog("As soon as your attack connects, your weapon unleashes all its magical charge! Like lightning, the energy surges into the " + this.getName() + " with a brilliant flash and thunderous bang!", "color: yellow;");
 						else
 							addLog("With a brilliant flash, you're concussed by the " + attacker.getName() + "'s " + attacker.weapon.getName() + 
 								"!", "color: orange;");
@@ -867,7 +867,7 @@ class unit
 						else
 						{
 							if(attacker.class == "player")
-								addLog("As soon as your attack connects, your weapon unleashes all it's magical charge! Like lightning, the energy surges into the " + this.getName() + " with a brilliant flash and thunderous bang! The " + this.getName() + " is stunned!", "color: yellow;");
+								addLog("As soon as your attack connects, your weapon unleashes all its magical charge! Like lightning, the energy surges into the " + this.getName() + " with a brilliant flash and thunderous bang! The " + this.getName() + " is stunned!", "color: yellow;");
 							else
 								addLog("With a brilliant flash, you're concussed by the " + attacker.getName() + "'s " + attacker.weapon.getName() + 
 								"!", "color: orange;");
