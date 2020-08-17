@@ -467,7 +467,7 @@ function updateDisplay()
 				html += ' <img class="inventoryTick" src="./images/equippedTick.png" />';
 
 			element.innerHTML = html;
-			element.title = inventory[i].getDescription();
+			element.title = item.getDescription();
 			inventoryObject.appendChild(element);
 		}
 	}
@@ -696,6 +696,12 @@ function loadCookie()
 			{
 				gameData.customMaps = loadData;
 			}
+			else if(loadData.cookieFormat < gameData.cookieFormat)
+			{
+				console.warn("Cookie format has been updated, overwriting with defaults.");
+				saveCookie();
+				return;
+			}
 			else
 			{
 				gameData = loadData;
@@ -712,7 +718,7 @@ function saveCookie()
 {
 	let expireDate = new Date();
 	expireDate.setTime(expireDate.getTime() + 3345271305300);
-	document.cookie = "data=" + window.btoa(JSON.stringify(gameData)) + "; expires=" + expireDate.toString();
+	document.cookie = "data=" + window.btoa(JSON.stringify(gameData)) + "; SameSite=strict; expires=" + expireDate.toString();
 }
 
 function setupOptions()
@@ -2312,7 +2318,7 @@ var _visionModeFloodFill = false;
 // Default game configuration data
 var gameData = 
 {
-	cookieFormat: 3,
+	cookieFormat: 4,
 
 	options: 
 	{

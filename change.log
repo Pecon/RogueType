@@ -120,5 +120,8 @@ v2.2.0
 - Buffed bloodlust enchantment. Each stack of bloodlust now increases weapon damage by 30% (up from 10%) and instead of losing all stacks of bloodlust after 8 turns of no kills, you only lose half of the stacks (rounded up) and the no kills countdown restarts.
 
 v2.2.1
-- All high level monsters now use fancy symbols to make their danger more obvious.
+- Added a number of aesthetic tiles for use in making more lively looking maps.
+
+v2.2.2
+- Internally reorganized files so the repository isn't such a mess.
 - Fixed some english issues.
