@@ -37,12 +37,12 @@ function attempt_init()
 	}
 
 	// Start music
-	titleMusic = new Audio("./title.mp3");
+	titleMusic = new Audio("./sound/title.mp3");
 	titleMusic.volume = 0.7;
 	titleMusic.play();
 
 
-	introMusic = new Audio("./intro.mp3");
+	introMusic = new Audio("./sound/intro.mp3");
 	introMusic.preload = true;
 	introMusic.volume = 0.7;
 	introMusic.onended = function()
@@ -51,13 +51,13 @@ function attempt_init()
 		gameMusic.play();
 	}
 
-	gameMusic = new Audio("./loop.mp3");
+	gameMusic = new Audio("./sound/loop.mp3");
 	gameMusic.preload = true;
 	gameMusic.volume = 0.7;
 	gameMusic.loop = true;
 
 
-	bossIntroMusic = new Audio("./intro_boss.mp3");
+	bossIntroMusic = new Audio("./sound/intro_boss.mp3");
 	bossIntroMusic.volume = 0.7;
 	bossIntroMusic.preload = true;
 	bossIntroMusic.onended = function()
@@ -65,22 +65,22 @@ function attempt_init()
 		bossGameMusic.play();
 	}
 
-	bossGameMusic = new Audio("./loop_boss.mp3");
+	bossGameMusic = new Audio("./sound/loop_boss.mp3");
 	bossGameMusic.volume = 0.7;
 	bossGameMusic.loop = true;
 	bossGameMusic.preload = true;
 
-	gameOverMusic = new Audio("./gameover.mp3");
+	gameOverMusic = new Audio("./sound/gameover.mp3");
 	gameOverMusic.volume = 0.4;
 	gameOverMusic.loop = false;
 	gameOverMusic.preload = true;
 
-	victoryMusic = new Audio("./victory.mp3");
+	victoryMusic = new Audio("./sound/victory.mp3");
 	victoryMusic.volume = 0.5;
 	victoryMusic.loop = false;
 	victoryMusic.preload = true;
 
-	gameSoundEffect = new Audio("./crumble.mp3");
+	gameSoundEffect = new Audio("./sound/crumble.mp3");
 	gameSoundEffect.volume = 0.7;
 	gameSoundEffect.preload = true;
 
@@ -462,9 +462,9 @@ function updateDisplay()
 				html = html + ' <button onclick="drop(' + stackInventory[i].referenceIndexes[0] + ')" class="' + className +'" ' + allButtonsProperties + '>Drop</button>';
 
 			if(usable)
-				html += ' <img class="inventoryTick" src="./DownTick2.png" />';
+				html += ' <img class="inventoryTick" src="./images/DownTick2.png" />';
 			else if(item.class == "weapon" && player.weapon == item)
-				html += ' <img class="inventoryTick" src="./equippedTick.png" />';
+				html += ' <img class="inventoryTick" src="./images/equippedTick.png" />';
 
 			element.innerHTML = html;
 			element.title = inventory[i].getDescription();
@@ -498,13 +498,13 @@ function updateDisplay()
 	// Status icons
 	let html = "";
 	if(player.stun > 0)
-		html += '<img class="statusIcon" src="./Stun2.png" title="Stunned - You cannot move or attack while stunned. Stamina is consumed each turn to recover from stun status; if you don\'t have enough stamina the stun will extend until you do." /> ' + player.stun + "\n";
+		html += '<img class="statusIcon" src="./images/Stun2.png" title="Stunned - You cannot move or attack while stunned. Stamina is consumed each turn to recover from stun status; if you don\'t have enough stamina the stun will extend until you do." /> ' + player.stun + "\n";
 	if(player.poison > 0)
-		html += '<img class="statusIcon" src="./Poison2.png" title="Poisoned - You will take damage equal to your poison status every five turns." /> ' + player.poison + "\n";
+		html += '<img class="statusIcon" src="./images/Poison2.png" title="Poisoned - You will take damage equal to your poison status every five turns." /> ' + player.poison + "\n";
 	if(player.stamina < 0)
-		html += '<img class="statusIcon" src="./Exhaustion.png" title="Exhausted - You\'re exhausted! You\'ll need to wait a few turns to recover or drink a stamina potion of some sort." /> ' + Math.ceil(player.stamina / 5 * -1) + "\n";
+		html += '<img class="statusIcon" src="./images/Exhaustion.png" title="Exhausted - You\'re exhausted! You\'ll need to wait a few turns to recover or drink a stamina potion of some sort." /> ' + Math.ceil(player.stamina / 5 * -1) + "\n";
 	if(player.compulsiveAction !== null)
-		html += '<img class="statusIcon" src="./ControlLoss.png" title="No Control - You\'re being forced to do a specific action this turn." /> \n';
+		html += '<img class="statusIcon" src="./images/ControlLoss.png" title="No Control - You\'re being forced to do a specific action this turn." /> \n';
 	if(player.weapon.magicalEffect == "bloodlust")
 	{
 		if(!(player.weapon.lastKillTurn > turnCount - 8) && player.weapon.kills > 0)
@@ -519,17 +519,17 @@ function updateDisplay()
 
 		if(player.weapon.lastKillTurn > turnCount - 8)
 		{
-			html += '<img class="statusIcon" src="./Bloodlust.png" title="Bloodlust - Your weapon deals 30% additional damage for each stack of bloodlust." /> ' + player.weapon.kills + '\n';
-			html += '<img class="statusIcon" src="./Greylust.png" title="Bloodlust cooldown - When this timer runs out you will lose half of your bloodlust stacks and this timer resets. Gaining a stack of bloodlust also resets this timer." /> ' + (turnCount - player.weapon.lastKillTurn - 8) * -1 + '\n';
+			html += '<img class="statusIcon" src="./images/Bloodlust.png" title="Bloodlust - Your weapon deals 30% additional damage for each stack of bloodlust." /> ' + player.weapon.kills + '\n';
+			html += '<img class="statusIcon" src="./images/Greylust.png" title="Bloodlust cooldown - When this timer runs out you will lose half of your bloodlust stacks and this timer resets. Gaining a stack of bloodlust also resets this timer." /> ' + (turnCount - player.weapon.lastKillTurn - 8) * -1 + '\n';
 		}
 		else if(player.weapon.isIdentifed())
 		{
-			html += '<img class="statusIcon" src="./DamageReduction.png" title="Damage Reduction - Something is reducing the effectiveness of your melee attacks." /> \n';
+			html += '<img class="statusIcon" src="./images/DamageReduction.png" title="Damage Reduction - Something is reducing the effectiveness of your melee attacks." /> \n';
 		}
 	}
 	else if(player.weapon.magicalEffect == "dullness" && player.weapon.isIdentifed())
 	{
-		html += '<img class="statusIcon" src="./DamageReduction.png" title="Damage Reduction - Something is reducing the effectiveness of your melee attacks." /> \n';
+		html += '<img class="statusIcon" src="./images/DamageReduction.png" title="Damage Reduction - Something is reducing the effectiveness of your melee attacks." /> \n';
 	}
 
 	if(statusObject.innerHTML != html)
@@ -2328,28 +2328,28 @@ var gameData =
 			name: "The Dungeon",
 			author: "Pecon",
 			difficulty: "Normal",
-			src: "./level.dat"
+			src: "./maps/level.dat"
 		},
 
 		{
 			name: "The Dungeon",
 			author: "Pecon",
 			difficulty: "Easy",
-			src: "./level_easy.dat"
+			src: "./maps/level_easy.dat"
 		},
 
 		{
 			name: "The Dungeon",
 			author: "Pecon",
 			difficulty: "Hard",
-			src: "./level_hard.dat"
+			src: "./maps/level_hard.dat"
 		},
 
 		{
 			name: "z'ralnixeus, the cat caverns",
 			author: "Zeustal",
 			difficulty: "Normal",
-			src: "./zeus_map.dat"
+			src: "./maps/zeus_map.dat"
 		}
 	],
 

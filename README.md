@@ -1,4 +1,4 @@
-![RogueType Logo](https://leopard.hosting/dl/dhnkp/rogueType_logo.png)
+![RogueType Logo](https://leopard.hosting.pecon.us/dl/dhnkp/rogueType_logo.png)
 
 # RogueType
 A browser-based roguelike game with handmade maps instead of randomly generated ones. Custom maps can be created and imported easily.

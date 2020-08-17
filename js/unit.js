@@ -460,7 +460,7 @@ class unit
 			if(this.health / this.maxHealth <= this.angerThreshold)
 			{
 				addLog("The " + this.getName() + " seeths with anger! It smashes its tail against the ground and the entire dungeon rumbles...", "color: red;");
-				gameSoundEffect.src = "./crumble.mp3";
+				gameSoundEffect.src = "./sound/crumble.mp3";
 				gameSoundEffect.play();
 				windowObject.classList.add("screenShake");
 
