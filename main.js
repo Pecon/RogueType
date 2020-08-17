@@ -2071,7 +2071,7 @@ function drop(slot)
 			{
 				addLog("You put the " + droppingItem.getName() + " on the altar.");
 				addLog("A magical light fills the room and consumes the " + droppingItem.getName() + ".");
-				addLog("A smouldering potion is left on the altar...");
+				addLog("A glittering sword is left on the altar...");
 				droppingItem.remove();
 				
 				weapon = new item("lightbringer");
