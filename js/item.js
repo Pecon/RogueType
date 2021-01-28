@@ -920,7 +920,7 @@ class item
 			"The curse will slowly build up energy during combat, and then release all of in a concussive blast once fully charged; however, the curse causes it to sometimes backfire.",
 			"The curse uses my own stamina to heal my wounds, but it only activates when I land a hit.",
 			"The curse makes my attacks a little less effective.",
-			"The curse makes this weapon feel a lot heavier and require more stamina to swing, I doubt the weight increase changes it's effectiveness.",
+			"The curse makes this weapon feel a lot heavier and require more stamina to swing, I doubt the weight increase changes its effectiveness.",
 			"The curse causes this weapon to ocassionally jerk around while attacking, causing the attack to miss."
 			];
 

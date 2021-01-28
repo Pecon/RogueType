@@ -123,5 +123,7 @@ v2.2.1
 - Added a number of aesthetic tiles for use in making more lively looking maps.
 
 v2.2.2
+- Fixed an issue with some inventory descriptions being accessed incorrectly.
+- Added SameSite attribute to game cookie. (Required for future browser compatibility)
 - Internally reorganized files so the repository isn't such a mess.
 - Fixed some english issues.
