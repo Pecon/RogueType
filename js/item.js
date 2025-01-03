@@ -24,6 +24,9 @@ class item
 		this.canStack = false;
 		this.rareLoot = false;
 
+		//the type of the item that we get when we sacrifice this item on the altar.
+		this.sacrificeReward = null;
+
 		switch(type)
 		{
 			case "droppings":
@@ -64,6 +67,7 @@ class item
 				this.character = "c";
 				this.description = "The carcass of a dead spider.";
 				this.canStack = true;
+				this.sacrificeReward = "antipoison_potion";
 				break;
 
 			case "skeleton_bone":
@@ -144,6 +148,7 @@ class item
 				this.character = "k";
 				this.description = "The skull of a heroic champion that perished in the dungeon.";
 				this.canStack = true;
+				this.sacrificeReward = "lightbringer";
 				break;
 
 			case "corpseCleric": 
@@ -152,6 +157,7 @@ class item
 				this.character = "k";
 				this.description = "The skull of a lowly healer that perished in the dungeon.";
 				this.canStack = true;
+				this.sacrificeReward = "health_potion";
 				break;				
 
 			case "fists":
