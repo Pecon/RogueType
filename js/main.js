@@ -2064,38 +2064,18 @@ function drop(slot)
 		
 		if(tile.base.type == "altar")
 		{
-			if(droppingItem.type == "spider_body")
-			{
+			if(droppingItem.sacrificeReward != null) {
 				addLog("You put the " + droppingItem.getName() + " on the altar.");
 				addLog("A magical light fills the room and consumes the " + droppingItem.getName() + ".");
-				addLog("A smouldering potion is left on the altar...");
+				let newItem = new item(droppingItem.sacrificeReward);
 				droppingItem.remove();
-				let newItem = new item("antipoison_potion");
-				inventory.push(newItem);
+				addLog("A smouldering + " + newItem.getName() + " is left on the altar...");
+				newItem.identify();
+				inventory.push(nnewItemewItem);
 			}
-			else if(droppingItem.type == "corpseHero")
-			{
-				addLog("You put the " + droppingItem.getName() + " on the altar.");
-				addLog("A magical light fills the room and consumes the " + droppingItem.getName() + ".");
-				addLog("A glittering sword is left on the altar...");
-				droppingItem.remove();
-				
-				weapon = new item("lightbringer");
-				weapon.identify();
-				inventory.push(weapon);
-				
-			}
-			else if(droppingItem.type == "corpseCleric")
-			{
-				addLog("You put the " + droppingItem.getName() + " on the altar.");
-				addLog("A magical light fills the room and consumes the " + droppingItem.getName() + ".");
-				addLog("A smouldering potion is left on the altar...");
-				droppingItem.remove();
-				inventory.push(new item("health_potion"));
-			} 
 			else
 			{
-				addLog("You drop the " + droppingItem.getName() + "...");
+				addLog("You drop the " + droppingItem.getName() + "... The altar doesn't react.");
 				inventory.splice(slot, 1);
 				droppingItem.moveTo(player.location);
 				groundItems.push(droppingItem);
